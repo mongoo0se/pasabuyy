@@ -1,6 +1,4 @@
-/* ===================================
-   RUNNER DASHBOARD SAMPLE DATA
-   =================================== */
+
 
 // Runner Profile
 const RUNNER_PROFILE = {
@@ -18,7 +16,7 @@ const RUNNER_PROFILE = {
     totalEarned: 12847.00
 };
 
-// Available Orders
+
 const AVAILABLE_ORDERS = [
     {
         id: "ORD-2024-1001",
