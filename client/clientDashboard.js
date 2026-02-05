@@ -55,18 +55,22 @@ const riders = [
 let currentSlide = 0;
 const slideshow = document.getElementById("slideshow");
 
-// Slideshow functionality
-function showSlide() {
-  slideshow.style.backgroundImage = `url(${slides[currentSlide]})`;
-  currentSlide = (currentSlide + 1) % slides.length;
+// Slideshow functionality - only on dashboard
+if (slideshow) {
+  function showSlide() {
+    slideshow.style.backgroundImage = `url(${slides[currentSlide]})`;
+    currentSlide = (currentSlide + 1) % slides.length;
+  }
+
+  showSlide();
+  setInterval(showSlide, 5000);
 }
 
-showSlide();
-setInterval(showSlide, 5000);
-
-// Render riders
+// Render riders - only on dashboard
 function renderRiders() {
   const ridersContainer = document.getElementById("ridersContainer");
+  if (!ridersContainer) return;
+  
   ridersContainer.innerHTML = riders
     .sort((a, b) => b.rating - a.rating)
     .map(
@@ -86,50 +90,85 @@ function renderRiders() {
 
 renderRiders();
 
-// Navigation event listeners
-document.getElementById("homeLink").addEventListener("click", () => {
-  window.location.href = "clientDashboard.html";
-});
+// Navigation event listeners - works on all pages
+function setupNavigation() {
+  const homeLink = document.getElementById("homeLink");
+  const cartIcon = document.getElementById("cartIcon");
+  const messagesIcon = document.getElementById("messagesIcon");
+  const profileIcon = document.getElementById("profileIcon");
 
-document.getElementById("cartIcon").addEventListener("click", () => {
-  window.location.href = "cart.html";
-});
+  if (homeLink) {
+    homeLink.addEventListener("click", () => {
+      window.location.href = "clientDashboard.html";
+    });
+  }
 
-document.getElementById("messagesIcon").addEventListener("click", () => {
-  window.location.href = "messages.html";
-});
+  if (cartIcon) {
+    cartIcon.addEventListener("click", () => {
+      window.location.href = "cart.html";
+    });
+  }
 
-document.getElementById("profileIcon").addEventListener("click", () => {
-  window.location.href = "profile.html";
-});
+  if (messagesIcon) {
+    messagesIcon.addEventListener("click", () => {
+      window.location.href = "messages.html";
+    });
+  }
 
-// Bottom navigation
-document.querySelectorAll(".nav-btn").forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    document.querySelectorAll(".nav-btn").forEach((b) => b.classList.remove("active"));
-    e.target.classList.add("active");
-    const page = e.target.dataset.page;
-    if (page === "stores") {
-      window.location.href = "stores.html";
-    } else if (page === "delivery") {
-      window.location.href = "delivery.html";
-    } else if (page === "pickup") {
-      window.location.href = "pickup.html";
+  if (profileIcon) {
+    profileIcon.addEventListener("click", () => {
+      window.location.href = "profile.html";
+    });
+  }
+}
+
+// Call setup navigation on all pages
+document.addEventListener("DOMContentLoaded", setupNavigation);
+
+// If DOM is already loaded (in some cases)
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", setupNavigation);
+} else {
+  setupNavigation();
+}
+
+// Bottom navigation (only works on dashboard)
+const navBtns = document.querySelectorAll(".nav-btn");
+if (navBtns.length > 0) {
+  navBtns.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      document.querySelectorAll(".nav-btn").forEach((b) => b.classList.remove("active"));
+      e.target.classList.add("active");
+      const page = e.target.dataset.page;
+      if (page === "stores") {
+        window.location.href = "stores.html";
+      } else if (page === "delivery") {
+        window.location.href = "delivery.html";
+      } else if (page === "pickup") {
+        window.location.href = "pickup.html";
+      }
+    });
+  });
+}
+
+// Search functionality (only on dashboard)
+const searchBtn = document.getElementById("searchBtn");
+const searchInput = document.getElementById("searchInput");
+
+if (searchBtn) {
+  searchBtn.addEventListener("click", () => {
+    const query = searchInput.value;
+    if (query.trim()) {
+      console.log("Searching for:", query);
+      alert("Searching for: " + query);
     }
   });
-});
+}
 
-// Search functionality
-document.getElementById("searchBtn").addEventListener("click", () => {
-  const query = document.getElementById("searchInput").value;
-  if (query.trim()) {
-    console.log("Searching for:", query);
-    alert("Searching for: " + query);
-  }
-});
-
-document.getElementById("searchInput").addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
-    document.getElementById("searchBtn").click();
-  }
-});
+if (searchInput) {
+  searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      document.getElementById("searchBtn").click();
+    }
+  });
+}

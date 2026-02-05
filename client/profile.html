@@ -60,29 +60,25 @@
     }
 
     .upload-avatar-btn {
-      position: absolute;
-      bottom: 0;
-      right: -50%;
-      width: 40px;
-      height: 40px;
+      width: 100%;
+      padding: 10px;
       background: var(--emerald);
       color: white;
       border: none;
-      border-radius: 50%;
+      border-radius: 8px;
       cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+      margin-top: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
+      gap: 8px;
     }
 
     .upload-avatar-btn:hover {
-      right: -40%;
       background: var(--emerald-dark);
-    }
-
-    .profile-avatar-container:hover .upload-avatar-btn {
-      right: -5%;
     }
 
     #avatarInput {
@@ -93,7 +89,7 @@
       font-size: 20px;
       font-weight: 700;
       color: var(--text-dark);
-      margin: 0;
+      margin: 16px 0 0 0;
     }
 
     .profile-email {
@@ -455,12 +451,12 @@
           <div class="profile-avatar" id="profileAvatarDisplay">
             <i class="fa-solid fa-user"></i>
           </div>
-          <button class="upload-avatar-btn" id="uploadAvatarBtn">
-            <i class="fa-solid fa-camera"></i>
-          </button>
-          <input type="file" id="avatarInput" accept="image/*" />
           <p class="profile-name">John Doe</p>
           <p class="profile-email">john@example.com</p>
+          <button class="upload-avatar-btn" id="uploadAvatarBtn">
+            <i class="fa-solid fa-camera"></i> Change Photo
+          </button>
+          <input type="file" id="avatarInput" accept="image/*" />
         </div>
 
         <div class="profile-tabs">
@@ -694,41 +690,6 @@
   </div>
 
   <script src="profile.js"></script>
-  <script src="clientDashboard.js"></script>
-</body>
-</html>
-      margin-bottom: 20px;
-      color: var(--emerald);
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .back-link:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
-    <div class="top-icons">
-      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
-      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
-      <i class="fa-solid fa-user" id="profileIcon"></i>
-    </div>
-  </header>
-
-  <div class="page-container">
-    <a class="back-link" onclick="window.location.href='clientDashboard.html'">← Back to Dashboard</a>
-    <h2 class="page-title">My Profile</h2>
-    <div class="profile-card">
-      <div class="profile-avatar"><i class="fa-solid fa-user"></i></div>
-      <h2>John Doe</h2>
-      <p>john@example.com</p>
-      <p>+63 912 345 6789</p>
-      <p style="margin-top: 20px; color: var(--text-dark);">Barangay 123, City, Region</p>
-    </div>
-  </div>
-
   <script src="clientDashboard.js"></script>
 </body>
 </html>
