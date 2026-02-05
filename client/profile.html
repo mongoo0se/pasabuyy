@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile - Pa-Buy, Bes</title>
+  <link rel="stylesheet" href="clientDashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .page-container {
+      width: 90%;
+      margin: 40px auto;
+      min-height: calc(100vh - 200px);
+    }
+    .page-title {
+      font-size: 28px;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+    }
+    .profile-card {
+      background: var(--card);
+      border-radius: 22px;
+      padding: 40px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--teal);
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: white;
+    }
+    .profile-card h2 {
+      color: var(--text-dark);
+      margin: 20px 0 10px;
+    }
+    .profile-card p {
+      color: var(--text-muted);
+      margin: 8px 0;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--emerald);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
+    <div class="top-icons">
+      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
+      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
+      <i class="fa-solid fa-user" id="profileIcon"></i>
+    </div>
+  </header>
+
+  <div class="page-container">
+    <a class="back-link" onclick="window.location.href='clientDashboard.html'">← Back to Dashboard</a>
+    <h2 class="page-title">My Profile</h2>
+    <div class="profile-card">
+      <div class="profile-avatar"><i class="fa-solid fa-user"></i></div>
+      <h2>John Doe</h2>
+      <p>john@example.com</p>
+      <p>+63 912 345 6789</p>
+      <p style="margin-top: 20px; color: var(--text-dark);">Barangay 123, City, Region</p>
+    </div>
+  </div>
+
+  <script src="clientDashboard.js"></script>
+</body>
+</html>

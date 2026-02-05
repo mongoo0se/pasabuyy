@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pick-up - Pa-Buy, Bes</title>
+  <link rel="stylesheet" href="clientDashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .page-container {
+      width: 90%;
+      margin: 40px auto;
+      min-height: calc(100vh - 200px);
+    }
+    .page-title {
+      font-size: 28px;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .empty-state i {
+      font-size: 64px;
+      color: var(--teal);
+      margin-bottom: 20px;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--emerald);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
+    <div class="top-icons">
+      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
+      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
+      <i class="fa-solid fa-user" id="profileIcon"></i>
+    </div>
+  </header>
+
+  <nav class="nav-bar">
+    <button class="nav-btn" data-page="stores">Stores</button>
+    <button class="nav-btn" data-page="delivery">Delivery</button>
+    <button class="nav-btn active" data-page="pickup">Pick-up</button>
+  </nav>
+
+  <div class="page-container">
+    <a class="back-link" onclick="window.location.href='clientDashboard.html'">← Back to Dashboard</a>
+    <h2 class="page-title">Pick-up Orders</h2>
+    <div class="empty-state">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <p style="color: var(--text-muted); font-size: 18px;">No pick-up orders yet</p>
+      <p style="color: var(--text-muted);">Orders placed for pick-up will appear here</p>
+    </div>
+  </div>
+
+  <script src="clientDashboard.js"></script>
+</body>
+</html>

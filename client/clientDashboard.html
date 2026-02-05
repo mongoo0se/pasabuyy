@@ -10,26 +10,28 @@
 <body>
 
   <header>
-    <h1>Pa-Buy, Bes</h1>
+    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
     <div class="top-icons">
-      <i class="fa-solid fa-cart-shopping"></i>
-      <i class="fa-solid fa-motorcycle"></i>
-      <i class="fa-solid fa-user"></i>
+      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
+      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
+      <i class="fa-solid fa-user" id="profileIcon"></i>
     </div>
   </header>
 
   <nav class="nav-bar">
-    <button class="active">Shops</button>
-    <button>Delivery</button>
-    <button>Pick-up</button>
+    <button class="nav-btn active" data-page="stores">Stores</button>
+    <button class="nav-btn" data-page="delivery">Delivery</button>
+    <button class="nav-btn" data-page="pickup">Pick-up</button>
   </nav>
 
   <div class="slideshow" id="slideshow"></div>
 
   <div class="search-container">
-    <input type="text" placeholder="Search for food, shops, or deals..." />
+    <input type="text" id="searchInput" placeholder="Search for food, shops, or deals..." />
+    <button id="searchBtn" class="search-btn"><i class="fa-solid fa-search"></i></button>
   </div>
 
+  <h2 class="section-title">Featured Stores & Products</h2>
   <section class="cards-container">
     <div class="food-card">
       <img src="https://images.unsplash.com/photo-1604908176997-4315a9d8e7d9" />
@@ -66,6 +68,10 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <h2 class="section-title">Recommended Riders</h2>
+  <section class="riders-container" id="ridersContainer">
   </section>
 
   <script src="clientDashboard.js"></script>

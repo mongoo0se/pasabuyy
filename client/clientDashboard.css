@@ -25,13 +25,12 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom-left-radius: 22px;
-  border-bottom-right-radius: 22px;
 }
 
 header h1 {
   color: #fff;
   margin: 0;
+  cursor: pointer;
 }
 
 .top-icons i {
@@ -46,6 +45,7 @@ header h1 {
   padding: 14px 32px;
   display: flex;
   gap: 30px;
+  justify-content: center;
 }
 
 .nav-bar button {
@@ -55,12 +55,17 @@ header h1 {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
+  padding: 6px 0;
+  transition: all 0.2s ease;
+}
+
+.nav-bar button:hover {
+  color: #fff;
 }
 
 .nav-bar button.active {
   border-bottom: 3px solid var(--teal);
   color: #fff;
-  padding-bottom: 6px;
 }
 
 .slideshow {
@@ -77,6 +82,7 @@ header h1 {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  gap: 8px;
 }
 
 .search-container input {
@@ -85,7 +91,23 @@ header h1 {
   border-radius: 14px;
   border: none;
   outline: none;
+  font-size: 16px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.search-btn {
+  background: var(--emerald);
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s ease;
+}
+
+.search-btn:hover {
+  background: var(--emerald-dark);
 }
 
 .cards-container {
@@ -134,4 +156,67 @@ header h1 {
   justify-content: space-between;
   color: var(--emerald-dark);
   font-weight: 600;
+}
+
+.section-title {
+  width: 90%;
+  margin: 32px auto 16px;
+  color: var(--text-dark);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.riders-container {
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.rider-card {
+  background: var(--card);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  padding: 20px;
+  text-align: center;
+}
+
+.rider-card:hover {
+  transform: translateY(-6px);
+}
+
+.rider-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 12px;
+  background: var(--teal);
+}
+
+.rider-card h3 {
+  margin: 12px 0 6px;
+  color: var(--text-dark);
+}
+
+.rider-card p {
+  margin: 4px 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.rating {
+  margin-top: 12px;
+  color: #f59e0b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.rating i {
+  margin-right: 4px;
 }
