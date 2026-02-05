@@ -15,16 +15,7 @@
     .page-title {
       font-size: 28px;
       color: var(--text-dark);
-      margin-bottom: 20px;
-    }
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-    }
-    .empty-state i {
-      font-size: 64px;
-      color: var(--teal);
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     .back-link {
       display: inline-block;
@@ -35,6 +26,291 @@
     }
     .back-link:hover {
       text-decoration: underline;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .empty-state i {
+      font-size: 64px;
+      color: var(--teal);
+      margin-bottom: 20px;
+    }
+
+    /* Section Titles */
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 32px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title i {
+      color: var(--emerald);
+      font-size: 24px;
+    }
+
+    /* Active Pick-up Order */
+    .active-order-container {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 1024px) {
+      .active-order-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .order-card {
+      background: var(--card);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+    }
+
+    .order-status-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .order-status-badge.ready {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .order-header {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .order-from {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .order-store-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    /* Order Items */
+    .order-items {
+      margin: 24px 0;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-name-qty {
+      flex: 1;
+    }
+
+    .item-name {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .item-qty {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .item-price {
+      font-weight: 600;
+      color: var(--text-dark);
+      min-width: 80px;
+      text-align: right;
+    }
+
+    /* Order Summary */
+    .order-summary {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .summary-row.total {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--emerald);
+      padding-top: 12px;
+      border-top: 2px solid #e2e8f0;
+    }
+
+    /* Pickup Details Card */
+    .pickup-details-card {
+      background: var(--card);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+    }
+
+    .pickup-details-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text-dark);
+    }
+
+    .pickup-info-section {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .pickup-info-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .pickup-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .pickup-value {
+      font-size: 15px;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .location-highlight {
+      background: #fef3c7;
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 4px solid #f59e0b;
+    }
+
+    .instructions-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-dark);
+    }
+
+    .pickup-action-btn {
+      width: 100%;
+      background: var(--emerald);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      margin-top: 20px;
+    }
+
+    .pickup-action-btn:hover {
+      background: var(--emerald-dark);
+    }
+
+    /* Pickup Store Cards Grid */
+    .pickup-stores-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      padding-bottom: 40px;
+    }
+
+    .store-pickup-card {
+      background: var(--card);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .store-pickup-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .store-pickup-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .store-pickup-info {
+      padding: 18px;
+    }
+
+    .store-pickup-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .store-pickup-category {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .store-pickup-location {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .store-pickup-rating {
+      font-size: 14px;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    .badge-safe-zone {
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -57,10 +333,199 @@
   <div class="page-container">
     <a class="back-link" onclick="window.location.href='clientDashboard.html'">← Back to Dashboard</a>
     <h2 class="page-title">Pick-up Orders</h2>
-    <div class="empty-state">
-      <i class="fa-solid fa-bag-shopping"></i>
-      <p style="color: var(--text-muted); font-size: 18px;">No pick-up orders yet</p>
-      <p style="color: var(--text-muted);">Orders placed for pick-up will appear here</p>
+
+    <!-- Active Pick-up Order Section -->
+    <div class="active-order-container">
+      <!-- Main Order Info -->
+      <div>
+        <div class="order-card">
+          <span class="order-status-badge ready">✓ Ready for Pick-up</span>
+          
+          <div class="order-header">
+            <div class="order-from">Order from:</div>
+            <div class="order-store-name">Pa-Buy Kitchen</div>
+          </div>
+
+          <!-- Order Items -->
+          <div class="order-items">
+            <div class="order-item">
+              <div class="item-name-qty">
+                <div class="item-name">Adobo & Rice Combo</div>
+                <div class="item-qty">x2</div>
+              </div>
+              <div class="item-price">₱460.00</div>
+            </div>
+
+            <div class="order-item">
+              <div class="item-name-qty">
+                <div class="item-name">Spring Rolls</div>
+                <div class="item-qty">x1</div>
+              </div>
+              <div class="item-price">₱85.00</div>
+            </div>
+
+            <div class="order-item">
+              <div class="item-name-qty">
+                <div class="item-name">Iced Mango Juice</div>
+                <div class="item-qty">x2</div>
+              </div>
+              <div class="item-price">₱90.00</div>
+            </div>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="order-summary">
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>₱635.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Service Fee</span>
+              <span>₱20.00</span>
+            </div>
+            <div class="summary-row total">
+              <span>Amount to Pay</span>
+              <span>₱655.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pickup Details -->
+      <div class="pickup-details-card">
+        <h3>Pick-up Information</h3>
+
+        <div class="pickup-info-section">
+          <div class="pickup-label">Pick-up Location</div>
+          <div class="location-highlight">
+            <div class="pickup-value" style="margin-bottom: 6px;">Campus Safe Zone - Building A</div>
+            <div class="instructions-text">Near the main gate, beside the information booth</div>
+          </div>
+        </div>
+
+        <div class="pickup-info-section">
+          <div class="pickup-label">Order Number</div>
+          <div class="pickup-value">#PU-82945</div>
+        </div>
+
+        <div class="pickup-info-section">
+          <div class="pickup-label">Estimated Ready Time</div>
+          <div class="pickup-value">2:30 PM</div>
+        </div>
+
+        <div class="pickup-info-section">
+          <div class="pickup-label">Pickup Instructions</div>
+          <div class="instructions-text">
+            1. Proceed to the Campus Safe Zone<br>
+            2. Show your order number: #PU-82945<br>
+            3. Present valid ID<br>
+            4. Pay the amount due<br>
+            5. Receive your order
+          </div>
+        </div>
+
+        <button class="pickup-action-btn">
+          <i class="fa-solid fa-check"></i> Mark as Picked Up
+        </button>
+      </div>
+    </div>
+
+    <!-- Available Pick-up Stores Section -->
+    <h3 class="section-title">
+      <i class="fa-solid fa-building"></i>
+      Campus Safe Zone Stores
+    </h3>
+
+    <div class="pickup-stores-grid">
+      <!-- Store 1 -->
+      <div class="store-pickup-card">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c" alt="Pa-Buy Kitchen" class="store-pickup-img" />
+        <div class="store-pickup-info">
+          <div class="store-pickup-name">Pa-Buy Kitchen</div>
+          <div class="store-pickup-category">Filipino Cuisine</div>
+          <div class="store-pickup-location">
+            <i class="fa-solid fa-map-pin"></i>
+            Building A
+          </div>
+          <div class="store-pickup-rating">4.9 ⭐ (200 reviews)</div>
+          <div class="badge-safe-zone">SAFE ZONE</div>
+        </div>
+      </div>
+
+      <!-- Store 2 -->
+      <div class="store-pickup-card">
+        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd" alt="Bes Burger House" class="store-pickup-img" />
+        <div class="store-pickup-info">
+          <div class="store-pickup-name">Bes Burger House</div>
+          <div class="store-pickup-category">Fast Food</div>
+          <div class="store-pickup-location">
+            <i class="fa-solid fa-map-pin"></i>
+            Building B
+          </div>
+          <div class="store-pickup-rating">4.8 ⭐ (150 reviews)</div>
+          <div class="badge-safe-zone">SAFE ZONE</div>
+        </div>
+      </div>
+
+      <!-- Store 3 -->
+      <div class="store-pickup-card">
+        <img src="https://images.unsplash.com/photo-1512568400610-62da28bc8a13" alt="Teal Cup" class="store-pickup-img" />
+        <div class="store-pickup-info">
+          <div class="store-pickup-name">Teal Cup</div>
+          <div class="store-pickup-category">Café & Pastries</div>
+          <div class="store-pickup-location">
+            <i class="fa-solid fa-map-pin"></i>
+            Building C
+          </div>
+          <div class="store-pickup-rating">4.7 ⭐ (120 reviews)</div>
+          <div class="badge-safe-zone">SAFE ZONE</div>
+        </div>
+      </div>
+
+      <!-- Store 4 -->
+      <div class="store-pickup-card">
+        <img src="https://images.unsplash.com/photo-1571115765669-251cb3cee4dc" alt="Pizza Palace" class="store-pickup-img" />
+        <div class="store-pickup-info">
+          <div class="store-pickup-name">Pizza Palace</div>
+          <div class="store-pickup-category">Italian Pizza</div>
+          <div class="store-pickup-location">
+            <i class="fa-solid fa-map-pin"></i>
+            Building D
+          </div>
+          <div class="store-pickup-rating">4.7 ⭐ (95 reviews)</div>
+          <div class="badge-safe-zone">SAFE ZONE</div>
+        </div>
+      </div>
+
+      <!-- Store 5 -->
+      <div class="store-pickup-card">
+        <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df" alt="Sushi Master" class="store-pickup-img" />
+        <div class="store-pickup-info">
+          <div class="store-pickup-name">Sushi Master</div>
+          <div class="store-pickup-category">Japanese Food</div>
+          <div class="store-pickup-location">
+            <i class="fa-solid fa-map-pin"></i>
+            Building A
+          </div>
+          <div class="store-pickup-rating">4.9 ⭐ (220 reviews)</div>
+          <div class="badge-safe-zone">SAFE ZONE</div>
+        </div>
+      </div>
+
+      <!-- Store 6 -->
+      <div class="store-pickup-card">
+        <img src="https://images.unsplash.com/photo-1565958011457-ce93c6900144" alt="Taco Fiesta" class="store-pickup-img" />
+        <div class="store-pickup-info">
+          <div class="store-pickup-name">Taco Fiesta</div>
+          <div class="store-pickup-category">Mexican Food</div>
+          <div class="store-pickup-location">
+            <i class="fa-solid fa-map-pin"></i>
+            Building C
+          </div>
+          <div class="store-pickup-rating">4.5 ⭐ (140 reviews)</div>
+          <div class="badge-safe-zone">SAFE ZONE</div>
+        </div>
+      </div>
     </div>
   </div>
 
