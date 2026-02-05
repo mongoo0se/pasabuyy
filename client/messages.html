@@ -19,15 +19,20 @@
     }
 
     .messages-container {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 320px 1fr;
       height: calc(100vh - 90px);
       background: white;
+      gap: 0;
     }
 
-    /* Hide sidebar on messages-only view */
+    /* Sidebar */
     .messages-sidebar {
-      display: none;
+      background: var(--card);
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
     .sidebar-header {
