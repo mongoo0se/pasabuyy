@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Marketplace - Multi-Window Dashboard</title>
+    <link rel="stylesheet" href="runner-style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <div class="nav-brand">
+                <h1 class="brand-logo">🚴 RunnerHub</h1>
+                <span class="runner-status online">● Online</span>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn active" data-window="dashboard">
+                    <span class="nav-icon">📊</span>
+                    Dashboard
+                </button>
+                <button class="nav-btn" data-window="orders">
+                    <span class="nav-icon">📦</span>
+                    Available Orders
+                </button>
+                <button class="nav-btn" data-window="active">
+                    <span class="nav-icon">🗺️</span>
+                    Active Delivery
+                </button>
+                <button class="nav-btn" data-window="earnings">
+                    <span class="nav-icon">💰</span>
+                    Earnings
+                </button>
+            </div>
+            <div class="nav-profile">
+                <button class="profile-btn" title="Profile">
+                    <span class="profile-avatar">👨‍🚴</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- 1. DASHBOARD WINDOW -->
+            <section id="dashboard" class="window active">
+                <div class="dashboard-grid">
+                    <!-- Top Stats Row -->
+                    <div class="stats-row">
+                        <div class="stat-card earnings-card">
+                            <div class="stat-header">
+                                <span class="stat-icon">💵</span>
+                                <span class="stat-label">Today's Earnings</span>
+                            </div>
+                            <div class="stat-value" id="todayEarnings">$0.00</div>
+                            <div class="stat-detail" id="earningsDetail">0 orders completed</div>
+                        </div>
+
+                        <div class="stat-card rating-card">
+                            <div class="stat-header">
+                                <span class="stat-icon">⭐</span>
+                                <span class="stat-label">Your Rating</span>
+                            </div>
+                            <div class="stat-value" id="ratingValue">4.9</div>
+                            <div class="stat-detail" id="ratingCount">Based on 342 deliveries</div>
+                        </div>
+
+                        <div class="stat-card orders-card">
+                            <div class="stat-header">
+                                <span class="stat-icon">✅</span>
+                                <span class="stat-label">Orders Complete</span>
+                            </div>
+                            <div class="stat-value" id="ordersComplete">12</div>
+                            <div class="stat-detail">This week: 47</div>
+                        </div>
+
+                        <div class="stat-card time-card">
+                            <div class="stat-header">
+                                <span class="stat-icon">⏱️</span>
+                                <span class="stat-label">Avg Delivery Time</span>
+                            </div>
+                            <div class="stat-value" id="avgTime">18 min</div>
+                            <div class="stat-detail">On-time rate: 98%</div>
+                        </div>
+                    </div>
+
+                    <!-- Middle Section: Active Delivery & Available Orders -->
+                    <div class="dashboard-content">
+                        <!-- Left: Active Delivery Summary -->
+                        <div class="active-delivery-card">
+                            <div class="card-header">
+                                <h3>Current Delivery</h3>
+                                <span id="activeStatus" class="status-badge active">In Progress</span>
+                            </div>
+                            <div id="activeDeliverySummary" class="delivery-summary">
+                                <div class="summary-item">
+                                    <span class="summary-icon">🏪</span>
+                                    <div class="summary-text">
+                                        <span class="summary-label">From</span>
+                                        <span id="fromStore" class="summary-value">Pizza Palace</span>
+                                    </div>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-icon">📍</span>
+                                    <div class="summary-text">
+                                        <span class="summary-label">To</span>
+                                        <span id="toLocation" class="summary-value">123 Main St</span>
+                                    </div>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-icon">💰</span>
+                                    <div class="summary-text">
+                                        <span class="summary-label">Payout</span>
+                                        <span id="deliveryPayout" class="summary-value payout">$5.50</span>
+                                    </div>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-icon">⏰</span>
+                                    <div class="summary-text">
+                                        <span class="summary-label">ETA</span>
+                                        <span id="deliveryETA" class="summary-value">12 min</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" id="viewDeliveryBtn">View Details</button>
+                        </div>
+
+                        <!-- Right: Quick Stats & Performance -->
+                        <div class="performance-card">
+                            <div class="card-header">
+                                <h3>Performance</h3>
+                            </div>
+                            <div class="performance-metrics">
+                                <div class="metric">
+                                    <span class="metric-name">Acceptance Rate</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: 92%;"></div>
+                                    </div>
+                                    <span class="metric-value">92%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-name">On-Time Delivery</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: 98%;"></div>
+                                    </div>
+                                    <span class="metric-value">98%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-name">Customer Rating</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: 97%;"></div>
+                                    </div>
+                                    <span class="metric-value">4.9 ⭐</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-name">This Week Income</span>
+                                    <div class="metric-bar">
+                                        <div class="metric-fill" style="width: 75%;"></div>
+                                    </div>
+                                    <span class="metric-value">$182.50</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom: Upcoming Orders Preview -->
+                    <div class="upcoming-section">
+                        <div class="section-header">
+                            <h3>Next Pending Orders</h3>
+                            <a href="#" class="view-all-link">View All →</a>
+                        </div>
+                        <div class="pending-orders-list" id="pendingOrdersList">
+                            <!-- Orders will be dynamically added -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. AVAILABLE ORDERS WINDOW -->
+            <section id="orders" class="window">
+                <div class="window-header">
+                    <h2>Available Orders</h2>
+                    <div class="order-filters">
+                        <select id="filterDistance" class="filter-select">
+                            <option value="">All Distances</option>
+                            <option value="short">Less than 1 km</option>
+                            <option value="medium">1-3 km</option>
+                            <option value="long">3+ km</option>
+                        </select>
+                        <select id="filterPayout" class="filter-select">
+                            <option value="">All Payouts</option>
+                            <option value="high">$5+</option>
+                            <option value="medium">$3-5</option>
+                            <option value="low">Under $3</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="ordersEmptyState" class="empty-state hidden">
+                    <div class="empty-icon">📭</div>
+                    <h3>No orders available</h3>
+                    <p>Check back soon or adjust your filters</p>
+                </div>
+
+                <div id="ordersGrid" class="orders-grid">
+                    <!-- Order cards will be dynamically generated -->
+                </div>
+            </section>
+
+            <!-- 3. ACTIVE DELIVERY WINDOW -->
+            <section id="active" class="window">
+                <div id="activeEmptyState" class="empty-state">
+                    <div class="empty-icon">🏁</div>
+                    <h3>No active delivery</h3>
+                    <p>Accept an order to start tracking your delivery</p>
+                </div>
+
+                <div id="activeDeliveryContainer" class="active-delivery-container hidden">
+                    <div class="delivery-header">
+                        <h2>Active Delivery</h2>
+                        <span id="activeOrderId" class="order-badge"></span>
+                    </div>
+
+                    <div class="delivery-split-view">
+                        <!-- Left: Delivery Details -->
+                        <div class="delivery-left">
+                            <!-- Pickup Details -->
+                            <div class="delivery-card">
+                                <div class="card-section-header">📍 Pickup Location</div>
+                                <div class="location-details">
+                                    <h4 id="pickupStore">Pizza Palace</h4>
+                                    <p id="pickupAddress">123 Main St, Downtown</p>
+                                    <p id="pickupTime" class="time-info">Estimated wait: 5 min</p>
+                                </div>
+                                <button class="btn btn-secondary" id="arrivedBtn">Mark Arrived</button>
+                            </div>
+
+                            <!-- Dropoff Details -->
+                            <div class="delivery-card">
+                                <div class="card-section-header">🏠 Dropoff Location</div>
+                                <div class="location-details">
+                                    <h4 id="dropoffLocation">456 Oak Ave</h4>
+                                    <p id="dropoffDetails">Apt 305, Building B</p>
+                                    <p id="dropoffTime" class="time-info">Estimated delivery: 18 min</p>
+                                </div>
+                                <button class="btn btn-secondary" id="getDirectionsBtn">Get Directions</button>
+                            </div>
+
+                            <!-- Order Details -->
+                            <div class="delivery-card">
+                                <div class="card-section-header">📦 Order Details</div>
+                                <div id="orderDetailsList" class="details-list">
+                                    <!-- Items will be added dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Customer Info -->
+                            <div class="delivery-card customer-card">
+                                <div class="card-section-header">👤 Customer Info</div>
+                                <div class="customer-info">
+                                    <span class="customer-icon">👨‍💼</span>
+                                    <div class="customer-details">
+                                        <h4 id="customerName">John Doe</h4>
+                                        <div class="customer-rating">
+                                            <span>Rating: </span>
+                                            <span id="customerRating">4.8 ⭐</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="customer-actions">
+                                    <button class="action-btn" title="Call">📞</button>
+                                    <button class="action-btn" title="Message">💬</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Map & ETA -->
+                        <div class="delivery-right">
+                            <div class="map-container">
+                                <div class="map-placeholder">
+                                    <div class="map-content">
+                                        <div class="map-icon">🗺️</div>
+                                        <p>Live Navigation Map</p>
+                                        <p class="map-subtitle">Your route to customer</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="delivery-controls">
+                                <div class="control-item">
+                                    <span class="control-label">Distance</span>
+                                    <span id="remainDistance" class="control-value">1.2 km</span>
+                                </div>
+                                <div class="control-item">
+                                    <span class="control-label">ETA</span>
+                                    <span id="remainETA" class="control-value">12 min</span>
+                                </div>
+                                <div class="control-item">
+                                    <span class="control-label">Payout</span>
+                                    <span id="deliveryPayoutAmount" class="control-value">$5.50</span>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-danger" id="cancelDeliveryBtn">Cancel Delivery</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. EARNINGS WINDOW -->
+            <section id="earnings" class="window">
+                <div class="window-header">
+                    <h2>Earnings & Analytics</h2>
+                </div>
+
+                <div class="earnings-container">
+                    <!-- Summary Cards -->
+                    <div class="earnings-summary">
+                        <div class="earn-card today">
+                            <span class="earn-label">Today's Earnings</span>
+                            <span class="earn-amount" id="summaryToday">$62.50</span>
+                            <span class="earn-detail">12 deliveries</span>
+                        </div>
+                        <div class="earn-card week">
+                            <span class="earn-label">This Week</span>
+                            <span class="earn-amount" id="summaryWeek">$182.50</span>
+                            <span class="earn-detail">47 deliveries</span>
+                        </div>
+                        <div class="earn-card month">
+                            <span class="earn-label">This Month</span>
+                            <span class="earn-amount" id="summaryMonth">$1,245.75</span>
+                            <span class="earn-detail">180 deliveries</span>
+                        </div>
+                        <div class="earn-card total">
+                            <span class="earn-label">Total Earned</span>
+                            <span class="earn-amount" id="summaryTotal">$12,847.00</span>
+                            <span class="earn-detail">2,342 total deliveries</span>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="earnings-tabs">
+                        <button class="tab-btn active" data-tab="daily">Daily</button>
+                        <button class="tab-btn" data-tab="weekly">Weekly</button>
+                        <button class="tab-btn" data-tab="monthly">Monthly</button>
+                    </div>
+
+                    <!-- Chart Placeholder -->
+                    <div class="earnings-chart">
+                        <div class="chart-placeholder">
+                            <div class="chart-bar" style="height: 60%;"></div>
+                            <div class="chart-bar" style="height: 75%;"></div>
+                            <div class="chart-bar" style="height: 80%;"></div>
+                            <div class="chart-bar" style="height: 55%;"></div>
+                            <div class="chart-bar" style="height: 90%;"></div>
+                            <div class="chart-bar" style="height: 85%;"></div>
+                            <div class="chart-bar" style="height: 70%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown Table -->
+                    <div class="earnings-breakdown">
+                        <h3>Daily Breakdown</h3>
+                        <div class="breakdown-table">
+                            <div class="table-header">
+                                <span class="col-date">Date</span>
+                                <span class="col-orders">Orders</span>
+                                <span class="col-earnings">Earnings</span>
+                                <span class="col-distance">Distance</span>
+                            </div>
+                            <div id="breakdownRows" class="table-body">
+                                <!-- Rows will be dynamically added -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div class="payment-methods">
+                        <h3>Payment & Payouts</h3>
+                        <div class="method-cards">
+                            <div class="method-card">
+                                <span class="method-icon">🏦</span>
+                                <div class="method-info">
+                                    <span class="method-name">Bank Account</span>
+                                    <span class="method-detail">****1234 • Ready to withdraw</span>
+                                </div>
+                                <button class="btn btn-secondary" id="withdrawBtn">Withdraw</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

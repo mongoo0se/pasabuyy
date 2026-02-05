@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pa-Buy, Bes</title>
+  <link rel="stylesheet" href="clientDashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <header>
+    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
+    <div class="top-icons">
+      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
+      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
+      <i class="fa-solid fa-user" id="profileIcon"></i>
+    </div>
+  </header>
+
+  <nav class="nav-bar">
+    <button class="nav-btn active" data-page="stores">Stores</button>
+    <button class="nav-btn" data-page="delivery">Delivery</button>
+    <button class="nav-btn" data-page="pickup">Pick-up</button>
+  </nav>
+
+  <div class="slideshow" id="slideshow"></div>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search for food, shops, or deals..." />
+    <button id="searchBtn" class="search-btn"><i class="fa-solid fa-search"></i></button>
+  </div>
+
+  <h2 class="section-title">Featured Stores & Products</h2>
+  <section class="cards-container">
+    <div class="food-card">
+      <img src="https://images.unsplash.com/photo-1604908176997-4315a9d8e7d9" />
+      <div class="food-info">
+        <h3>Burger Combo</h3>
+        <p>Bes Burger House</p>
+        <div class="meta">
+          <span>25–30 mins</span>
+          <span>Delivery</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card">
+      <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe" />
+      <div class="food-info">
+        <h3>Chicken Rice</h3>
+        <p>Pa-Buy Kitchen</p>
+        <div class="meta">
+          <span>20–25 mins</span>
+          <span>Delivery</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card">
+      <img src="https://images.unsplash.com/photo-1529042410759-befb1204b468" />
+      <div class="food-info">
+        <h3>Milk Tea Promo</h3>
+        <p>Teal Cup</p>
+        <div class="meta">
+          <span>15–20 mins</span>
+          <span>Pick-up</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <h2 class="section-title">Recommended Riders</h2>
+  <section class="riders-container" id="ridersContainer">
+  </section>
+
+  <script src="clientDashboard.js"></script>
+</body>
+</html>
