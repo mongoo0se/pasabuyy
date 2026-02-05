@@ -124,11 +124,13 @@ header h1 {
   border-radius: 22px;
   overflow: hidden;
   box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .food-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-8px);
+  box-shadow: 0 16px 35px rgba(16, 185, 129, 0.15);
 }
 
 .food-card img {
@@ -180,14 +182,15 @@ header h1 {
   border-radius: 22px;
   overflow: hidden;
   box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
   cursor: pointer;
   padding: 20px;
   text-align: center;
 }
 
 .rider-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-8px);
+  box-shadow: 0 16px 35px rgba(16, 185, 129, 0.15);
 }
 
 .rider-avatar {

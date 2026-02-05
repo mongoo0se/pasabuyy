@@ -146,15 +146,19 @@
       display: flex;
       flex-direction: column;
       background: white;
+      height: 100%;
+      overflow: hidden;
     }
 
     .chat-header {
       padding: 16px;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 2px solid #e5e7eb;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--card);
+      background: white;
+      flex-shrink: 0;
+      z-index: 10;
     }
 
     .chat-header-info {
@@ -206,6 +210,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      min-height: 0;
     }
 
     .message-group {
@@ -267,11 +272,12 @@
     /* Input Area */
     .chat-input-area {
       padding: 16px;
-      border-top: 1px solid #e5e7eb;
-      background: var(--card);
+      border-top: 2px solid #e5e7eb;
+      background: white;
       display: flex;
       gap: 8px;
       align-items: flex-end;
+      flex-shrink: 0;
     }
 
     .chat-input-actions {
