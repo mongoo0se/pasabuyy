@@ -1,0 +1,137 @@
+:root {
+  --emerald: #10b981;
+  --emerald-dark: #047857;
+  --teal: #14b8a6;
+  --bg: #f0fdfa;
+  --card: #ffffff;
+  --text-dark: #0f172a;
+  --text-muted: #475569;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-dark);
+}
+
+header {
+  background: var(--emerald);
+  padding: 18px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
+}
+
+header h1 {
+  color: #fff;
+  margin: 0;
+}
+
+.top-icons i {
+  color: #fff;
+  font-size: 20px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.nav-bar {
+  background: var(--emerald-dark);
+  padding: 14px 32px;
+  display: flex;
+  gap: 30px;
+}
+
+.nav-bar button {
+  background: none;
+  border: none;
+  color: #e5fef7;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nav-bar button.active {
+  border-bottom: 3px solid var(--teal);
+  color: #fff;
+  padding-bottom: 6px;
+}
+
+.slideshow {
+  width: 90%;
+  height: 200px;
+  margin: 28px auto;
+  border-radius: 22px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.search-container input {
+  width: 90%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: none;
+  outline: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.cards-container {
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.food-card {
+  background: var(--card);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.food-card:hover {
+  transform: translateY(-6px);
+}
+
+.food-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.food-info {
+  padding: 16px;
+}
+
+.food-info h3 {
+  margin: 0 0 6px;
+}
+
+.food-info p {
+  margin: 4px 0;
+  color: var(--text-muted);
+}
+
+.food-info .meta {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--emerald-dark);
+  font-weight: 600;
+}
