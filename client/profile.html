@@ -9,45 +9,694 @@
   <style>
     .page-container {
       width: 90%;
+      max-width: 1200px;
       margin: 40px auto;
       min-height: calc(100vh - 200px);
     }
+
     .page-title {
       font-size: 28px;
       color: var(--text-dark);
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
-    .profile-card {
+
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 30px;
+    }
+
+    /* Sidebar */
+    .profile-sidebar {
       background: var(--card);
-      border-radius: 22px;
-      padding: 40px;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-      text-align: center;
-      max-width: 500px;
-      margin: 0 auto;
+      border-radius: 16px;
+      padding: 30px 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      height: fit-content;
+      position: sticky;
+      top: 20px;
     }
+
+    .profile-avatar-container {
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
     .profile-avatar {
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      background: var(--teal);
-      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--emerald) 0%, var(--teal) 100%);
+      margin: 0 auto 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 48px;
       color: white;
+      object-fit: cover;
+      position: relative;
+      overflow: hidden;
     }
-    .profile-card h2 {
+
+    .upload-avatar-btn {
+      position: absolute;
+      bottom: 0;
+      right: -50%;
+      width: 40px;
+      height: 40px;
+      background: var(--emerald);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .upload-avatar-btn:hover {
+      right: -40%;
+      background: var(--emerald-dark);
+    }
+
+    .profile-avatar-container:hover .upload-avatar-btn {
+      right: -5%;
+    }
+
+    #avatarInput {
+      display: none;
+    }
+
+    .profile-name {
+      font-size: 20px;
+      font-weight: 700;
       color: var(--text-dark);
-      margin: 20px 0 10px;
+      margin: 0;
     }
-    .profile-card p {
+
+    .profile-email {
       color: var(--text-muted);
-      margin: 8px 0;
+      font-size: 14px;
+      margin: 6px 0 0 0;
     }
+
+    .profile-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .tab-btn {
+      padding: 12px 16px;
+      border: none;
+      background: #f3f4f6;
+      color: var(--text-muted);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      text-align: left;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tab-btn:hover {
+      background: #e5e7eb;
+    }
+
+    .tab-btn.active {
+      background: var(--emerald);
+      color: white;
+    }
+
+    /* Main Content */
+    .profile-content {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .content-section {
+      display: none;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    .section-header {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 0 0 24px 0;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-row.three-cols {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--emerald);
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: var(--emerald-dark);
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: var(--text-dark);
+      flex: 1;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    /* Payment Methods */
+    .payment-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .payment-card {
+      background: linear-gradient(135deg, var(--emerald) 0%, var(--teal) 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .payment-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .payment-card-type {
+      font-size: 12px;
+      opacity: 0.9;
+      margin-bottom: 12px;
+    }
+
+    .payment-card-number {
+      font-size: 16px;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .payment-card-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .payment-card-holder {
+      font-size: 12px;
+    }
+
+    .payment-card-expiry {
+      font-size: 12px;
+    }
+
+    .payment-card-delete {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .payment-card-delete:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    .add-payment-method {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .payment-method-option {
+      border: 2px dashed #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .payment-method-option:hover {
+      border-color: var(--emerald);
+      background: #f0fdfa;
+    }
+
+    .payment-method-icon {
+      font-size: 32px;
+      color: var(--emerald);
+      margin-bottom: 12px;
+    }
+
+    .payment-method-name {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 0 0 20px 0;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
     .back-link {
       display: inline-block;
+      margin-bottom: 20px;
+      color: var(--emerald);
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .success-message {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .profile-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-sidebar {
+        position: static;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row.three-cols {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
+    <div class="top-icons">
+      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
+      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
+      <i class="fa-solid fa-user" id="profileIcon"></i>
+    </div>
+  </header>
+
+  <div class="page-container">
+    <a class="back-link" onclick="window.location.href='clientDashboard.html'">← Back to Dashboard</a>
+    <h2 class="page-title">My Profile</h2>
+
+    <div class="profile-layout">
+      <!-- Sidebar -->
+      <div class="profile-sidebar">
+        <div class="profile-avatar-container">
+          <div class="profile-avatar" id="profileAvatarDisplay">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <button class="upload-avatar-btn" id="uploadAvatarBtn">
+            <i class="fa-solid fa-camera"></i>
+          </button>
+          <input type="file" id="avatarInput" accept="image/*" />
+          <p class="profile-name">John Doe</p>
+          <p class="profile-email">john@example.com</p>
+        </div>
+
+        <div class="profile-tabs">
+          <button class="tab-btn active" data-tab="personal">
+            <i class="fa-solid fa-user"></i> Personal Info
+          </button>
+          <button class="tab-btn" data-tab="payment">
+            <i class="fa-solid fa-wallet"></i> Payment Methods
+          </button>
+          <button class="tab-btn" data-tab="wallet">
+            <i class="fa-solid fa-money-bill"></i> My Wallet
+          </button>
+          <button class="tab-btn" data-tab="security">
+            <i class="fa-solid fa-lock"></i> Security
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="profile-content">
+        <!-- Personal Information -->
+        <div class="content-section active" data-section="personal">
+          <h3 class="section-header">Personal Information</h3>
+          <div class="success-message" id="personalSuccessMsg">
+            <i class="fa-solid fa-check-circle"></i> Profile updated successfully!
+          </div>
+          
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="fullName" value="John Doe" />
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="email" value="john@example.com" />
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="phone" value="+63 912 345 6789" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" id="dob" value="1995-05-15" />
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select id="gender">
+                <option value="">Select Gender</option>
+                <option value="male" selected>Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row three-cols">
+            <div class="form-group">
+              <label>Department/School</label>
+              <input type="text" id="department" placeholder="e.g., College of Engineering" value="College of IT" />
+            </div>
+            <div class="form-group">
+              <label>Course/Program</label>
+              <input type="text" id="course" placeholder="e.g., Computer Science" value="Computer Science" />
+            </div>
+            <div class="form-group">
+              <label>Section</label>
+              <input type="text" id="section" placeholder="e.g., A" value="1A" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Address</label>
+            <textarea id="address" placeholder="Enter your address">123 Main St, Barangay, City</textarea>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" id="savePersonalBtn">Save Changes</button>
+            <button class="btn btn-secondary" onclick="resetPersonalForm()">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="content-section" data-section="payment">
+          <h3 class="section-header">Payment Methods</h3>
+          <div class="success-message" id="paymentSuccessMsg">
+            <i class="fa-solid fa-check-circle"></i> Payment method saved successfully!
+          </div>
+
+          <div class="payment-cards-grid" id="paymentCardsContainer">
+            <!-- Payment cards will be rendered here -->
+          </div>
+
+          <h4 style="margin-top: 30px; margin-bottom: 16px; color: var(--text-dark); font-weight: 600;">Add New Payment Method</h4>
+          <div class="add-payment-method" id="paymentMethodOptions">
+            <!-- Payment method options will be rendered here -->
+          </div>
+        </div>
+
+        <!-- My Wallet -->
+        <div class="content-section" data-section="wallet">
+          <h3 class="section-header">My Wallet</h3>
+          <div class="success-message" id="walletSuccessMsg">
+            <i class="fa-solid fa-check-circle"></i> Wallet setup successful!
+          </div>
+
+          <div style="background: linear-gradient(135deg, var(--emerald) 0%, var(--teal) 100%); color: white; padding: 30px; border-radius: 16px; margin-bottom: 24px;">
+            <p style="margin: 0 0 8px 0; opacity: 0.9; font-size: 14px;">Total Balance</p>
+            <h2 style="margin: 0; font-size: 32px; font-weight: 700;">₱2,450.50</h2>
+          </div>
+
+          <h4 style="margin-bottom: 16px; color: var(--text-dark); font-weight: 600;">Linked E-Wallet Accounts</h4>
+          <div style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; background: #fbbf24; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                  <i class="fa-solid fa-g"></i>
+                </div>
+                <div>
+                  <p style="margin: 0; font-weight: 600; color: var(--text-dark);">GCash</p>
+                  <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 12px;">Balance: ₱1,200.00</p>
+                </div>
+              </div>
+              <button class="btn btn-secondary" style="flex: 0; padding: 8px 16px; font-size: 12px;">View</button>
+            </div>
+          </div>
+
+          <div style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; background: #06b6d4; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                  <i class="fa-solid fa-mobile"></i>
+                </div>
+                <div>
+                  <p style="margin: 0; font-weight: 600; color: var(--text-dark);">Bank Transfer Account</p>
+                  <p style="margin: 4px 0 0 0; color: var(--text-muted); font-size: 12px;">Balance: ₱1,250.50</p>
+                </div>
+              </div>
+              <button class="btn btn-secondary" style="flex: 0; padding: 8px 16px; font-size: 12px;">View</button>
+            </div>
+          </div>
+
+          <h4 style="margin-bottom: 16px; color: var(--text-dark); font-weight: 600;">Add New Wallet Connection</h4>
+          <div class="add-payment-method">
+            <div class="payment-method-option" id="addGCashBtn">
+              <div class="payment-method-icon"><i class="fa-solid fa-wallet"></i></div>
+              <p class="payment-method-name">Link GCash</p>
+            </div>
+            <div class="payment-method-option" id="addApplePayBtn">
+              <div class="payment-method-icon"><i class="fa-brands fa-apple"></i></div>
+              <p class="payment-method-name">Add Apple Pay</p>
+            </div>
+            <div class="payment-method-option">
+              <div class="payment-method-icon"><i class="fa-solid fa-credit-card"></i></div>
+              <p class="payment-method-name">Bank Account</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div class="content-section" data-section="security">
+          <h3 class="section-header">Security Settings</h3>
+          <div class="success-message" id="securitySuccessMsg">
+            <i class="fa-solid fa-check-circle"></i> Password changed successfully!
+          </div>
+
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" placeholder="Enter current password" />
+          </div>
+
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" placeholder="Enter new password" />
+          </div>
+
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password" placeholder="Confirm new password" />
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" id="changePasswordBtn">Change Password</button>
+            <button class="btn btn-secondary" onclick="resetSecurityForm()">Cancel</button>
+          </div>
+
+          <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+          <h4 style="margin-bottom: 16px; color: var(--text-dark); font-weight: 600;">Two-Factor Authentication</h4>
+          <p style="color: var(--text-muted); margin: 0 0 16px 0;">Add an extra layer of security to your account</p>
+          <button class="btn btn-primary" style="max-width: 200px;">Enable 2FA</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Method Modal -->
+  <div class="modal" id="paymentModal">
+    <div class="modal-content" style="position: relative;">
+      <button class="modal-close" id="paymentModalClose">&times;</button>
+      <h3 class="modal-title" id="paymentModalTitle">Add Credit Card</h3>
+      
+      <div class="form-group">
+        <label>Cardholder Name</label>
+        <input type="text" id="cardholderName" placeholder="John Doe" />
+      </div>
+
+      <div class="form-group">
+        <label>Card Number</label>
+        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5" />
+        </div>
+        <div class="form-group">
+          <label>CVV</label>
+          <input type="text" id="cvv" placeholder="123" maxlength="3" />
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="addCardBtn">Add Card</button>
+        <button class="btn btn-secondary" id="paymentModalClose2">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="profile.js"></script>
+  <script src="clientDashboard.js"></script>
+</body>
+</html>
       margin-bottom: 20px;
       color: var(--emerald);
       text-decoration: none;

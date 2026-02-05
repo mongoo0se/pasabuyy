@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout - Pa-Buy, Bes</title>
+  <link rel="stylesheet" href="clientDashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .page-container {
+      width: 90%;
+      margin: 40px auto;
+      min-height: calc(100vh - 200px);
+    }
+
+    .page-title {
+      font-size: 28px;
+      color: var(--text-dark);
+      margin-bottom: 30px;
+    }
+
+    .checkout-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 30px;
+    }
+
+    .checkout-section {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .section-title {
+      font-size: 18px;
+      color: var(--text-dark);
+      margin: 0 0 20px 0;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .delivery-options {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .option-btn.active {
+      border-color: var(--emerald);
+      color: var(--emerald);
+      background: #f0fdfa;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .payment-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .payment-method {
+      padding: 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+    }
+
+    .payment-method:hover {
+      border-color: var(--teal);
+      background: #f0fdfa;
+    }
+
+    .payment-method input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .payment-method.active {
+      border-color: var(--emerald);
+      background: #f0fdfa;
+    }
+
+    .payment-icon {
+      font-size: 24px;
+      color: var(--emerald);
+      width: 40px;
+      text-align: center;
+    }
+
+    .payment-info {
+      flex: 1;
+    }
+
+    .payment-info h4 {
+      margin: 0;
+      color: var(--text-dark);
+      font-size: 16px;
+    }
+
+    .payment-info p {
+      margin: 4px 0 0 0;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* Order Summary */
+    .order-summary {
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+    }
+
+    .receipt-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .receipt-item:last-of-type {
+      border-bottom: none;
+    }
+
+    .receipt-item-name {
+      color: var(--text-dark);
+      flex: 1;
+    }
+
+    .receipt-item-qty {
+      color: var(--text-muted);
+      margin: 0 12px;
+    }
+
+    .receipt-item-price {
+      color: var(--emerald);
+      font-weight: 700;
+    }
+
+    .receipt-divider {
+      height: 2px;
+      background: #e5e7eb;
+      margin: 16px 0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      color: var(--text-muted);
+    }
+
+    .summary-row.total {
+      font-weight: 700;
+      color: var(--text-dark);
+      font-size: 18px;
+      margin-top: 12px;
+    }
+
+    .final-checkout-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--emerald);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.2s;
+    }
+
+    .final-checkout-btn:hover {
+      background: var(--emerald-dark);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--emerald);
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 1024px) {
+      .checkout-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .order-summary {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
+    <div class="top-icons">
+      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
+      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
+      <i class="fa-solid fa-user" id="profileIcon"></i>
+    </div>
+  </header>
+
+  <div class="page-container">
+    <a class="back-link" onclick="window.location.href='cart.html'">← Back to Cart</a>
+    <h2 class="page-title">Checkout</h2>
+
+    <div class="checkout-wrapper">
+      <!-- Main Checkout Form -->
+      <div>
+        <!-- Delivery Options -->
+        <div class="checkout-section">
+          <h3 class="section-title">Delivery Option</h3>
+          <div class="delivery-options">
+            <button class="option-btn active" data-delivery="delivery">
+              <i class="fa-solid fa-truck"></i> Delivery
+            </button>
+            <button class="option-btn" data-delivery="pickup">
+              <i class="fa-solid fa-location-dot"></i> Pick-up
+            </button>
+          </div>
+        </div>
+
+        <!-- Delivery Address -->
+        <div class="checkout-section">
+          <h3 class="section-title">Delivery Address</h3>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="Enter your full name" value="John Doe" />
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" placeholder="Enter your phone number" value="+63 912 345 6789" />
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <input type="text" placeholder="Enter your address" value="123 Main St, Barangay, City" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" placeholder="City" value="Cebu" />
+            </div>
+            <div class="form-group">
+              <label>Postal Code</label>
+              <input type="text" placeholder="Postal Code" value="6000" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="checkout-section">
+          <h3 class="section-title">Payment Method</h3>
+          <div class="payment-methods" id="paymentMethods">
+            <!-- Payment methods will be rendered here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="order-summary checkout-section">
+        <h3 class="section-title">Order Summary</h3>
+        <div id="orderItemsReceipt"></div>
+        
+        <div class="receipt-divider"></div>
+
+        <div class="summary-row">
+          <span>Subtotal:</span>
+          <span id="receiptSubtotal">₱0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery Fee:</span>
+          <span id="receiptDeliveryFee">₱0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Tax:</span>
+          <span id="receiptTax">₱0.00</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total:</span>
+          <span id="receiptTotal">₱0.00</span>
+        </div>
+
+        <button id="finalCheckoutBtn" class="final-checkout-btn">
+          Complete Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="checkout.js"></script>
+  <script src="clientDashboard.js"></script>
+</body>
+</html>

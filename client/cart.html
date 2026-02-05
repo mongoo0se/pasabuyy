@@ -12,27 +12,257 @@
       margin: 40px auto;
       min-height: calc(100vh - 200px);
     }
+
     .page-title {
       font-size: 28px;
       color: var(--text-dark);
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
+
+    .cart-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .select-all-checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .cart-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 30px;
+    }
+
+    .cart-items-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .store-group {
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .store-header {
+      background: linear-gradient(135deg, var(--emerald) 0%, var(--teal) 100%);
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .store-header h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .store-items {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 40px 1fr auto;
+      gap: 16px;
+      padding: 16px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      align-items: center;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .item-info h4 {
+      margin: 0 0 6px 0;
+      color: var(--text-dark);
+      font-size: 16px;
+    }
+
+    .item-info p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .item-price {
+      color: var(--emerald);
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f3f4f6;
+      border-radius: 8px;
+      padding: 6px;
+    }
+
+    .quantity-btn {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: var(--emerald);
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .quantity-btn:hover {
+      background: var(--emerald-dark);
+    }
+
+    .quantity-display {
+      width: 40px;
+      text-align: center;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
     .empty-state {
       text-align: center;
       padding: 60px 20px;
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     }
+
     .empty-state i {
       font-size: 64px;
       color: var(--teal);
       margin-bottom: 20px;
     }
+
+    .empty-state h3 {
+      color: var(--text-dark);
+      margin: 0 0 10px 0;
+    }
+
+    .empty-state p {
+      color: var(--text-muted);
+      margin: 0 0 20px 0;
+    }
+
+    .continue-shopping-btn {
+      background: var(--emerald);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .continue-shopping-btn:hover {
+      background: var(--emerald-dark);
+    }
+
+    /* Sidebar */
+    .cart-summary {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+
+    .cart-summary h3 {
+      margin: 0 0 20px 0;
+      color: var(--text-dark);
+      font-size: 18px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      color: var(--text-muted);
+    }
+
+    .summary-row.total {
+      border-top: 2px solid #e5e7eb;
+      padding-top: 12px;
+      margin-top: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+      font-size: 18px;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--emerald);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.2s;
+    }
+
+    .checkout-btn:hover:not(:disabled) {
+      background: var(--emerald-dark);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .checkout-btn:disabled {
+      background: #d1d5db;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 1024px) {
+      .cart-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .cart-summary {
+        position: static;
+      }
+    }
+
     .back-link {
       display: inline-block;
       margin-bottom: 20px;
       color: var(--emerald);
       text-decoration: none;
       cursor: pointer;
+      font-size: 14px;
     }
+
     .back-link:hover {
       text-decoration: underline;
     }
@@ -50,14 +280,59 @@
 
   <div class="page-container">
     <a class="back-link" onclick="window.location.href='clientDashboard.html'">← Back to Dashboard</a>
-    <h2 class="page-title">Your Cart</h2>
-    <div class="empty-state">
+    <div class="page-title">
+      <span>Your Cart</span>
+    </div>
+
+    <div id="emptyCartState" class="empty-state" style="display: none;">
       <i class="fa-solid fa-shopping-cart"></i>
-      <p style="color: var(--text-muted); font-size: 18px;">Your cart is empty</p>
-      <p style="color: var(--text-muted);">Add items from the dashboard to get started!</p>
+      <h3>Your cart is empty</h3>
+      <p>Add items from the dashboard to get started!</p>
+      <button class="continue-shopping-btn" onclick="window.location.href='clientDashboard.html'">
+        Continue Shopping
+      </button>
+    </div>
+
+    <div id="cartContent" style="display: none;">
+      <div class="cart-header">
+        <input type="checkbox" id="selectAllCheckbox" class="select-all-checkbox" />
+        <label for="selectAllCheckbox" style="cursor: pointer; color: var(--text-dark); font-weight: 600;">
+          Select All
+        </label>
+      </div>
+
+      <div class="cart-wrapper">
+        <div class="cart-items-container" id="cartItemsContainer">
+          <!-- Cart items grouped by store will be rendered here -->
+        </div>
+
+        <div class="cart-summary">
+          <h3>Order Summary</h3>
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span id="subtotal">₱0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Delivery Fee:</span>
+            <span id="deliveryFee">₱0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Tax:</span>
+            <span id="tax">₱0.00</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total:</span>
+            <span id="totalAmount">₱0.00</span>
+          </div>
+          <button id="checkoutBtn" class="checkout-btn" disabled>
+            Proceed to Checkout
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
+  <script src="cart.js"></script>
   <script src="clientDashboard.js"></script>
 </body>
 </html>

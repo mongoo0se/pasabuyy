@@ -7,34 +7,357 @@
   <link rel="stylesheet" href="clientDashboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    .page-container {
-      width: 90%;
-      margin: 40px auto;
-      min-height: calc(100vh - 200px);
+    body {
+      margin: 0;
+      padding: 0;
     }
-    .page-title {
-      font-size: 28px;
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .messages-container {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      height: calc(100vh - 90px);
+      background: var(--bg);
+    }
+
+    /* Sidebar */
+    .messages-sidebar {
+      background: var(--card);
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 16px;
+      background: linear-gradient(135deg, var(--emerald) 0%, var(--teal) 100%);
+      color: white;
+    }
+
+    .sidebar-header h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .sidebar-search {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .sidebar-search input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .sidebar-search input:focus {
+      border-color: var(--emerald);
+    }
+
+    .conversations-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    .conversation-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f3f4f6;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .conversation-item:hover {
+      background: #f9fafb;
+    }
+
+    .conversation-item.active {
+      background: #f0fdfa;
+      border-left: 4px solid var(--emerald);
+      padding-left: 12px;
+    }
+
+    .conversation-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--teal);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .conversation-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .conversation-name {
+      font-weight: 600;
       color: var(--text-dark);
-      margin-bottom: 20px;
+      margin: 0 0 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .empty-state {
+
+    .conversation-preview {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .conversation-preview.unread {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    .unread-badge {
+      width: 20px;
+      height: 20px;
+      background: var(--emerald);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Main Chat Area */
+    .chat-area {
+      display: flex;
+      flex-direction: column;
+      background: white;
+    }
+
+    .chat-header {
+      padding: 16px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card);
+    }
+
+    .chat-header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-header-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--teal);
+      object-fit: cover;
+    }
+
+    .chat-header-details h3 {
+      margin: 0;
+      color: var(--text-dark);
+      font-size: 16px;
+    }
+
+    .chat-header-status {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .chat-header-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    .chat-header-actions i {
+      color: var(--emerald);
+      cursor: pointer;
+      font-size: 18px;
+      transition: color 0.2s;
+    }
+
+    .chat-header-actions i:hover {
+      color: var(--emerald-dark);
+    }
+
+    .messages-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .message-group.sent {
+      justify-content: flex-end;
+    }
+
+    .message-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--teal);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .message-bubble {
+      max-width: 60%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      word-wrap: break-word;
+    }
+
+    .message-group.received .message-bubble {
+      background: #e5e7eb;
+      color: var(--text-dark);
+    }
+
+    .message-group.sent .message-bubble {
+      background: var(--emerald);
+      color: white;
+    }
+
+    .message-time {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin: 12px 0;
+    }
+
+    .empty-chat {
       text-align: center;
       padding: 60px 20px;
+      color: var(--text-muted);
     }
-    .empty-state i {
+
+    .empty-chat i {
       font-size: 64px;
       color: var(--teal);
       margin-bottom: 20px;
+      display: block;
     }
-    .back-link {
-      display: inline-block;
-      margin-bottom: 20px;
+
+    /* Input Area */
+    .chat-input-area {
+      padding: 16px;
+      border-top: 1px solid #e5e7eb;
+      background: var(--card);
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .chat-input-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .input-action-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: #f3f4f6;
       color: var(--emerald);
-      text-decoration: none;
+      border-radius: 50%;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.2s;
     }
-    .back-link:hover {
-      text-decoration: underline;
+
+    .input-action-btn:hover {
+      background: var(--emerald);
+      color: white;
+    }
+
+    .chat-input-field {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f3f4f6;
+      border-radius: 20px;
+      padding: 8px 12px;
+    }
+
+    .chat-input-field input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .send-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--emerald);
+      color: white;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .send-btn:hover {
+      background: var(--emerald-dark);
+    }
+
+    @media (max-width: 768px) {
+      .messages-container {
+        grid-template-columns: 1fr;
+      }
+
+      .messages-sidebar {
+        position: absolute;
+        left: -320px;
+        height: 100%;
+        width: 320px;
+        z-index: 1000;
+        transition: left 0.3s;
+      }
+
+      .messages-sidebar.show {
+        left: 0;
+      }
+
+      .message-bubble {
+        max-width: 85%;
+      }
     }
   </style>
 </head>
@@ -47,6 +370,73 @@
       <i class="fa-solid fa-user" id="profileIcon"></i>
     </div>
   </header>
+
+  <div class="messages-container">
+    <!-- Sidebar with Conversations -->
+    <div class="messages-sidebar">
+      <div class="sidebar-header">
+        <h2>Messages</h2>
+      </div>
+      <div class="sidebar-search">
+        <input type="text" id="searchInput" placeholder="Search conversations..." />
+      </div>
+      <div class="conversations-list" id="conversationsList">
+        <!-- Conversations will be rendered here -->
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+      <div id="emptyChatState" style="display: none;">
+        <div class="empty-chat">
+          <i class="fa-solid fa-comments"></i>
+          <h3>Select a conversation</h3>
+          <p>Choose a conversation from the list to start messaging</p>
+        </div>
+      </div>
+
+      <div id="chatContent" style="display: none;">
+        <!-- Chat Header -->
+        <div class="chat-header">
+          <div class="chat-header-info">
+            <img class="chat-header-avatar" id="chatHeaderAvatar" src="" alt="" />
+            <div>
+              <h3 id="chatHeaderName"></h3>
+              <p class="chat-header-status" id="chatHeaderStatus"></p>
+            </div>
+          </div>
+          <div class="chat-header-actions">
+            <i class="fa-solid fa-phone-volume"></i>
+            <i class="fa-solid fa-video"></i>
+            <i class="fa-solid fa-circle-info"></i>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="messages-content" id="messagesContent">
+          <!-- Messages will be rendered here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-area">
+          <div class="chat-input-actions">
+            <button class="input-action-btn"><i class="fa-solid fa-plus"></i></button>
+            <button class="input-action-btn"><i class="fa-solid fa-image"></i></button>
+          </div>
+          <div class="chat-input-field">
+            <input type="text" id="messageInput" placeholder="Aa" />
+            <button class="send-btn" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="messages.js"></script>
+  <script src="clientDashboard.js"></script>
+</body>
+</html>
+
 
   <div class="page-container">
     <a class="back-link" onclick="window.location.href='clientDashboard.html'">← Back to Dashboard</a>
