@@ -119,25 +119,34 @@ function selectConversation(conversationId) {
   
   // Render messages
   renderMessages(conversation.messages);
-  
-  // Scroll to bottom
-  setTimeout(() => {
-    const messagesContent = document.getElementById('messagesContent');
-    messagesContent.scrollTop = messagesContent.scrollHeight;
-  }, 0);
 }
 
 // Render messages
 function renderMessages(messages) {
   const messagesContent = document.getElementById('messagesContent');
+  const conversationData = conversationsData.find(c => c.id === currentConversationId);
   
-  messagesContent.innerHTML = messages.map(msg => `
-    <div class="message-group ${msg.sender === 'user' ? 'sent' : 'received'}">
-      ${msg.sender === 'user' ? '' : '<img src="' + conversationsData.find(c => c.id === currentConversationId).avatar + '" alt="" class="message-avatar" />'}
-      <div class="message-bubble">${msg.text}</div>
-      ${msg.sender === 'user' ? '<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="" class="message-avatar" />' : ''}
-    </div>
-  `).join('');
+  messagesContent.innerHTML = messages.map(msg => {
+    if (msg.sender === 'user') {
+      return `
+        <div class="message-group sent">
+          <div class="message-bubble">${msg.text}</div>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="message-group received">
+          <img src="${conversationData.avatar}" alt="" class="message-avatar" />
+          <div class="message-bubble">${msg.text}</div>
+        </div>
+      `;
+    }
+  }).join('');
+  
+  // Scroll to bottom
+  setTimeout(() => {
+    messagesContent.scrollTop = messagesContent.scrollHeight;
+  }, 0);
 }
 
 // Send message
@@ -182,15 +191,7 @@ function sendMessage() {
     });
     
     renderMessages(conversation.messages);
-    
-    // Scroll to bottom
-    const messagesContent = document.getElementById('messagesContent');
-    messagesContent.scrollTop = messagesContent.scrollHeight;
   }, 1000);
-  
-  // Scroll to bottom
-  const messagesContent = document.getElementById('messagesContent');
-  messagesContent.scrollTop = messagesContent.scrollHeight;
 }
 
 // Event listeners
