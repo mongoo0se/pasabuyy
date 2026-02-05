@@ -1,6 +1,4 @@
-/* ===================================
-   RUNNER DASHBOARD STATE MANAGEMENT
-   =================================== */
+
 
 class DashboardState {
     constructor() {
