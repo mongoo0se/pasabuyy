@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Dashboard | Admin View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans" x-data="{ tab: 'orders' }">
+
+    <div class="flex h-screen overflow-hidden">
+        <aside class="w-64 bg-[#312E81] text-white flex-shrink-0 shadow-xl">
+            <div class="p-6 text-xl font-bold flex items-center gap-3 border-b border-indigo-800">
+                <i class="fas fa-store text-yellow-400"></i>
+                <span>Store Insights</span>
+            </div>
+            <nav class="mt-6 px-4 space-y-2">
+                <a href="admindash.html" class="block p-3 hover:bg-indigo-800 rounded-lg transition text-indigo-100">
+                    <i class="fas fa-chart-line mr-2"></i> Admin Dashboard
+                </a>
+                <a href="runners.html" class="block p-3 hover:bg-indigo-800 rounded-lg transition text-indigo-100">
+                    <i class="fas fa-truck-fast mr-2"></i> Runner Portal
+                </a>
+                <div class="border-t border-indigo-800 my-4"></div>
+                <button @click="tab = 'orders'" :class="tab === 'orders' ? 'bg-indigo-700' : ''" class="w-full text-left p-3 rounded-lg hover:bg-indigo-800 transition">
+                    <i class="fas fa-receipt mr-2"></i> Store Orders
+                </button>
+                <button @click="tab = 'history'" :class="tab === 'history' ? 'bg-indigo-700' : ''" class="w-full text-left p-3 rounded-lg hover:bg-indigo-800 transition">
+                    <i class="fas fa-history mr-2"></i> Transaction History
+                </button>
+            </nav>
+        </aside>
+
+        <main class="flex-1 flex flex-col overflow-y-auto">
+            <header class="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm">
+                <h2 class="text-xl font-bold text-gray-800">Store Activity Monitor</h2>
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">Live Updates</span>
+            </header>
+
+            <div class="p-8">
+                <div x-show="tab === 'orders'">
+                    <h3 class="text-lg font-bold text-gray-700 mb-4">Current Runner Pickups</h3>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 text-gray-400 text-[10px] uppercase font-bold tracking-widest">
+                                <tr>
+                                    <th class="p-4">Store Name</th>
+                                    <th class="p-4">Assigned Runner</th>
+                                    <th class="p-4">Order Details</th>
+                                    <th class="p-4">Store Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="p-4 font-bold text-gray-800">Burger King</td>
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-2">
+                                            <div class="h-8 w-8 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xs font-bold">DF</div>
+                                            <span class="text-sm">Dave Fastman</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4 text-sm text-gray-600">1x Whopper Meal, 1x Coke</td>
+                                    <td class="p-4">
+                                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold animate-pulse">Preparing</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div x-show="tab === 'history'">
+                    <h3 class="text-lg font-bold text-gray-700 mb-4">Runner-Store Financial History</h3>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 text-gray-400 text-[10px] uppercase font-bold tracking-widest">
+                                <tr>
+                                    <th class="p-4">Date/Time</th>
+                                    <th class="p-4">Store Owner</th>
+                                    <th class="p-4">Runner</th>
+                                    <th class="p-4">Amount Paid</th>
+                                    <th class="p-4">Payment Method</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-sm">
+                                <tr>
+                                    <td class="p-4 text-gray-500">Feb 5, 11:00 PM</td>
+                                    <td class="p-4 font-bold">Sarah Jenkins (BK)</td>
+                                    <td class="p-4">Dave Fastman</td>
+                                    <td class="p-4 font-bold text-green-600">$12.50</td>
+                                    <td class="p-4"><span class="bg-gray-100 px-2 py-1 rounded text-xs">Cash at Counter</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 text-gray-500">Feb 5, 10:15 PM</td>
+                                    <td class="p-4 font-bold">Mike Ross (Pizza Hut)</td>
+                                    <td class="p-4">Elena Swift</td>
+                                    <td class="p-4 font-bold text-green-600">$22.00</td>
+                                    <td class="p-4"><span class="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs italic font-bold">Digital Wallet</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

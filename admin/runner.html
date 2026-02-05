@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Runner Performance | Admin Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-[#f8fafc] font-sans" x-data="runnerStats()">
+
+    <div class="flex h-screen overflow-hidden">
+        <aside class="w-64 bg-indigo-950 text-white flex-shrink-0 flex flex-col shadow-xl">
+            <div class="p-6 text-xl font-bold flex items-center gap-3 border-b border-indigo-900 text-yellow-400">
+                <i class="fas fa-shield-halved"></i><span>Admin Panel</span>
+            </div>
+            <nav class="mt-6 px-4 space-y-2 flex-1">
+                <a href="main.html" class="block p-3 hover:bg-indigo-900 rounded-lg transition text-indigo-200"><i class="fas fa-th-large mr-2"></i> Dashboard</a>
+                <a href="runners.html" class="w-full flex items-center gap-3 p-3 rounded-xl bg-indigo-800 text-white font-bold shadow-lg">
+                    <i class="fas fa-motorcycle"></i> Runners
+                </a>
+                <a href="stores.html" class="block p-3 hover:bg-indigo-900 rounded-lg transition text-indigo-200"><i class="fas fa-store mr-2"></i> Stores</a>
+                <a href="clients.html" class="block p-3 hover:bg-indigo-900 rounded-lg transition text-indigo-200"><i class="fas fa-users mr-2"></i> Clients</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 flex flex-col overflow-y-auto">
+            
+            <header class="bg-white border-b px-8 py-6 sticky top-0 z-10 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-black text-gray-800 uppercase tracking-tight">Runner Monitoring</h2>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Performance & Logistics Oversight</p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="bg-yellow-50 px-5 py-2 rounded-2xl border border-yellow-100 flex flex-col items-center">
+                        <p class="text-[10px] font-black text-yellow-600 uppercase">Active Now</p>
+                        <p class="text-xl font-black text-indigo-950" x-text="runners.length"></p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-8 space-y-8">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="runner in runners" :key="runner.name">
+                        <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-100 hover:shadow-md transition duration-300">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="h-14 w-14 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600">
+                                    <i class="fas fa-user-circle text-3xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-black text-gray-800 leading-none" x-text="runner.name"></h3>
+                                    <div class="flex items-center mt-1">
+                                        <i class="fas fa-star text-yellow-400 text-[10px]"></i>
+                                        <span class="text-[10px] font-black text-gray-400 ml-1" x-text="runner.rating"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-gray-50 p-3 rounded-2xl">
+                                    <p class="text-[8px] font-black text-gray-400 uppercase">Delivered</p>
+                                    <p class="text-sm font-black text-indigo-950" x-text="runner.delivered"></p>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-2xl">
+                                    <p class="text-[8px] font-black text-gray-400 uppercase">Pending</p>
+                                    <p class="text-sm font-black text-yellow-600" x-text="runner.pending"></p>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-2xl col-span-2 flex justify-between items-center">
+                                    <p class="text-[8px] font-black text-gray-400 uppercase">Earnings</p>
+                                    <p class="text-sm font-black text-green-600" x-text="'₱' + runner.earnings"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <h4 class="font-black text-xs text-gray-500 uppercase tracking-widest">Detailed Delivery Logs</h4>
+                    </div>
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-gray-50 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                <th class="p-5">Order ID</th>
+                                <th class="p-5">Runner</th>
+                                <th class="p-5">Location</th>
+                                <th class="p-5">Status</th>
+                                <th class="p-5">Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50 text-sm">
+                            <template x-for="log in logs" :key="log.id">
+                                <tr class="hover:bg-indigo-50/10 transition">
+                                    <td class="p-5 font-black text-indigo-600" x-text="log.id"></td>
+                                    <td class="p-5 font-bold text-gray-700" x-text="log.runner"></td>
+                                    <td class="p-5">
+                                        <div class="flex items-center gap-2 text-gray-500">
+                                            <i class="fas fa-location-dot text-indigo-400"></i>
+                                            <span class="text-xs font-bold" x-text="log.location"></span>
+                                        </div>
+                                    </td>
+                                    <td class="p-5">
+                                        <span :class="log.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
+                                              class="text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter" x-text="log.status">
+                                        </span>
+                                    </td>
+                                    <td class="p-5">
+                                        <span class="text-[10px] font-bold text-gray-400 border border-gray-200 px-2 py-1 rounded-lg" x-text="log.payment"></span>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function runnerStats() {
+            return {
+                runners: [
+                    { name: 'James Wilson', rating: '4.8', delivered: 412, pending: 3, earnings: '12,400.50' },
+                    { name: 'Aisha Khan', rating: '4.0', delivered: 285, pending: 0, earnings: '8,900.20' },
+                    { name: 'Mark Ramos', rating: '4.5', delivered: 120, pending: 1, earnings: '4,200.00' }
+                ],
+                logs: [
+                    { id: '#ORD-9901', runner: 'James Wilson', location: 'Library South Wing', status: 'Delivered', payment: 'Paid (Wallet)' },
+                    { id: '#ORD-9905', runner: 'James Wilson', location: 'Science Lab B-12', status: 'In Progress', payment: 'COD (Pending)' },
+                    { id: '#ORD-9882', runner: 'Aisha Khan', location: 'Dormitory Block A', status: 'Delivered', payment: 'Paid (Online)' }
+                ]
+            }
+        }
+    </script>
+</body>
+</html>
