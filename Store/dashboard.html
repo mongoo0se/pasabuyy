@@ -62,7 +62,7 @@
         </nav>
 
         <div class="p-4 border-t border-gray-100">
-            <button class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
+            <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
                 <i data-lucide="log-out" class="w-5 h-5"></i> Logout
             </button>
         </div>
@@ -158,11 +158,12 @@
                                 <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Price</th>
                                 <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Stock</th>
                                 <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="product-list-body" class="divide-y divide-gray-50">
                             <tr>
-                                <td class="px-6 py-4 font-medium italic text-slate-400" colspan="5">No products added yet. Click "Add New Product" to start.</td>
+                                <td class="px-6 py-4 font-medium italic text-slate-400" colspan="6">No products added yet. Click "Add New Product" to start.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -256,7 +257,7 @@
             // Clear the "No products" message if it's the first product
             if(productListBody.innerText.includes("No products")) productListBody.innerHTML = "";
 
-            // Create new row
+            // Create new row with Delete action
             const row = `
                 <tr class="hover:bg-slate-50 transition-colors">
                     <td class="px-6 py-4 font-semibold text-slate-700">${name}</td>
@@ -265,6 +266,9 @@
                     <td class="px-6 py-4">${stock} Units</td>
                     <td class="px-6 py-4">
                         <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Active</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <button type="button" class="delete-product bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">Delete</button>
                     </td>
                 </tr>
             `;
@@ -308,6 +312,24 @@
                 }
             }
         });
+
+        // Delete product handler (event delegation)
+        productListBody.addEventListener('click', (ev) => {
+            const btn = ev.target.closest('.delete-product');
+            if (!btn) return;
+            const row = btn.closest('tr');
+            if (row) row.remove();
+
+            // If no product rows remain, show placeholder message again
+            if (!productListBody.querySelector('tr')) {
+                productListBody.innerHTML = `\n                            <tr>\n                                <td class="px-6 py-4 font-medium italic text-slate-400" colspan="6">No products added yet. Click "Add New Product" to start.</td>\n                            </tr>`;
+            }
+        });
+
+        // Logout handler
+        function logout() {
+            window.location.href = '../index.html';
+        }
     </script>
 </body>
 </html>

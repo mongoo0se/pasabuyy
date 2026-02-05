@@ -18,6 +18,13 @@ function login() {
 document.getElementById('login').addEventListener('submit', function(e) {
     e.preventDefault();
     const role = this.querySelector('select').value;
+
+    // Redirect store partners to the store dashboard
+    if (role === 'store') {
+        window.location.href = 'Store/dashboard.html';
+        return;
+    }
+
     alert("Logging in as " + role + "... Bes is on the way!");
 });
 
@@ -42,6 +49,21 @@ function checkRole() {
     var roleSelect = document.getElementById("role-select");
     var adminField = document.getElementById("admin-key-container");
     var adminInput = document.getElementById("admin-key");
+
+    if (roleSelect.value === "admin") {
+        adminField.style.display = "block";
+        adminInput.setAttribute("required", "true");
+    } else {
+        adminField.style.display = "none";
+        adminInput.removeAttribute("required");
+    }
+}
+
+// Function to show/hide Admin Key on the login form
+function checkLoginRole() {
+    var roleSelect = document.getElementById("login-role");
+    var adminField = document.getElementById("login-admin-key-container");
+    var adminInput = document.getElementById("login-admin-key");
 
     if (roleSelect.value === "admin") {
         adminField.style.display = "block";
