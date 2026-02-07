@@ -244,7 +244,7 @@
                                 </div>
                             </div>
 
-                            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition duration-200">
+                            <button onclick="handlePlaceOrder()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition duration-200">
                                 Place Order
                             </button>
                             <button onclick="window.location.href='cart.html'" class="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-slate-800 font-bold py-3 rounded-xl transition duration-200">
@@ -282,6 +282,122 @@
 
         function logout() {
             window.location.href = '../index.html';
+        }
+
+        // Form validation
+        function validateCheckoutForm() {
+            const fullName = document.querySelector('input[placeholder="Enter your full name"]').value.trim();
+            const phone = document.querySelector('input[placeholder="Enter your phone number"]').value.trim();
+            const address = document.querySelector('input[placeholder="Enter your address"]').value.trim();
+            const city = document.querySelector('input[placeholder="City"]').value.trim();
+            const postal = document.querySelector('input[placeholder="Postal Code"]').value.trim();
+
+            if (!fullName || !phone || !address || !city || !postal) {
+                alert('Please fill in all required fields!');
+                return false;
+            }
+            return true;
+        }
+
+        // Place Order function
+        function handlePlaceOrder() {
+            // Step 1: Validate form
+            if (!validateCheckoutForm()) {
+                return;
+            }
+
+            // Step 2: Show confirmation dialog
+            const confirmed = confirm('Are you sure you want to place this order?\n\nTotal: ₱567.00');
+            if (!confirmed) {
+                return;
+            }
+
+            // Step 3: Get the button and show loading state
+            const placeOrderBtn = event.target;
+            const originalText = placeOrderBtn.textContent;
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.textContent = 'Processing...';
+            placeOrderBtn.classList.add('opacity-50');
+
+            // Step 4: Simulate order processing (2 seconds)
+            setTimeout(() => {
+                // Generate random order number
+                const orderNumber = 'ORD-' + Date.now().toString().slice(-8);
+                
+                // Step 5: Show success popup
+                showSuccessModal(orderNumber);
+
+                // Reset button
+                placeOrderBtn.disabled = false;
+                placeOrderBtn.textContent = originalText;
+                placeOrderBtn.classList.remove('opacity-50');
+            }, 2000);
+        }
+
+        // Success modal
+        function showSuccessModal(orderNumber) {
+            // Create modal HTML
+            const modalHTML = `
+                <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 animate-scale-in">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-800 mb-2">Order Placed Successfully!</h3>
+                            <p class="text-slate-600 mb-6">Your order has been confirmed and is being prepared.</p>
+                            
+                            <div class="bg-blue-50 rounded-xl p-4 mb-6">
+                                <p class="text-sm text-slate-600 mb-1">Order Number</p>
+                                <p class="text-xl font-bold text-blue-600">${orderNumber}</p>
+                            </div>
+
+                            <div class="space-y-2 text-sm text-slate-600 mb-6">
+                                <p>📍 Estimated delivery: 30-45 minutes</p>
+                                <p>📱 You'll receive SMS updates</p>
+                                <p>💬 Track your order in the Delivery section</p>
+                            </div>
+
+                            <button onclick="closeSuccessModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition duration-200 mb-3">
+                                Continue to Tracking
+                            </button>
+                            <button onclick="window.location.href='stores.html'" class="w-full bg-gray-100 hover:bg-gray-200 text-slate-800 font-bold py-3 rounded-xl transition duration-200">
+                                Continue Shopping
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes scaleIn {
+                        from {
+                            opacity: 0;
+                            transform: scale(0.95);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+                    }
+                    .animate-scale-in {
+                        animation: scaleIn 0.3s ease-out;
+                    }
+                </style>
+            `;
+
+            // Insert modal into page
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeSuccessModal() {
+            const modal = document.getElementById('successModal');
+            if (modal) {
+                modal.remove();
+            }
+            // Redirect to delivery tracking page
+            window.location.href = 'delivery.html';
         }
     </script>
 </body>
