@@ -10,57 +10,31 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
         :root { font-family: 'Inter', sans-serif; }
-
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
-        /* Smooth Tab Transitions */
-        .content-section {
-            display: none;
-            animation: fadeIn 0.4s ease-out;
-        }
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
         .content-section.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Glassmorphism for Modal */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .modal-bg { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
     </style>
 </head>
 <body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden">
-
     <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col z-20">
         <div class="p-6">
             <div class="flex items-center gap-3 text-blue-600">
-                <div class="bg-blue-600 text-white p-2 rounded-lg">
-                    <i data-lucide="layout-grid" class="w-5 h-5"></i>
-                </div>
+                <div class="bg-blue-600 text-white p-2 rounded-lg"><i data-lucide="layout-grid" class="w-5 h-5"></i></div>
                 <span class="text-xl font-bold tracking-tight text-slate-800">Pa-Buy Bes!</span>
             </div>
         </div>
-
         <nav class="flex-1 px-4 space-y-1">
-            <button onclick="switchTab('dashboard')" class="nav-btn active w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-blue-600 bg-blue-50 font-semibold">
-                <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Dashboard
-            </button>
-            <button onclick="switchTab('products')" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
-                <i data-lucide="package" class="w-5 h-5"></i> Products
-            </button>
-            <button onclick="switchTab('orders')" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
-                <i data-lucide="shopping-cart" class="w-5 h-5"></i> Orders
-            </button>
-            <button onclick="switchTab('customers')" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
-                <i data-lucide="users" class="w-5 h-5"></i> Customers
-            </button>
+            <button onclick="switchTab('dashboard')" class="nav-btn active w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-blue-600 bg-blue-50 font-semibold"><i data-lucide="bar-chart-3" class="w-5 h-5"></i> Dashboard</button>
+            <button onclick="switchTab('products')" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100"><i data-lucide="package" class="w-5 h-5"></i> Products</button>
+            <button onclick="switchTab('orders')" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100"><i data-lucide="shopping-cart" class="w-5 h-5"></i> Orders</button>
+            <button onclick="switchTab('customers')" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100"><i data-lucide="users" class="w-5 h-5"></i> Customers</button>
+            <button onclick="switchTab('profile')" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100"><i data-lucide="user" class="w-5 h-5"></i> Profile</button>
         </nav>
-
         <div class="p-4 border-t border-gray-100 space-y-3">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-semibold text-slate-700 uppercase">Role</span>
@@ -69,443 +43,132 @@
                     <option value="staff">Staff</option>
                 </select>
             </div>
-            <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
-                <i data-lucide="log-out" class="w-5 h-5"></i> Logout
-            </button>
+            <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors"><i data-lucide="log-out" class="w-5 h-5"></i> Logout</button>
         </div>
     </aside>
-
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
-        
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
             <h2 id="page-title" class="text-lg font-semibold text-slate-800">Dashboard Overview</h2>
             <div class="flex items-center gap-5">
                 <div class="relative">
-                    <button onclick="toggleNotifications()">
-                        <i data-lucide="bell" class="w-5 h-5 text-slate-400"></i>
-                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                    </button>
-
-                    <!-- Notification Dropdown -->
-                    <div id="notificationBox"
-                        class="hidden absolute right-0 mt-4 w-80 bg-white rounded-2xl shadow-xl border z-50">
-                        <div class="p-4 border-b font-bold text-slate-800">
-                            Notifications
-                        </div>
-
+                    <button onclick="toggleNotifications()"><i data-lucide="bell" class="w-5 h-5 text-slate-400"></i><span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span></button>
+                    <div id="notificationBox" class="hidden absolute right-0 mt-4 w-80 bg-white rounded-2xl shadow-xl border z-50">
+                        <div class="p-4 border-b font-bold text-slate-800">Notifications</div>
                         <div class="max-h-72 overflow-y-auto divide-y">
-                            <div class="p-4 hover:bg-slate-50">
-                                <p class="text-sm font-semibold">New Order Received</p>
-                                <p class="text-xs text-slate-500">Order #ORD-1023 • 2 mins ago</p>
-                            </div>
-                            <div class="p-4 hover:bg-slate-50">
-                                <p class="text-sm font-semibold text-orange-600">Low Stock Alert</p>
-                                <p class="text-xs text-slate-500">iPhone Case • 5 items left</p>
-                            </div>
-                            <div class="p-4 hover:bg-slate-50">
-                                <p class="text-sm font-semibold">System Update</p>
-                                <p class="text-xs text-slate-500">Dashboard updated successfully</p>
-                            </div>
+                            <div class="p-4 hover:bg-slate-50"><p class="text-sm font-semibold">New Order Received</p><p class="text-xs text-slate-500">Order #ORD-1023 • 2 mins ago</p></div>
+                            <div class="p-4 hover:bg-slate-50"><p class="text-sm font-semibold text-orange-600">Low Stock Alert</p><p class="text-xs text-slate-500">iPhone Case • 5 items left</p></div>
+                            <div class="p-4 hover:bg-slate-50"><p class="text-sm font-semibold">System Update</p><p class="text-xs text-slate-500">Dashboard updated successfully</p></div>
                         </div>
                     </div>
                 </div>
                 <div class="relative">
-                    <button onclick="toggleAdminMenu()" class="flex items-center gap-3 pl-5 border-l">
-                        <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff"
-                            class="w-8 h-8 rounded-full shadow-sm">
-                        <span class="text-sm font-medium text-slate-700">
-                            Store <span id="roleLabel">Admin</span>
-                        </span>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
-                    </button>
-
-                    <!-- Admin Dropdown -->
-                    <div id="adminMenu"
-                        class="hidden absolute right-0 mt-4 w-56 bg-white rounded-2xl shadow-xl border z-50">
-                        <button onclick="openSettingsModal()"
-                            class="w-full flex items-center gap-3 p-4 hover:bg-slate-50">
-                            <i data-lucide="settings" class="w-4 h-4"></i> Store Settings
-                        </button>
-                        <button class="w-full flex items-center gap-3 p-4 hover:bg-slate-50">
-                            <i data-lucide="shield" class="w-4 h-4"></i> Security
-                        </button>
-                        <button onclick="logout()"
-                            class="w-full flex items-center gap-3 p-4 text-red-500 hover:bg-red-50">
-                            <i data-lucide="log-out" class="w-4 h-4"></i> Logout
-                        </button>
+                    <button onclick="toggleAdminMenu()" class="flex items-center gap-3 pl-5 border-l"><img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" class="w-8 h-8 rounded-full shadow-sm"><span class="text-sm font-medium text-slate-700">Store <span id="roleLabel">Admin</span></span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i></button>
+                    <div id="adminMenu" class="hidden absolute right-0 mt-4 w-56 bg-white rounded-2xl shadow-xl border z-50">
+                        <button onclick="openSettingsModal()" class="w-full flex items-center gap-3 p-4 hover:bg-slate-50"><i data-lucide="settings" class="w-4 h-4"></i> Store Settings</button>
+                        <button class="w-full flex items-center gap-3 p-4 hover:bg-slate-50"><i data-lucide="shield" class="w-4 h-4"></i> Security</button>
+                        <button onclick="logout()" class="w-full flex items-center gap-3 p-4 text-red-500 hover:bg-red-50"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
                     </div>
                 </div>
             </div>
         </header>
-
         <main class="flex-1 overflow-y-auto p-8">
-            
             <section id="dashboard-section" class="content-section active space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-slate-500 text-sm font-medium">Total Revenue</p>
-                        <h3 class="text-2xl font-bold mt-2">$24,500.00</h3>
-                        <span class="text-green-500 text-xs font-bold mt-2 flex items-center gap-1">
-                            <i data-lucide="arrow-up-right" class="w-3 h-3"></i> +14%
-                        </span>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-slate-500 text-sm font-medium">Active Orders</p>
-                        <h3 class="text-2xl font-bold mt-2">154</h3>
-                        <span class="text-blue-500 text-xs font-bold mt-2 italic">8 Pending</span>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-slate-500 text-sm font-medium">Total Products</p>
-                        <h3 class="text-2xl font-bold mt-2">1,205</h3>
-                        <span class="text-slate-400 text-xs mt-2">Across 12 Categories</span>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-slate-500 text-sm font-medium">Conversion Rate</p>
-                        <h3 class="text-2xl font-bold mt-2">3.2%</h3>
-                        <span class="text-red-400 text-xs font-bold mt-2 flex items-center gap-1">
-                            <i data-lucide="arrow-down-right" class="w-3 h-3"></i> -0.4%
-                        </span>
-                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Total Revenue</p><h3 class="text-2xl font-bold mt-2">$24,500.00</h3><span class="text-green-500 text-xs font-bold mt-2 flex items-center gap-1"><i data-lucide="arrow-up-right" class="w-3 h-3"></i> +14%</span></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Active Orders</p><h3 class="text-2xl font-bold mt-2">154</h3><span class="text-blue-500 text-xs font-bold mt-2 italic">8 Pending</span></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Total Products</p><h3 class="text-2xl font-bold mt-2">1,205</h3><span class="text-slate-400 text-xs mt-2">Across 12 Categories</span></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Conversion Rate</p><h3 class="text-2xl font-bold mt-2">3.2%</h3><span class="text-red-400 text-xs font-bold mt-2 flex items-center gap-1"><i data-lucide="arrow-down-right" class="w-3 h-3"></i> -0.4%</span></div>
                 </div>
-
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <h4 class="font-bold text-slate-800 mb-6">Sales Analytics</h4>
-                        <canvas id="salesChart" height="140"></canvas>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <h4 class="font-bold text-slate-800 mb-6">Recent Activities</h4>
-                        <div class="space-y-6">
-                            <div class="flex gap-4">
-                                <div class="w-2 h-2 mt-2 rounded-full bg-blue-500"></div>
-                                <div>
-                                    <p class="text-sm font-medium">New order #8829</p>
-                                    <p class="text-xs text-slate-400">2 minutes ago</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-4">
-                                <div class="w-2 h-2 mt-2 rounded-full bg-orange-500"></div>
-                                <div>
-                                    <p class="text-sm font-medium">Product "iPhone 15" is low in stock</p>
-                                    <p class="text-xs text-slate-400">1 hour ago</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><h4 class="font-bold text-slate-800 mb-6">Sales Analytics</h4><canvas id="salesChart" height="140"></canvas></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><h4 class="font-bold text-slate-800 mb-6">Recent Activities</h4><div class="space-y-6"><div class="flex gap-4"><div class="w-2 h-2 mt-2 rounded-full bg-blue-500"></div><div><p class="text-sm font-medium">New order #8829</p><p class="text-xs text-slate-400">2 minutes ago</p></div></div><div class="flex gap-4"><div class="w-2 h-2 mt-2 rounded-full bg-orange-500"></div><div><p class="text-sm font-medium">Product "iPhone 15" is low in stock</p><p class="text-xs text-slate-400">1 hour ago</p></div></div></div></div>
                 </div>
             </section>
-
             <section id="products-section" class="content-section space-y-6">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold">Product Catalog</h3>
-                    <button onclick="if(!adminOnlyAction()) return; openModal()" class="admin-only bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-blue-100">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Add New Product
-                    </button>
-                </div>
-                
+                <div class="flex justify-between items-center"><h3 class="text-xl font-bold">Product Catalog</h3><button onclick="if(!adminOnlyAction()) return; openModal()" class="admin-only bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-blue-100"><i data-lucide="plus" class="w-4 h-4"></i> Add New Product</button></div>
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                     <table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b border-slate-100">
-                            <tr>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Product</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Category</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Price</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Stock</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="product-list-body" class="divide-y divide-gray-50">
-                            <tr>
-                                <td class="px-6 py-4 font-medium italic text-slate-400" colspan="6">No products added yet. Click "Add New Product" to start.</td>
-                            </tr>
-                        </tbody>
+                        <thead class="bg-slate-50 border-b border-slate-100"><tr><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Product</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Category</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Price</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Stock</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Actions</th></tr></thead>
+                        <tbody id="product-list-body" class="divide-y divide-gray-50"><tr><td class="px-6 py-4 font-medium italic text-slate-400" colspan="6">No products added yet. Click "Add New Product" to start.</td></tr></tbody>
                     </table>
                 </div>
             </section>
-
             <section id="orders-section" class="content-section space-y-6">
-
-                <!-- Header -->
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold">Order Management</h3>
-                    <span class="text-sm text-slate-500">Track and update customer orders</span>
-                </div>
-
-                <!-- Summary Cards -->
+                <div class="flex justify-between items-center"><h3 class="text-xl font-bold">Order Management</h3><span class="text-sm text-slate-500">Track and update customer orders</span></div>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
-                        <p class="text-sm text-slate-500">Total Orders</p>
-                        <h3 class="text-2xl font-bold mt-1">245</h3>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
-                        <p class="text-sm text-slate-500">Pending</p>
-                        <h3 class="text-2xl font-bold text-orange-500 mt-1">18</h3>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
-                        <p class="text-sm text-slate-500">Delivered</p>
-                        <h3 class="text-2xl font-bold text-green-600 mt-1">210</h3>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
-                        <p class="text-sm text-slate-500">Cancelled</p>
-                        <h3 class="text-2xl font-bold text-red-500 mt-1">17</h3>
-                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Total Orders</p><h3 class="text-2xl font-bold mt-1">245</h3></div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Pending</p><h3 class="text-2xl font-bold text-orange-500 mt-1">18</h3></div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Delivered</p><h3 class="text-2xl font-bold text-green-600 mt-1">210</h3></div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Cancelled</p><h3 class="text-2xl font-bold text-red-500 mt-1">17</h3></div>
                 </div>
-
-                <!-- Orders Table -->
                 <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
                     <table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b">
-                            <tr>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Customer</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Payment</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y">
-                            <tr class="hover:bg-slate-50">
-                                <td class="px-6 py-4 font-semibold">#ORD-1023</td>
-                                <td class="px-6 py-4">Juan Dela Cruz</td>
-                                <td class="px-6 py-4 font-bold">$120.00</td>
-                                <td class="px-6 py-4">Cash on Delivery</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">
-                                        Pending
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <button onclick="openOrderModal('#ORD-1023','Juan Dela Cruz','$120.00','Cash on Delivery','Pending')" class="text-blue-600 hover:underline text-sm">View</button>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <thead class="bg-slate-50 border-b"><tr><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Customer</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Payment</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th></tr></thead>
+                        <tbody class="divide-y"><tr class="hover:bg-slate-50"><td class="px-6 py-4 font-semibold">#ORD-1023</td><td class="px-6 py-4">Juan Dela Cruz</td><td class="px-6 py-4 font-bold">$120.00</td><td class="px-6 py-4">Cash on Delivery</td><td class="px-6 py-4"><span class="px-3 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">Pending</span></td><td class="px-6 py-4"><button onclick="openOrderModal('#ORD-1023','Juan Dela Cruz','$120.00','Cash on Delivery','Pending')" class="text-blue-600 hover:underline text-sm">View</button></td></tr></tbody>
                     </table>
                 </div>
-
             </section>
-
             <section id="customers-section" class="content-section space-y-6">
-
-                <!-- Header -->
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold">Customer Directory</h3>
-                    <input type="text" placeholder="Search customer..."
-                        class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 outline-none">
-                </div>
-
-                <!-- Customer Stats -->
+                <div class="flex justify-between items-center"><h3 class="text-xl font-bold">Customer Directory</h3><input type="text" placeholder="Search customer..." class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 outline-none"></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
-                        <p class="text-sm text-slate-500">Total Customers</p>
-                        <h3 class="text-2xl font-bold mt-1">138</h3>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
-                        <p class="text-sm text-slate-500">Repeat Buyers</p>
-                        <h3 class="text-2xl font-bold text-green-600 mt-1">89</h3>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
-                        <p class="text-sm text-slate-500">Inactive</p>
-                        <h3 class="text-2xl font-bold text-red-500 mt-1">12</h3>
-                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Total Customers</p><h3 class="text-2xl font-bold mt-1">138</h3></div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Repeat Buyers</p><h3 class="text-2xl font-bold text-green-600 mt-1">89</h3></div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Inactive</p><h3 class="text-2xl font-bold text-red-500 mt-1">12</h3></div>
                 </div>
-
-                <!-- Customers Table -->
                 <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
                     <table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b">
-                            <tr>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Customer</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Email</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Orders</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total Spent</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y">
-                            <tr class="hover:bg-slate-50">
-                                <td class="px-6 py-4 font-semibold">Maria Santos</td>
-                                <td class="px-6 py-4 text-slate-500">maria@email.com</td>
-                                <td class="px-6 py-4">12</td>
-                                <td class="px-6 py-4 font-bold">$540.00</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
-                                        Active
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <button onclick="openCustomerModal('Maria Santos','maria@email.com','12','$540.00','Active')" class="text-blue-600 hover:underline text-sm">View</button>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <thead class="bg-slate-50 border-b"><tr><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Customer</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Email</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Orders</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total Spent</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th></tr></thead>
+                        <tbody class="divide-y"><tr class="hover:bg-slate-50"><td class="px-6 py-4 font-semibold">Maria Santos</td><td class="px-6 py-4 text-slate-500">maria@email.com</td><td class="px-6 py-4">12</td><td class="px-6 py-4 font-bold">$540.00</td><td class="px-6 py-4"><span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Active</span></td><td class="px-6 py-4"><button onclick="openCustomerModal('Maria Santos','maria@email.com','12','$540.00','Active')" class="text-blue-600 hover:underline text-sm">View</button></td></tr></tbody>
                     </table>
                 </div>
-
             </section>
-
+            <section id="profile-section" class="content-section space-y-8">
+                <div class="flex justify-between items-center"><h3 class="text-xl font-bold">My Profile</h3><button onclick="openProfileEdit()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-semibold">Edit Profile</button></div>
+                <div class="bg-white p-8 rounded-2xl border shadow-sm flex gap-8 items-center">
+                    <div class="text-center"><img id="profileImage" src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" class="w-32 h-32 rounded-full shadow-md object-cover mx-auto"><input type="file" id="imageUpload" class="hidden" accept="image/*"><button onclick="document.getElementById('imageUpload').click()" class="mt-3 text-sm text-blue-600 hover:underline">Change Photo</button></div>
+                    <div class="flex-1 space-y-3 text-sm"><p><strong>Name:</strong> <span id="profileName">Store Admin</span></p><p><strong>Email:</strong> <span id="profileEmail">admin@email.com</span></p><p><strong>Role:</strong> <span id="profileRole"></span></p><p><strong>Member Since:</strong> <span>2024</span></p></div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm"><h4 class="font-bold mb-4">Change Password</h4><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><input type="password" id="oldPass" placeholder="Old Password" class="bg-slate-50 border rounded-xl px-4 py-3"><input type="password" id="newPass" placeholder="New Password" class="bg-slate-50 border rounded-xl px-4 py-3"><button onclick="changePassword()" class="bg-green-600 hover:bg-green-700 text-white rounded-xl px-4">Update</button></div></div>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm"><h4 class="font-bold mb-4">Account Activity</h4><ul id="activityLog" class="text-sm text-slate-600 space-y-2"></ul></div>
+            </section>
         </main>
     </div>
-
     <div id="productModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4">
         <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl scale-95 transition-transform duration-300">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h3 class="text-xl font-bold">New Product Information</h3>
-                <button onclick="closeModal()" class="p-2 hover:bg-gray-100 rounded-full"><i data-lucide="x"></i></button>
-            </div>
+            <div class="p-6 border-b flex justify-between items-center"><h3 class="text-xl font-bold">New Product Information</h3><button onclick="closeModal()" class="p-2 hover:bg-gray-100 rounded-full"><i data-lucide="x"></i></button></div>
             <form id="productForm" class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">Product Name</label>
-                    <input type="text" id="pName" required placeholder="e.g. Wireless Headphones" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1">Price ($)</label>
-                        <input type="number" id="pPrice" step="0.01" required placeholder="99.99" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1">Quantity</label>
-                        <input type="number" id="pStock" required placeholder="50" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-1">Category</label>
-                    <select id="pCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all">
-                        <option>Electronics</option>
-                        <option>Fashion</option>
-                        <option>Lifestyle</option>
-                    </select>
-                </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl mt-4 transition-all shadow-lg shadow-blue-200">
-                    Confirm & Save Product
-                </button>
+                <div><label class="block text-sm font-semibold text-slate-700 mb-1">Product Name</label><input type="text" id="pName" required placeholder="e.g. Wireless Headphones" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"></div>
+                <div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold text-slate-700 mb-1">Price ($)</label><input type="number" id="pPrice" step="0.01" required placeholder="99.99" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"></div><div><label class="block text-sm font-semibold text-slate-700 mb-1">Quantity</label><input type="number" id="pStock" required placeholder="50" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"></div></div>
+                <div><label class="block text-sm font-semibold text-slate-700 mb-1">Category</label><select id="pCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"><option>Electronics</option><option>Fashion</option><option>Lifestyle</option></select></div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl mt-4 transition-all shadow-lg shadow-blue-200">Confirm & Save Product</button>
             </form>
         </div>
     </div>
-
     <div id="orderModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h3 class="text-xl font-bold">Order Details</h3>
-                <button onclick="closeOrderModal()" class="p-2 hover:bg-gray-100 rounded-full">
-                    <i data-lucide="x"></i>
-                </button>
-            </div>
-
-            <div class="p-6 space-y-4 text-sm">
-                <p><strong>Order ID:</strong> <span id="oId"></span></p>
-                <p><strong>Customer:</strong> <span id="oCustomer"></span></p>
-                <p><strong>Total:</strong> <span id="oTotal"></span></p>
-                <p><strong>Payment Method:</strong> <span id="oPayment"></span></p>
-                <p><strong>Status:</strong> <span id="oStatus"></span></p>
-
-                <div class="pt-4 border-t">
-                    <h4 class="font-semibold mb-2">Items</h4>
-                    <ul class="list-disc list-inside text-slate-600">
-                        <li>Wireless Headphones ×1</li>
-                        <li>Phone Case ×2</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl"><div class="p-6 border-b flex justify-between items-center"><h3 class="text-xl font-bold">Order Details</h3><button onclick="closeOrderModal()" class="p-2 hover:bg-gray-100 rounded-full"><i data-lucide="x"></i></button></div><div class="p-6 space-y-4 text-sm"><p><strong>Order ID:</strong> <span id="oId"></span></p><p><strong>Customer:</strong> <span id="oCustomer"></span></p><p><strong>Total:</strong> <span id="oTotal"></span></p><p><strong>Payment Method:</strong> <span id="oPayment"></span></p><p><strong>Status:</strong> <span id="oStatus"></span></p><div class="pt-4 border-t"><h4 class="font-semibold mb-2">Items</h4><ul class="list-disc list-inside text-slate-600"><li>Wireless Headphones ×1</li><li>Phone Case ×2</li></ul></div></div></div>
     </div>
-
     <div id="customerModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h3 class="text-xl font-bold">Customer Profile</h3>
-                <button onclick="closeCustomerModal()" class="p-2 hover:bg-gray-100 rounded-full">
-                    <i data-lucide="x"></i>
-                </button>
-            </div>
-
-            <div class="p-6 space-y-4 text-sm">
-                <p><strong>Name:</strong> <span id="cName"></span></p>
-                <p><strong>Email:</strong> <span id="cEmail"></span></p>
-                <p><strong>Total Orders:</strong> <span id="cOrders"></span></p>
-                <p><strong>Total Spent:</strong> <span id="cSpent"></span></p>
-                <p><strong>Status:</strong> <span id="cStatus"></span></p>
-
-                <div class="pt-4 border-t">
-                    <h4 class="font-semibold mb-2">Recent Orders</h4>
-                    <ul class="list-disc list-inside text-slate-600">
-                        <li>#ORD-1023 – $120</li>
-                        <li>#ORD-1017 – $85</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl"><div class="p-6 border-b flex justify-between items-center"><h3 class="text-xl font-bold">Customer Profile</h3><button onclick="closeCustomerModal()" class="p-2 hover:bg-gray-100 rounded-full"><i data-lucide="x"></i></button></div><div class="p-6 space-y-4 text-sm"><p><strong>Name:</strong> <span id="cName"></span></p><p><strong>Email:</strong> <span id="cEmail"></span></p><p><strong>Total Orders:</strong> <span id="cOrders"></span></p><p><strong>Total Spent:</strong> <span id="cSpent"></span></p><p><strong>Status:</strong> <span id="cStatus"></span></p><div class="pt-4 border-t"><h4 class="font-semibold mb-2">Recent Orders</h4><ul class="list-disc list-inside text-slate-600"><li>#ORD-1023 – $120</li><li>#ORD-1017 – $85</li></ul></div></div></div>
     </div>
-
     <div id="settingsModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h3 class="text-xl font-bold">Store Settings</h3>
-                <button onclick="closeSettingsModal()" class="p-2 hover:bg-gray-100 rounded-full">
-                    <i data-lucide="x"></i>
-                </button>
-            </div>
-
-            <form id="settingsForm" class="p-6 space-y-4">
-                <div>
-                    <label class="text-sm font-semibold">Store Name</label>
-                    <input id="storeName" type="text" value="Pa-Buy Bes!"
-                        class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
-                </div>
-
-                <div>
-                    <label class="text-sm font-semibold">Profit Margin (%)</label>
-                    <input id="profitMargin" type="number" value="20"
-                        class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
-                </div>
-
-                <div>
-                    <label class="text-sm font-semibold">Delivery Fee ($)</label>
-                    <input id="deliveryFee" type="number" value="5"
-                        class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
-                </div>
-
-                <div>
-                    <label class="text-sm font-semibold">Store Status</label>
-                    <select id="storeStatus" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
-                        <option>Open</option>
-                        <option>Closed</option>
-                    </select>
-                </div>
-
-                <div class="pt-4 border-t">
-                    <h4 class="font-semibold mb-2">Security</h4>
-                    <ul class="text-sm text-slate-600 space-y-1">
-                        <li>✓ Role-based access control</li>
-                        <li>✓ Session timeout enabled (10 min)</li>
-                        <li>✓ Activity logging active</li>
-                    </ul>
-                </div>
-
-                <button type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">
-                    Save Changes
-                </button>
-            </form>
-        </div>
+        <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl"><div class="p-6 border-b flex justify-between items-center"><h3 class="text-xl font-bold">Store Settings</h3><button onclick="closeSettingsModal()" class="p-2 hover:bg-gray-100 rounded-full"><i data-lucide="x"></i></button></div><form id="settingsForm" class="p-6 space-y-4"><div><label class="text-sm font-semibold">Store Name</label><input id="storeName" type="text" value="Pa-Buy Bes!" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3"></div><div><label class="text-sm font-semibold">Profit Margin (%)</label><input id="profitMargin" type="number" value="20" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3"></div><div><label class="text-sm font-semibold">Delivery Fee ($)</label><input id="deliveryFee" type="number" value="5" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3"></div><div><label class="text-sm font-semibold">Store Status</label><select id="storeStatus" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3"><option>Open</option><option>Closed</option></select></div><div class="pt-4 border-t"><h4 class="font-semibold mb-2">Security</h4><ul class="text-sm text-slate-600 space-y-1"><li>✓ Role-based access control</li><li>✓ Session timeout enabled (10 min)</li><li>✓ Activity logging active</li></ul></div><button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">Save Changes</button></form></div>
     </div>
 
     <script>
-        // ========================================
-        // ROLE-BASED ACCESS CONTROL
-        // ========================================
+        // Global variables
         let currentUserRole = localStorage.getItem("role") || "staff";
-        
+        let storeSettings = JSON.parse(localStorage.getItem("storeSettings")) || {storeName: "Pa-Buy Bes!",profitMargin: 20,deliveryFee: 5,status: "Open"};
+        let sessionTimer;
+        let securityLogs = JSON.parse(localStorage.getItem("securityLogs")) || [];
+        let userProfile = JSON.parse(localStorage.getItem("userProfile")) || {name: "Store Admin",email: "admin@email.com"};
+
+        // Global DOM references
+        let modal, productListBody, productForm, ctx, orderModal, customerModal, settingsForm;
+
         function applyRolePermissions() {
             if (currentUserRole === "staff") {
-                // Hide admin-only buttons
                 document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
-                // Disable delete product buttons
-                document.querySelectorAll('.delete-product').forEach(btn => {
-                    btn.disabled = true;
-                    btn.classList.add('opacity-40', 'cursor-not-allowed');
-                });
+                document.querySelectorAll('.delete-product').forEach(btn => {btn.disabled = true;btn.classList.add('opacity-40', 'cursor-not-allowed');});
                 document.querySelector('#roleLabel').innerText = "Staff";
             } else {
                 document.querySelector('#roleLabel').innerText = "Admin";
@@ -513,26 +176,61 @@
         }
 
         function adminOnlyAction() {
-            if (currentUserRole !== "admin") {
-                alert("Access denied. Admin only.");
-                return false;
-            }
+            if (currentUserRole !== "admin") {alert("Access denied. Admin only.");return false;}
             return true;
         }
 
-        // ========================================
-        // STORE SETTINGS & PROFIT MARGIN
-        // ========================================
-        let storeSettings = JSON.parse(localStorage.getItem("storeSettings")) || {
-            storeName: "Pa-Buy Bes!",
-            profitMargin: 20,
-            deliveryFee: 5,
-            status: "Open"
-        };
-
-        function applyProfit(basePrice) {
-            return basePrice + (basePrice * storeSettings.profitMargin / 100);
+        function switchRole(role) {
+            currentUserRole = role;
+            localStorage.setItem("role", role);
+            applyRolePermissions();
+            logSecurity(`Switched to ${role} role`);
         }
+
+        function switchTab(tabId) {
+            const titles = {'dashboard': 'Dashboard Overview','products': 'Product Management','orders': 'Order Tracking','customers': 'Customer Directory','profile': 'User Profile'};
+            document.getElementById('page-title').innerText = titles[tabId];
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(`${tabId}-section`).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => {btn.classList.remove('text-blue-600', 'bg-blue-50', 'font-semibold');btn.classList.add('text-slate-600');});
+            const navButtons = Array.from(document.querySelectorAll('.nav-btn'));
+            const tabNameLower = tabId.toLowerCase();
+            const activeBtn = navButtons.find(btn => {const btnText = btn.textContent.trim().toLowerCase();return btnText.includes(tabNameLower) || btnText.startsWith(tabNameLower);});
+            if (activeBtn) {activeBtn.classList.remove('text-slate-600');activeBtn.classList.add('text-blue-600', 'bg-blue-50', 'font-semibold');}
+        }
+
+        function openModal() { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+        function closeModal() { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+
+        function openOrderModal(id, customer, total, payment, status) {
+            document.getElementById('oId').innerText = id;
+            document.getElementById('oCustomer').innerText = customer;
+            document.getElementById('oTotal').innerText = total;
+            document.getElementById('oPayment').innerText = payment;
+            document.getElementById('oStatus').innerText = status;
+            orderModal.classList.remove('hidden');
+            orderModal.classList.add('flex');
+        }
+
+        function closeOrderModal() { orderModal.classList.add('hidden'); orderModal.classList.remove('flex'); }
+
+        function openCustomerModal(name, email, orders, spent, status) {
+            document.getElementById('cName').innerText = name;
+            document.getElementById('cEmail').innerText = email;
+            document.getElementById('cOrders').innerText = orders;
+            document.getElementById('cSpent').innerText = spent;
+            document.getElementById('cStatus').innerText = status;
+            customerModal.classList.remove('hidden');
+            customerModal.classList.add('flex');
+        }
+
+        function closeCustomerModal() { customerModal.classList.add('hidden'); customerModal.classList.remove('flex'); }
+
+        function toggleNotifications() { document.getElementById('notificationBox').classList.toggle('hidden'); }
+
+        function toggleAdminMenu() { document.getElementById('adminMenu').classList.toggle('hidden'); }
+
+        function logout() { window.location.href = '../index.html'; }
 
         function loadSettings() {
             document.getElementById('storeName').value = storeSettings.storeName;
@@ -544,256 +242,15 @@
         function saveSettings(e) {
             e.preventDefault();
             if (!adminOnlyAction()) return;
-
             storeSettings.storeName = document.getElementById('storeName').value;
             storeSettings.profitMargin = parseFloat(document.getElementById('profitMargin').value);
             storeSettings.deliveryFee = parseFloat(document.getElementById('deliveryFee').value);
             storeSettings.status = document.getElementById('storeStatus').value;
-
             localStorage.setItem("storeSettings", JSON.stringify(storeSettings));
             logSecurity("Updated store settings");
             alert("Store settings saved!");
             closeSettingsModal();
         }
-
-        // ========================================
-        // SECURITY FEATURES
-        // ========================================
-        let sessionTimer;
-        let securityLogs = JSON.parse(localStorage.getItem("securityLogs")) || [];
-
-        function startSessionTimer() {
-            clearTimeout(sessionTimer);
-            sessionTimer = setTimeout(() => {
-                alert("Session expired. Please login again.");
-                logout();
-            }, 10 * 60 * 1000); // 10 minutes
-        }
-
-        function logSecurity(action) {
-            securityLogs.unshift({
-                action,
-                time: new Date().toLocaleString()
-            });
-            localStorage.setItem("securityLogs", JSON.stringify(securityLogs));
-        }
-
-        document.addEventListener('mousemove', startSessionTimer);
-        document.addEventListener('keydown', startSessionTimer);
-        startSessionTimer();
-
-        logSecurity("Logged in as " + currentUserRole);
-
-        // Initialize Icons
-        lucide.createIcons();
-
-        // 1. Tab Switching System
-        function switchTab(tabId) {
-            // Update Title
-            const titles = {
-                'dashboard': 'Dashboard Overview',
-                'products': 'Product Management',
-                'orders': 'Order Tracking',
-                'customers': 'Customer Directory'
-            };
-            document.getElementById('page-title').innerText = titles[tabId];
-
-            // Toggle Active Sections
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById(`${tabId}-section`).classList.add('active');
-
-            // Update Sidebar UI
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-blue-600', 'bg-blue-50', 'font-semibold');
-                btn.classList.add('text-slate-600');
-            });
-            event.currentTarget.classList.add('text-blue-600', 'bg-blue-50', 'font-semibold');
-        }
-
-        // 2. Modal Controls
-        const modal = document.getElementById('productModal');
-        function openModal() { modal.classList.remove('hidden'); modal.classList.add('flex'); }
-        function closeModal() { modal.classList.add('hidden'); modal.classList.remove('flex'); }
-
-        // 3. Product Management Logic
-        const productListBody = document.getElementById('product-list-body');
-        const productForm = document.getElementById('productForm');
-
-        productForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Get values
-            const name = document.getElementById('pName').value;
-            const price = document.getElementById('pPrice').value;
-            const stock = document.getElementById('pStock').value;
-            const cat = document.getElementById('pCategory').value;
-
-            // Clear the "No products" message if it's the first product
-            if(productListBody.innerText.includes("No products")) productListBody.innerHTML = "";
-
-            // Create new row with Delete action
-            const row = `
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-6 py-4 font-semibold text-slate-700">${name}</td>
-                    <td class="px-6 py-4 text-slate-500">${cat}</td>
-                    <td class="px-6 py-4 font-bold text-slate-900">$${parseFloat(price).toFixed(2)}</td>
-                    <td class="px-6 py-4">${stock} Units</td>
-                    <td class="px-6 py-4">
-                        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Active</span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <button type="button" class="admin-only delete-product bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">Delete</button>
-                    </td>
-                </tr>
-            `;
-
-            productListBody.innerHTML += row;
-            productForm.reset();
-            closeModal();
-        });
-
-        // 4. Sales Chart Initialization
-        const ctx = document.getElementById('salesChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Revenue ($)',
-                    data: [18000, 24000, 15000, 32000, 28000, 41000, 45000],
-                    borderColor: '#2563eb',
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: (context) => {
-                        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                        gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
-                        gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
-                        return gradient;
-                    },
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#2563eb',
-                    pointBorderWidth: 2,
-                    pointRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { color: '#f1f5f9' }, ticks: { font: { family: 'Inter' } } },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-
-        // Delete product handler (event delegation)
-        productListBody.addEventListener('click', (ev) => {
-            const btn = ev.target.closest('.delete-product');
-            if (!btn) return;
-            const row = btn.closest('tr');
-            if (row) {
-                row.remove();
-                logSecurity("Deleted product");
-            }
-
-            // If no product rows remain, show placeholder message again
-            if (!productListBody.querySelector('tr')) {
-                productListBody.innerHTML = `
-                            <tr>
-                                <td class="px-6 py-4 font-medium italic text-slate-400" colspan="6">No products added yet. Click "Add New Product" to start.</td>
-                            </tr>`;
-            }
-        });
-
-        // Apply role permissions on page load
-        applyRolePermissions();
-
-        // Logout handler
-        function logout() {
-            window.location.href = '../index.html';
-        }
-
-        // ORDER MODAL
-        const orderModal = document.getElementById('orderModal');
-
-        function openOrderModal(id, customer, total, payment, status) {
-            document.getElementById('oId').innerText = id;
-            document.getElementById('oCustomer').innerText = customer;
-            document.getElementById('oTotal').innerText = total;
-            document.getElementById('oPayment').innerText = payment;
-            document.getElementById('oStatus').innerText = status;
-
-            orderModal.classList.remove('hidden');
-            orderModal.classList.add('flex');
-        }
-
-        function closeOrderModal() {
-            orderModal.classList.add('hidden');
-            orderModal.classList.remove('flex');
-        }
-
-        // CUSTOMER MODAL
-        const customerModal = document.getElementById('customerModal');
-
-        function openCustomerModal(name, email, orders, spent, status) {
-            document.getElementById('cName').innerText = name;
-            document.getElementById('cEmail').innerText = email;
-            document.getElementById('cOrders').innerText = orders;
-            document.getElementById('cSpent').innerText = spent;
-            document.getElementById('cStatus').innerText = status;
-
-            customerModal.classList.remove('hidden');
-            customerModal.classList.add('flex');
-        }
-
-        function closeCustomerModal() {
-            customerModal.classList.add('hidden');
-            customerModal.classList.remove('flex');
-        }
-
-        // NOTIFICATION DROPDOWN
-        function toggleNotifications() {
-            document.getElementById('notificationBox').classList.toggle('hidden');
-        }
-
-        // Close notification when clicking outside
-        document.addEventListener('click', (e) => {
-            const notifBox = document.getElementById('notificationBox');
-            const notifButton = e.target.closest('[onclick*="toggleNotifications"]');
-            if (!notifBox.contains(e.target) && !notifButton) {
-                notifBox.classList.add('hidden');
-            }
-        });
-
-        // ADMIN MENU DROPDOWN
-        function toggleAdminMenu() {
-            document.getElementById('adminMenu').classList.toggle('hidden');
-        }
-
-        // Close admin menu when clicking outside
-        document.addEventListener('click', (e) => {
-            const adminMenu = document.getElementById('adminMenu');
-            const adminButton = e.target.closest('[onclick*="toggleAdminMenu"]');
-            if (!adminMenu.contains(e.target) && !adminButton) {
-                adminMenu.classList.add('hidden');
-            }
-        });
-
-        // ROLE SWITCHING
-        function switchRole(role) {
-            currentUserRole = role;
-            localStorage.setItem("role", role);
-            applyRolePermissions();
-            logSecurity(`Switched to ${role} role`);
-        }
-
-        // STORE SETTINGS MODAL
-        const settingsForm = document.getElementById('settingsForm');
-        settingsForm.addEventListener('submit', saveSettings);
-
-        // Set role dropdown to current role
-        document.getElementById('roleToggle').value = currentUserRole;
 
         function openSettingsModal() {
             loadSettings();
@@ -807,6 +264,150 @@
             document.getElementById('settingsModal').classList.add('hidden');
             document.getElementById('settingsModal').classList.remove('flex');
         }
+
+        function startSessionTimer() {
+            clearTimeout(sessionTimer);
+            sessionTimer = setTimeout(() => {alert("Session expired. Please login again.");logout();}, 10 * 60 * 1000);
+        }
+
+        function logSecurity(action) {
+            securityLogs.unshift({action,time: new Date().toLocaleString()});
+            localStorage.setItem("securityLogs", JSON.stringify(securityLogs));
+        }
+
+        function loadProfile() {
+            document.getElementById('profileName').innerText = userProfile.name;
+            document.getElementById('profileEmail').innerText = userProfile.email;
+            document.getElementById('profileRole').innerText = currentUserRole.toUpperCase();
+        }
+
+        function openProfileEdit() {
+            const newName = prompt("Enter new name:", userProfile.name);
+            if (newName) {
+                userProfile.name = newName;
+                localStorage.setItem("userProfile", JSON.stringify(userProfile));
+                loadProfile();
+                logSecurity("Updated profile name");
+                loadActivityLog();
+            }
+        }
+
+        function changePassword() {
+            const oldPass = document.getElementById('oldPass').value;
+            const newPass = document.getElementById('newPass').value;
+            if (!oldPass || !newPass) {alert("Fill all fields");return;}
+            alert("Password updated successfully (Demo only)");
+            logSecurity("Changed password");
+            document.getElementById('oldPass').value = "";
+            document.getElementById('newPass').value = "";
+            loadActivityLog();
+        }
+
+        function loadActivityLog() {
+            const logContainer = document.getElementById('activityLog');
+            logContainer.innerHTML = "";
+            securityLogs.slice(0, 10).forEach(log => {
+                logContainer.innerHTML += `<li>• ${log.action} <span class="text-xs text-slate-400">(${log.time})</span></li>`;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            modal = document.getElementById('productModal');
+            productListBody = document.getElementById('product-list-body');
+            productForm = document.getElementById('productForm');
+            ctx = document.getElementById('salesChart').getContext('2d');
+            orderModal = document.getElementById('orderModal');
+            customerModal = document.getElementById('customerModal');
+            settingsForm = document.getElementById('settingsForm');
+
+            productForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('pName').value;
+                const price = document.getElementById('pPrice').value;
+                const stock = document.getElementById('pStock').value;
+                const cat = document.getElementById('pCategory').value;
+                if(productListBody.innerText.includes("No products")) productListBody.innerHTML = "";
+                const row = `<tr class="hover:bg-slate-50 transition-colors"><td class="px-6 py-4 font-semibold text-slate-700">${name}</td><td class="px-6 py-4 text-slate-500">${cat}</td><td class="px-6 py-4 font-bold text-slate-900">$${parseFloat(price).toFixed(2)}</td><td class="px-6 py-4">${stock} Units</td><td class="px-6 py-4"><span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Active</span></td><td class="px-6 py-4"><button type="button" class="admin-only delete-product bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">Delete</button></td></tr>`;
+                productListBody.innerHTML += row;
+                productForm.reset();
+                closeModal();
+            });
+
+            productListBody.addEventListener('click', (ev) => {
+                const btn = ev.target.closest('.delete-product');
+                if (!btn) return;
+                const row = btn.closest('tr');
+                if (row) {row.remove();logSecurity("Deleted product");}
+                if (!productListBody.querySelector('tr')) {
+                    productListBody.innerHTML = `<tr><td class="px-6 py-4 font-medium italic text-slate-400" colspan="6">No products added yet. Click "Add New Product" to start.</td></tr>`;
+                }
+            });
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Revenue ($)',
+                        data: [18000, 24000, 15000, 32000, 28000, 41000, 45000],
+                        borderColor: '#2563eb',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: (context) => {
+                            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
+                            gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
+                            return gradient;
+                        },
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#2563eb',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {responsive: true,plugins: { legend: { display: false } },scales: {y: { grid: { color: '#f1f5f9' }, ticks: { font: { family: 'Inter' } } },x: { grid: { display: false } }}}
+            });
+
+            document.addEventListener('mousemove', startSessionTimer);
+            document.addEventListener('keydown', startSessionTimer);
+            startSessionTimer();
+
+            document.addEventListener('click', (e) => {
+                const notifBox = document.getElementById('notificationBox');
+                const notifButton = e.target.closest('[onclick*="toggleNotifications"]');
+                if (!notifBox.contains(e.target) && !notifButton) {notifBox.classList.add('hidden');}
+            });
+
+            document.addEventListener('click', (e) => {
+                const adminMenu = document.getElementById('adminMenu');
+                const adminButton = e.target.closest('[onclick*="toggleAdminMenu"]');
+                if (!adminMenu.contains(e.target) && !adminButton) {adminMenu.classList.add('hidden');}
+            });
+
+            settingsForm.addEventListener('submit', saveSettings);
+            document.getElementById('roleToggle').value = currentUserRole;
+
+            document.getElementById('imageUpload').addEventListener('change', function(e) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('profileImage').src = event.target.result;
+                    localStorage.setItem("profileImage", event.target.result);
+                    logSecurity("Updated profile picture");
+                    loadActivityLog();
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            });
+
+            const savedImage = localStorage.getItem("profileImage");
+            if (savedImage) {document.getElementById('profileImage').src = savedImage;}
+
+            applyRolePermissions();
+            loadProfile();
+            loadActivityLog();
+            logSecurity("Logged in as " + currentUserRole);
+            lucide.createIcons();
+        });
     </script>
 </body>
 </html>
