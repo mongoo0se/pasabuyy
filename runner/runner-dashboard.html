@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pa-Buy Bes! | Runner Dashboard</title>
-    <link rel="stylesheet" href="runner-style.css">
+    <link rel="stylesheet" href="runner.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Leaflet Map Library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden">
     <!-- SIDEBAR NAVIGATION -->
@@ -54,8 +57,36 @@
             <h2 id="page-title" class="text-lg font-semibold text-slate-800">Dashboard Overview</h2>
             <div class="flex items-center gap-5">
                 <div class="relative">
-                    <i data-lucide="bell" class="w-5 h-5 text-slate-400 cursor-pointer hover:text-slate-600"></i>
-                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    <button onclick="toggleNotificationPanel()" class="relative p-2 rounded-lg hover:bg-gray-100 transition">
+                        <i data-lucide="bell" class="w-5 h-5 text-slate-600"></i>
+                        <span id="notificationBadge" class="absolute top-1 right-1 w-5 h-5 bg-red-500 rounded-full border-2 border-white text-white text-xs flex items-center justify-center font-bold hidden">0</span>
+                    </button>
+                    
+                    <!-- Notification Panel -->
+                    <div id="notificationPanel" class="absolute right-0 top-12 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 hidden z-40 max-h-96 flex flex-col">
+                        <!-- Header -->
+                        <div class="p-4 border-b bg-gradient-to-r from-blue-50 to-blue-100">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-bold text-slate-800">Store Notifications</h3>
+                                <button onclick="toggleNotificationPanel()" class="text-slate-400 hover:text-slate-600">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-slate-600 mt-1">Deliveries & Updates</p>
+                        </div>
+                        
+                        <!-- Notifications List -->
+                        <div id="notificationsList" class="flex-1 overflow-y-auto">
+                            <div class="p-4 text-center text-slate-500 text-sm">
+                                No notifications yet
+                            </div>
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div class="p-3 border-t text-center">
+                            <button onclick="clearAllNotifications(); updateNotificationPanel();" class="text-xs text-blue-600 hover:text-blue-700 font-semibold">Clear All</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex items-center gap-3 pl-5 border-l">
                     <img src="https://ui-avatars.com/api/?name=Rider&background=0D8ABC&color=fff" class="w-8 h-8 rounded-full shadow-sm">
@@ -122,8 +153,7 @@
                                 <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
                                     <span class="text-lg">💰</span>
                                     <div>
-                                        <p class="text-xs text-slate-500">Payout</p>
-                                        <p id="deliveryPayout" class="font-semibold text-green-600">$5.50</p>
+                
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
@@ -199,12 +229,7 @@
                             <option value="medium">1-3 km</option>
                             <option value="long">3+ km</option>
                         </select>
-                        <select id="filterPayout" class="bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium">
-                            <option value="">All Payouts</option>
-                            <option value="high">$5+</option>
-                            <option value="medium">$3-5</option>
-                            <option value="low">Under $3</option>
-                        </select>
+    
                     </div>
                 </div>
                 
@@ -214,10 +239,136 @@
                     <p class="text-slate-500">Check back soon or adjust your filters</p>
                 </div>
 
-                <div id="ordersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div id="ordersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Order cards will be dynamically generated -->
                 </div>
             </section>
+
+            <!-- ORDER DETAILS MODAL -->
+            <div id="orderModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4 overflow-y-auto">
+                <div class="bg-white rounded-2xl w-full max-w-2xl shadow-2xl my-8">
+                    <div class="p-6 border-b flex justify-between items-center sticky top-0 bg-white rounded-t-2xl">
+                        <h3 class="text-xl font-bold">Order Details & Map</h3>
+                        <button onclick="closeOrderModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-6 h-6"></i></button>
+                    </div>
+                    
+                    <div class="p-6 space-y-6">
+                        <!-- Live Map -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl h-72 flex flex-col items-center justify-center border-2 border-dashed border-blue-300">
+                            <i data-lucide="map" class="w-16 h-16 text-blue-400 mb-4"></i>
+                            <p class="text-blue-800 font-semibold">Live GPS Map</p>
+                            <p class="text-blue-600 text-sm">Route visualization with real-time location tracking</p>
+                            <button class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition">Open Live Map</button>
+                        </div>
+
+                        <!-- Order Information Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Pickup Details -->
+                            <div class="bg-slate-50 p-4 rounded-xl">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i data-lucide="store" class="w-5 h-5 text-orange-500"></i>
+                                    <h4 class="font-bold text-slate-800">Pickup</h4>
+                                </div>
+                                <div id="ordModalPickup" class="space-y-2 text-sm">
+                                    <p class="font-semibold text-slate-800">Restaurant Name</p>
+                                    <p class="text-slate-600">Address details here</p>
+                                    <div class="mt-3 pt-3 border-t">
+                                        <p class="text-xs text-slate-500 uppercase font-bold">Estimated Wait</p>
+                                        <p class="font-semibold text-slate-800">5-10 minutes</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dropoff Details -->
+                            <div class="bg-slate-50 p-4 rounded-xl">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i data-lucide="map-pin" class="w-5 h-5 text-green-500"></i>
+                                    <h4 class="font-bold text-slate-800">Delivery To</h4>
+                                </div>
+                                <div id="ordModalDropoff" class="space-y-2 text-sm">
+                                    <p class="font-semibold text-slate-800">Customer Address</p>
+                                    <p class="text-slate-600">Full address with unit/apt</p>
+                                    <div class="mt-3 pt-3 border-t">
+                                        <p class="text-xs text-slate-500 uppercase font-bold">Distance</p>
+                                        <p class="font-semibold text-slate-800">2.5 km</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Distance & Time -->
+                            <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i data-lucide="navigation" class="w-5 h-5 text-blue-600"></i>
+                                    <h4 class="font-bold text-slate-800">Distance & Time</h4>
+                                </div>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-600">Total Distance:</span>
+                                        <span id="ordModalDistance" class="font-bold text-slate-800">2.5 km</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-600">Estimated Time:</span>
+                                        <span id="ordModalTime" class="font-bold text-slate-800">15 min</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Items Count -->
+                            <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i data-lucide="package" class="w-5 h-5 text-blue-600"></i>
+                                    <h4 class="font-bold text-slate-800">Order Summary</h4>
+                                </div>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-600">Items Count:</span>
+                                        <span id="ordModalItems" class="font-bold text-slate-800">3 items</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Items -->
+                        <div class="bg-white border border-gray-200 rounded-xl p-4">
+                            <h4 class="font-bold text-slate-800 mb-3">Order Items</h4>
+                            <div id="ordModalItemsList" class="space-y-2 text-sm">
+                                <div class="flex justify-between py-2 border-b">
+                                    <span>2x Beef Burger</span>
+                                    <span class="font-semibold">$12.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customer Info -->
+                        <div class="bg-slate-50 p-4 rounded-xl">
+                            <h4 class="font-bold text-slate-800 mb-3">Customer Info</h4>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <img src="https://ui-avatars.com/api/?name=Customer&background=0D8ABC&color=fff" class="w-10 h-10 rounded-full">
+                                    <div>
+                                        <p id="ordModalCustName" class="font-semibold text-slate-800">John Doe</p>
+                                        <p class="text-xs text-slate-500">Rating: <span id="ordModalCustRating">4.8</span> ⭐</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg"><i data-lucide="phone" class="w-4 h-4"></i></button>
+                                    <button class="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg"><i data-lucide="message-circle" class="w-4 h-4"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-3 pt-4">
+                            <button onclick="window.currentOrderId && declineOrder(window.currentOrderId); closeOrderModal();" class="flex-1 bg-red-100 hover:bg-red-200 text-red-600 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
+                                <i data-lucide="x" class="w-5 h-5"></i> Decline
+                            </button>
+                            <button onclick="acceptOrder()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
+                                <i data-lucide="check" class="w-5 h-5"></i> Accept Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- ACTIVE DELIVERY SECTION -->
             <section id="active-section" class="content-section space-y-6">
@@ -228,18 +379,106 @@
                 </div>
 
                 <div id="activeDeliveryContainer" class="hidden space-y-6">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between mb-4">
                         <h3 class="text-xl font-bold">Active Delivery</h3>
-                        <span id="activeOrderId" class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full"></span>
+                        <div class="flex items-center gap-3">
+                            <div class="text-center">
+                                <p class="text-xs text-slate-500 uppercase font-bold">Time Elapsed</p>
+                                <p id="deliveryTimer" class="text-lg font-bold text-blue-600">12:34</p>
+                            </div>
+                            <span id="activeOrderId" class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full"></span>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Left: Delivery Details -->
+                        <!-- Left: Delivery Details & Map -->
                         <div class="lg:col-span-2 space-y-6">
+                            <!-- Live GPS Map with Full Screen Option -->
+                            <div class="bg-white rounded-2xl border-2 border-blue-200 relative shadow-sm overflow-hidden">
+                                <div id="deliveryMap" class="w-full h-96 relative" style="min-height: 400px;"></div>
+                                <div class="absolute top-4 right-4 flex gap-2 z-10">
+                                    <button onclick="centerMapOnDelivery()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2 shadow-lg">
+                                        <i data-lucide="target" class="w-4 h-4"></i> Center
+                                    </button>
+                                    <button onclick="toggleFullscreenMap()" class="bg-white hover:bg-blue-50 text-blue-600 border border-blue-300 px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2 shadow-lg">
+                                        <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <!-- Map Info Panel -->
+                                <div class="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 z-10 max-w-xs">
+                                    <p class="text-xs text-slate-500 font-bold uppercase">Current Location</p>
+                                    <p id="currentLocationText" class="text-sm font-semibold text-slate-800">Loading...</p>
+                                    <div class="flex gap-2 mt-2 text-xs">
+                                        <span class="text-slate-600"><strong>Distance:</strong> <span id="mapDistance">--</span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delivery Status Timeline -->
+                            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-6">Delivery Status</h4>
+                                <div class="space-y-4">
+                                    <!-- Status Step 1 -->
+                                    <div class="flex gap-4">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-8 h-8 rounded-full bg-green-100 border-2 border-green-500 flex items-center justify-center">
+                                                <i data-lucide="check" class="w-4 h-4 text-green-600"></i>
+                                            </div>
+                                            <div class="w-1 h-12 bg-green-300 mt-2"></div>
+                                        </div>
+                                        <div class="pt-1">
+                                            <p class="font-bold text-slate-800">Order Accepted</p>
+                                            <p class="text-xs text-slate-500">12:34 PM</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Status Step 2 -->
+                                    <div class="flex gap-4">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-8 h-8 rounded-full bg-blue-100 border-2 border-blue-500 flex items-center justify-center">
+                                                <i data-lucide="navigation" class="w-4 h-4 text-blue-600"></i>
+                                            </div>
+                                            <div class="w-1 h-12 bg-gray-300 mt-2"></div>
+                                        </div>
+                                        <div class="pt-1">
+                                            <p class="font-bold text-slate-800">On the Way to Pickup</p>
+                                            <p class="text-xs text-slate-500">Currently active</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Status Step 3 -->
+                                    <div class="flex gap-4">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-8 h-8 rounded-full bg-gray-100 border-2 border-gray-400 flex items-center justify-center">
+                                                <i data-lucide="package" class="w-4 h-4 text-gray-600"></i>
+                                            </div>
+                                            <div class="w-1 h-12 bg-gray-300 mt-2"></div>
+                                        </div>
+                                        <div class="pt-1">
+                                            <p class="font-bold text-slate-800">Pick up food</p>
+                                            <p class="text-xs text-slate-500">Pending</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Status Step 4 -->
+                                    <div class="flex gap-4">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-8 h-8 rounded-full bg-gray-100 border-2 border-gray-400 flex items-center justify-center">
+                                                <i data-lucide="home" class="w-4 h-4 text-gray-600"></i>
+                                            </div>
+                                        </div>
+                                        <div class="pt-1">
+                                            <p class="font-bold text-slate-800">Deliver to customer</p>
+                                            <p class="text-xs text-slate-500">Pending</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Pickup Location -->
                             <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                                 <div class="flex items-center gap-2 mb-4">
-                                    <i data-lucide="map-pin" class="w-5 h-5 text-orange-500"></i>
+                                    <i data-lucide="store" class="w-5 h-5 text-orange-500"></i>
                                     <h4 class="font-bold text-slate-800">Pickup Location</h4>
                                 </div>
                                 <div class="space-y-2 mb-4">
@@ -248,7 +487,7 @@
                                     <p id="pickupTime" class="text-slate-500 text-xs">Estimated wait: 5 min</p>
                                 </div>
                                 <button class="w-full bg-orange-100 hover:bg-orange-200 text-orange-600 font-semibold py-2 rounded-lg transition-colors" id="arrivedBtn">
-                                    Mark Arrived
+                                    Mark Arrived at Pickup
                                 </button>
                             </div>
 
@@ -299,17 +538,11 @@
                             </div>
                         </div>
 
-                        <!-- Right: Map & Controls -->
+                        <!-- Right: Controls & Camera -->
                         <div class="space-y-6">
-                            <!-- Map Placeholder -->
-                            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-96 flex flex-col items-center justify-center">
-                                <i data-lucide="map" class="w-12 h-12 text-slate-300 mb-3"></i>
-                                <p class="text-slate-600 font-medium">Live Navigation Map</p>
-                                <p class="text-slate-400 text-sm">Your route to customer</p>
-                            </div>
-
-                            <!-- Delivery Controls -->
+                            <!-- Navigation Controls -->
                             <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+                                <h4 class="font-bold text-slate-800">Navigation</h4>
                                 <div class="flex justify-between items-center">
                                     <span class="text-slate-600 text-sm font-medium">Distance</span>
                                     <span id="remainDistance" class="font-bold text-slate-800">1.2 km</span>
@@ -318,15 +551,139 @@
                                     <span class="text-slate-600 text-sm font-medium">ETA</span>
                                     <span id="remainETA" class="font-bold text-slate-800">12 min</span>
                                 </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-slate-600 text-sm font-medium">Payout</span>
-                                    <span id="deliveryPayoutAmount" class="font-bold text-green-600">$5.50</span>
+
+                            </div>
+
+                            <!-- Delivery Photo Capture -->
+                            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-4">Delivery Proof</h4>
+                                <div id="photoCaptureContainer" class="space-y-4">
+                                    <div id="photoPreview" class="hidden">
+                                        <img id="capturedPhoto" src="" class="w-full h-48 object-cover rounded-lg mb-3">
+                                        <button onclick="retakePhoto()" class="w-full bg-blue-100 hover:bg-blue-200 text-blue-600 font-semibold py-2 rounded-lg transition">
+                                            Retake Photo
+                                        </button>
+                                    </div>
+                                    <div id="noCameraState" class="text-center py-8">
+                                        <i data-lucide="camera" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
+                                        <p class="text-slate-600 font-medium">Capture Photo</p>
+                                        <p class="text-slate-400 text-sm">Take a photo when delivered</p>
+                                        <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="handlePhotoUpload(this)">
+                                        <div class="mt-3 space-y-2">
+                                            <button onclick="document.getElementById('photoInput').click()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2">
+                                                <i data-lucide="upload" class="w-4 h-4"></i> Upload Photo
+                                            </button>
+                                            <button onclick="captureFromCamera()" class="w-full bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2">
+                                                <i data-lucide="camera" class="w-4 h-4"></i> Use Camera
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button class="w-full bg-red-100 hover:bg-red-200 text-red-600 font-semibold py-3 rounded-xl transition-colors mt-4" id="cancelDeliveryBtn">
+                            </div>
+
+                            <!-- Delivery Actions -->
+                            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-3">
+                                <button onclick="openRatingModal()" id="completeDeliveryBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2" disabled>
+                                    <i data-lucide="check-circle" class="w-5 h-5"></i> Complete Delivery
+                                </button>
+                                <button class="w-full bg-red-100 hover:bg-red-200 text-red-600 font-semibold py-3 rounded-xl transition-colors" id="cancelDeliveryBtn">
                                     Cancel Delivery
                                 </button>
                             </div>
+
+                            <!-- Issues/Support -->
+                            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                                <h4 class="font-bold text-slate-800 mb-3">Support</h4>
+                                <button class="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-slate-100 rounded-lg transition text-slate-700">
+                                    <i data-lucide="alert-circle" class="w-5 h-5 text-orange-500"></i>
+                                    <span class="font-semibold">Report Issue</span>
+                                </button>
+                            </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Rating Modal -->
+                <div id="ratingModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl">
+                        <div class="p-6 border-b">
+                            <h3 class="text-xl font-bold">Rate Your Delivery</h3>
+                            <p class="text-slate-500 text-sm mt-1">How was your experience?</p>
+                        </div>
+                        
+                        <div class="p-6 space-y-6">
+                            <!-- Customer Rating -->
+                            <div>
+                                <p class="text-sm font-bold text-slate-700 mb-3">How would you rate the customer?</p>
+                                <div id="customerRatingStars" class="flex gap-2 text-3xl justify-center">
+                                    <button class="star-btn hover:scale-110 transition" data-rating="1">⭐</button>
+                                    <button class="star-btn hover:scale-110 transition" data-rating="2">⭐</button>
+                                    <button class="star-btn hover:scale-110 transition" data-rating="3">⭐</button>
+                                    <button class="star-btn hover:scale-110 transition" data-rating="4">⭐</button>
+                                    <button class="star-btn hover:scale-110 transition" data-rating="5">⭐</button>
+                                </div>
+                            </div>
+
+                            <!-- Feedback -->
+                            <div>
+                                <label class="text-sm font-bold text-slate-700 mb-2 block">Any feedback?</label>
+                                <textarea id="feedbackText" class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3" placeholder="Optional: Tell us about your experience..."></textarea>
+                            </div>
+
+                            <!-- Delivery Issues (Optional) -->
+                            <div>
+                                <label class="text-sm font-bold text-slate-700 mb-3 block">Any issues?</label>
+                                <div class="space-y-2">
+                                    <button class="w-full text-left p-3 border border-red-200 bg-red-50 hover:bg-red-100 rounded-lg text-sm text-red-700 font-medium transition">
+                                        <i data-lucide="x" class="w-4 h-4 inline mr-2"></i> Rude/Disruptive customer
+                                    </button>
+                                    <button class="w-full text-left p-3 border border-red-200 bg-red-50 hover:bg-red-100 rounded-lg text-sm text-red-700 font-medium transition">
+                                        <i data-lucide="alert-triangle" class="w-4 h-4 inline mr-2"></i> Unsafe neighborhood
+                                    </button>
+                                    <button class="w-full text-left p-3 border border-red-200 bg-red-50 hover:bg-red-100 rounded-lg text-sm text-red-700 font-medium transition">
+                                        <i data-lucide="map-pin" class="w-4 h-4 inline mr-2"></i> Wrong address
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-3">
+                                <button onclick="closeRatingModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition">
+                                    Skip
+                                </button>
+                                <button onclick="submitRating()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
+                                    <i data-lucide="send" class="w-4 h-4"></i> Submit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completion Modal -->
+                <div id="completionModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl text-center p-8 space-y-4">
+                        <div class="text-6xl mb-4">✨</div>
+                        <h3 class="text-2xl font-bold text-slate-800">Delivery Complete!</h3>
+                        <p class="text-slate-600">Great job! Your customer will be notified.</p>
+                        
+                        <!-- Store Notification Confirmation -->
+                        <div id="storeNotificationDiv" class="bg-blue-50 p-4 rounded-xl border border-blue-200 hidden">
+                            <div class="flex items-center gap-2 text-blue-700">
+                                <i data-lucide="check-circle" class="w-5 h-5"></i>
+                                <div class="text-left">
+                                    <p class="text-sm font-bold">Store Notified</p>
+                                    <p id="storeNotificationMsg" class="text-xs text-blue-600">Order delivery confirmed to store owner</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                            <p class="text-sm text-slate-600">Earnings for this delivery:</p>
+                            <p class="text-3xl font-bold text-green-600">$5.50</p>
+                        </div>
+                        <button onclick="resetDelivery()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition">
+                            Back to Orders
+                        </button>
                     </div>
                 </div>
             </section>
@@ -394,22 +751,7 @@
                     </div>
                 </div>
 
-                <!-- Payment Methods -->
-                <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                    <h4 class="font-bold text-slate-800 mb-6">Payment & Payouts</h4>
-                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="landmark" class="w-5 h-5 text-blue-600"></i>
-                            <div>
-                                <p class="font-semibold text-slate-800">Bank Account</p>
-                                <p class="text-sm text-slate-500">****1234 • Ready to withdraw</p>
-                            </div>
-                        </div>
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold text-sm transition-all" id="withdrawBtn">
-                            Withdraw
-                        </button>
-                    </div>
-                </div>
+
             </section>
         </main>
     </div>
@@ -418,6 +760,11 @@
     <script>
         // Initialize Icons
         lucide.createIcons();
+
+        // Page Load Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            generateOrderCards();
+        });
 
         // Tab Switching System
         function switchTab(tabId) {
@@ -446,6 +793,343 @@
             window.location.href = '../index.html';
         }
 
+        // Generate Order Cards
+        function generateOrderCards() {
+            const container = document.getElementById('ordersGrid');
+            const emptyState = document.getElementById('ordersEmptyState');
+            
+            if (sampleOrders.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            container.innerHTML = sampleOrders.map(order => `
+                <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer" data-order-id="${order.id}">
+                    <!-- Store Header -->
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-lg">${order.storeName}</h4>
+                            <p class="text-sm text-slate-500">${order.cuisine}</p>
+                        </div>
+                        <span class="text-2xl">🍽️</span>
+                    </div>
+                    
+                    <!-- Quick Info -->
+                    <div class="grid grid-cols-3 gap-4 mb-4 p-3 bg-slate-50 rounded-lg">
+                        <div class="text-center">
+                            <p class="text-xs text-slate-500">Distance</p>
+                            <p class="font-bold text-slate-800">${order.distance}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-slate-500">Time</p>
+                            <p class="font-bold text-slate-800">${order.estimatedTime} min</p>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Customer and Items Preview -->
+                    <div class="mb-4 pb-4 border-b border-gray-100">
+                        <p class="text-xs text-slate-500 mb-2">📦 ${order.items.length} items</p>
+                        <p class="text-sm text-slate-600">${order.items.slice(0, 2).map(i => i.name).join(', ')}${order.items.length > 2 ? '...' : ''}</p>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex gap-2">
+                        <button class="flex-1 bg-red-100 hover:bg-red-200 text-red-600 font-semibold py-2 rounded-lg transition" onclick="event.stopPropagation(); declineOrder('${order.id}')">
+                            <i data-lucide="x" class="w-4 h-4 inline mr-1"></i> Decline
+                        </button>
+                        <button class="flex-1 bg-green-100 hover:bg-green-200 text-green-600 font-semibold py-2 rounded-lg transition" onclick="event.stopPropagation(); openOrderModal('${order.id}')">
+                            <i data-lucide="eye" class="w-4 h-4 inline mr-1"></i> Details
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            lucide.createIcons();
+        }
+
+        // Sample Orders Data
+        const sampleOrders = [
+            {
+                id: 'ORD001',
+                storeName: 'Pizza Palace',
+                cuisine: 'Italian',
+                pickupAddress: '123 Main St, Downtown',
+                dropoffAddress: '456 Oak Ave',
+                dropoffDetails: 'Apt 305, Building B',
+                distance: '1.2 km',
+                estimatedTime: '18',
+                prepTime: '5',
+                customerName: 'John Doe',
+                customerRating: 4.8,
+                items: [
+                    { name: 'Pepperoni Pizza (Large)', qty: 1, price: 14.99 },
+                    { name: 'Garlic Bread', qty: 1, price: 4.99 },
+                    { name: 'Coca-Cola (2L)', qty: 1, price: 3.99 }
+                ]
+            },
+            {
+                id: 'ORD002',
+                storeName: 'Burger Barn',
+                cuisine: 'American',
+                pickupAddress: '789 Center Blvd',
+                dropoffAddress: '321 Maple Drive',
+                dropoffDetails: 'House with blue door',
+                distance: '0.8 km',
+                estimatedTime: '12',
+                prepTime: '3',
+                customerName: 'Jane Smith',
+                customerRating: 4.9,
+                items: [
+                    { name: 'Classic Cheeseburger', qty: 2, price: 8.99 },
+                    { name: 'French Fries (Large)', qty: 1, price: 3.99 }
+                ]
+            },
+            {
+                id: 'ORD003',
+                storeName: 'Sushi Sensation',
+                cuisine: 'Japanese',
+                pickupAddress: '555 Park Lane',
+                dropoffAddress: '789 Cherry St',
+                dropoffDetails: 'Office building, 3rd floor',
+                distance: '2.1 km',
+                estimatedTime: '22',
+                prepTime: '8',
+                customerName: 'Mike Johnson',
+                customerRating: 4.7,
+                items: [
+                    { name: 'Spicy Tuna Roll', qty: 2, price: 7.99 },
+                    { name: 'California Roll', qty: 1, price: 6.99 },
+                    { name: 'Edamame', qty: 1, price: 3.50 }
+                ]
+            }
+        ];
+
+        // Order Details Modal Functions
+        function openOrderModal(orderId) {
+            const order = sampleOrders.find(o => o.id === orderId);
+            if (order) {
+                document.getElementById('orderModal').classList.remove('hidden');
+                document.getElementById('orderModal').classList.add('flex');
+                
+                // Populate pickup details
+                document.getElementById('ordModalPickup').innerHTML = `
+                    <p class="font-semibold text-slate-800">${order.storeName}</p>
+                    <p class="text-slate-600">${order.pickupAddress}</p>
+                    <div class="mt-3 pt-3 border-t">
+                        <p class="text-xs text-slate-500 uppercase font-bold">Estimated Wait</p>
+                        <p class="font-semibold text-slate-800">${order.prepTime} min</p>
+                    </div>
+                `;
+                
+                // Populate dropoff details
+                document.getElementById('ordModalDropoff').innerHTML = `
+                    <p class="font-semibold text-slate-800">${order.dropoffAddress}</p>
+                    <p class="text-slate-600">${order.dropoffDetails}</p>
+                    <div class="mt-3 pt-3 border-t">
+                        <p class="text-xs text-slate-500 uppercase font-bold">Distance</p>
+                        <p class="font-semibold text-slate-800">${order.distance}</p>
+                    </div>
+                `;
+                
+                // Populate distance and time
+                document.getElementById('ordModalDistance').textContent = order.distance;
+                document.getElementById('ordModalTime').textContent = order.estimatedTime + ' min';
+                
+                // Populate items count
+                document.getElementById('ordModalItems').textContent = order.items.length + ' items';
+                
+                // Populate items list
+                const itemsList = document.getElementById('ordModalItemsList');
+                itemsList.innerHTML = order.items.map(item => `
+                    <div class="flex justify-between py-2 border-b">
+                        <span>${item.qty}x ${item.name}</span>
+                        <span class="font-semibold">$${(item.price * item.qty).toFixed(2)}</span>
+                    </div>
+                `).join('');
+                
+                // Populate customer info
+                document.getElementById('ordModalCustName').textContent = order.customerName;
+                document.getElementById('ordModalCustRating').textContent = order.customerRating;
+
+                // Store current order ID for later use
+                window.currentOrderId = orderId;
+            }
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+            document.getElementById('orderModal').classList.remove('flex');
+        }
+
+        function acceptOrder() {
+            const orderId = window.currentOrderId;
+            const order = sampleOrders.find(o => o.id === orderId);
+            closeOrderModal();
+            
+            // Show active delivery section
+            showActiveDelivery(order);
+            
+            // Start delivery timer
+            startDeliveryTimer();
+        }
+
+        function declineOrder(orderId) {
+            const index = sampleOrders.findIndex(o => o.id === orderId);
+            if (index > -1) {
+                sampleOrders.splice(index, 1);
+                generateOrderCards();
+            }
+        }
+
+        // Active Delivery Functions
+        function showActiveDelivery(order) {
+            const container = document.getElementById('activeDeliveryContainer');
+            const emptyState = document.getElementById('activeEmptyState');
+            
+            // Hide empty state, show delivery container
+            emptyState.classList.add('hidden');
+            container.classList.remove('hidden');
+            
+            // Populate delivery details
+            document.getElementById('activeOrderId').textContent = `Order #${order.id}`;
+            document.getElementById('pickupStore').textContent = order.storeName;
+            document.getElementById('pickupAddress').textContent = order.pickupAddress;
+            document.getElementById('pickupTime').textContent = `Estimated wait: ${order.prepTime} min`;
+            
+            document.getElementById('dropoffLocation').textContent = order.dropoffAddress;
+            document.getElementById('dropoffDetails').textContent = order.dropoffDetails;
+            document.getElementById('dropoffTime').textContent = `Estimated delivery: ${order.estimatedTime} min`;
+            
+            document.getElementById('customerName').textContent = order.customerName;
+            document.getElementById('customerRating').textContent = `Rating: ${order.customerRating} ⭐`;
+            
+            document.getElementById('remainDistance').textContent = order.distance;
+            document.getElementById('remainETA').textContent = order.estimatedTime + ' min';
+            
+            // Populate order items
+            const itemsList = document.getElementById('orderDetailsList');
+            itemsList.innerHTML = order.items.map(item => `
+                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                    <span class="text-slate-700">${item.name}</span>
+                    <span class="flex items-center gap-2">
+                        <span class="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs font-bold">x${item.qty}</span>
+                        <span class="font-semibold">$${(item.price * item.qty).toFixed(2)}</span>
+                    </span>
+                </div>
+            `).join('');
+            
+            // Switch to Active Delivery tab
+            switchTab('active');
+        }
+
+        function startDeliveryTimer() {
+            let seconds = 0;
+            const timerInterval = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                document.getElementById('deliveryTimer').textContent = 
+                    `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }, 1000);
+            window.deliveryTimerInterval = timerInterval;
+        }
+
+        // Photo Capture Functions
+        function captureFromCamera() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.capture = 'environment';
+            input.onchange = (e) => {
+                handlePhotoUpload({files: e.target.files});
+            };
+            input.click();
+        }
+
+        function handlePhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = (e) => {
+                    const img = e.target.result;
+                    document.getElementById('capturedPhoto').src = img;
+                    document.getElementById('photoPreview').classList.remove('hidden');
+                    document.getElementById('noCameraState').classList.add('hidden');
+                    
+                    // Enable complete delivery button
+                    document.getElementById('completeDeliveryBtn').disabled = false;
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function retakePhoto() {
+            document.getElementById('photoInput').value = '';
+            document.getElementById('photoPreview').classList.add('hidden');
+            document.getElementById('noCameraState').classList.remove('hidden');
+            document.getElementById('completeDeliveryBtn').disabled = true;
+        }
+
+        // Rating Modal Functions
+        function openRatingModal() {
+            document.getElementById('ratingModal').classList.remove('hidden');
+            document.getElementById('ratingModal').classList.add('flex');
+        }
+
+        function closeRatingModal() {
+            document.getElementById('ratingModal').classList.add('hidden');
+            document.getElementById('ratingModal').classList.remove('flex');
+            showCompletionModal();
+        }
+
+        function submitRating() {
+            const ratingValue = document.querySelector('.star-btn.selected')?.dataset.rating || '5';
+            const feedback = document.getElementById('feedbackText').value;
+            
+            console.log('Rating submitted:', {
+                rating: ratingValue,
+                feedback: feedback,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Send notification to store owner
+            sendDeliveryNotification(currentDelivery);
+            
+            closeRatingModal();
+        }
+
+        function showCompletionModal() {
+            document.getElementById('completionModal').classList.remove('hidden');
+            document.getElementById('completionModal').classList.add('flex');
+            // Show store notification confirmation
+            document.getElementById('storeNotificationDiv').classList.remove('hidden');
+        }
+
+        function resetDelivery() {
+            // Clear active delivery
+            document.getElementById('activeDeliveryContainer').classList.add('hidden');
+            document.getElementById('activeEmptyState').classList.remove('hidden');
+            document.getElementById('completionModal').classList.add('hidden');
+            document.getElementById('completionModal').classList.remove('flex');
+            
+            // Reset photo
+            retakePhoto();
+            
+            // Clear timer
+            if (window.deliveryTimerInterval) {
+                clearInterval(window.deliveryTimerInterval);
+            }
+            
+            // Switch back to available orders
+            switchTab('orders');
+            
+            // Show success message
+            alert('Ready for your next delivery!');
+        }
+
         // Tab switching for earnings
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -457,6 +1141,161 @@
                 this.classList.remove('text-slate-600', 'border-transparent');
             });
         });
+
+        // Star rating interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            const starButtons = document.querySelectorAll('.star-btn');
+            starButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const rating = this.dataset.rating;
+                    starButtons.forEach(b => {
+                        b.classList.remove('selected');
+                        b.classList.add('opacity-50');
+                    });
+                    for (let i = 0; i < rating; i++) {
+                        starButtons[i].classList.remove('opacity-50');
+                        starButtons[i].classList.add('selected');
+                    }
+                });
+            });
+        });
+
+        // ============= STORE NOTIFICATION SYSTEM =============
+        // Initialize Store Notifications Storage
+        function initializeStoreNotifications() {
+            if (!localStorage.getItem('storeNotifications')) {
+                localStorage.setItem('storeNotifications', JSON.stringify([]));
+            }
+        }
+
+        // Send Delivery Notification to Store Owner
+        function sendDeliveryNotification(delivery) {
+            if (!delivery) return;
+
+            const notification = {
+                id: 'NOTIF_' + Date.now(),
+                type: 'delivery_completed',
+                orderID: delivery.pickup?.name || 'Unknown Order',
+                storeName: delivery.pickup?.name || 'Store',
+                deliveryAddress: delivery.dropoff?.name || 'Unknown Address',
+                timestamp: new Date().toISOString(),
+                status: 'unread',
+                message: `Order from ${delivery.pickup?.name || 'Store'} has been successfully delivered!`
+            };
+
+            // Get existing notifications
+            let notifications = JSON.parse(localStorage.getItem('storeNotifications') || '[]');
+            
+            // Add new notification
+            notifications.unshift(notification);
+            
+            // Keep only last 50 notifications
+            if (notifications.length > 50) {
+                notifications = notifications.slice(0, 50);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('storeNotifications', JSON.stringify(notifications));
+            
+            // Try to show browser notification if supported
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Order Delivered!', {
+                    body: `Order from ${notification.storeName} delivered to ${notification.deliveryAddress}`,
+                    icon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzEwQjk4MSIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0xMiAyMGw0IDQgOC04Ii8+PC9zdmc+',
+                    tag: 'delivery_' + notification.id
+                });
+            }
+            
+            console.log('✓ Store notification sent:', notification);
+            return notification;
+        }
+
+        // Get Store Notifications
+        function getStoreNotifications() {
+            initializeStoreNotifications();
+            return JSON.parse(localStorage.getItem('storeNotifications') || '[]');
+        }
+
+        // Mark notification as read
+        function markNotificationAsRead(notificationId) {
+            let notifications = JSON.parse(localStorage.getItem('storeNotifications') || '[]');
+            const notification = notifications.find(n => n.id === notificationId);
+            if (notification) {
+                notification.status = 'read';
+                localStorage.setItem('storeNotifications', JSON.stringify(notifications));
+            }
+        }
+
+        // Clear all notifications
+        function clearAllNotifications() {
+            localStorage.setItem('storeNotifications', JSON.stringify([]));
+            console.log('✓ All notifications cleared');
+        }
+
+        // Initialize notifications on page load
+        initializeStoreNotifications();
+        
+        // Request browser notification permission if not already granted
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // ============= NOTIFICATION PANEL FUNCTIONS =============
+        function toggleNotificationPanel() {
+            const panel = document.getElementById('notificationPanel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) {
+                updateNotificationPanel();
+            }
+        }
+
+        function updateNotificationPanel() {
+            const notifications = getStoreNotifications();
+            const notificationsList = document.getElementById('notificationsList');
+            const badge = document.getElementById('notificationBadge');
+
+            // Update badge count
+            const unreadCount = notifications.filter(n => n.status === 'unread').length;
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            // Render notifications
+            if (notifications.length === 0) {
+                notificationsList.innerHTML = '<div class="p-8 text-center text-slate-500"><i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i><p class="text-sm">No notifications yet</p></div>';
+                lucide.createIcons();
+                return;
+            }
+
+            notificationsList.innerHTML = notifications.map(notif => `
+                <div class="p-4 border-b hover:bg-gray-50 transition cursor-pointer" onclick="markNotificationAsRead('${notif.id}')">
+                    <div class="flex items-start gap-3">
+                        <div class="mt-1">
+                            ${notif.status === 'unread' ? '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>' : '<div class="w-2 h-2 bg-transparent"></div>'}
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-slate-800 text-sm">${notif.message}</p>
+                            <p class="text-xs text-slate-500 mt-1">📍 ${notif.deliveryAddress}</p>
+                            <p class="text-xs text-slate-400 mt-2">${new Date(notif.timestamp).toLocaleString()}</p>
+                        </div>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-bold">✓ Delivered</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            lucide.createIcons();
+        }
+
+        // Update notification panel when notifications are added
+        const originalSendNotification = sendDeliveryNotification;
+        sendDeliveryNotification = function(delivery) {
+            const result = originalSendNotification(delivery);
+            setTimeout(() => updateNotificationPanel(), 300);
+            return result;
+        };
 
         // Earnings Chart Initialization
         const earningsCtx = document.getElementById('earningsChart').getContext('2d');
@@ -492,7 +1331,176 @@
                 }
             }
         });
+        // GPS and Map Variables
+        let deliveryMap = null;
+        let pickupMarker = null;
+        let dropoffMarker = null;
+        let riderMarker = null;
+        let routeLine = null;
+        let simulationInterval = null;
+        let currentDelivery = null;
+        let riderProgress = 0;
+
+        // Initialize Delivery Map
+        function initializeDeliveryMap(pickup, dropoff) {
+            // Create map centered between pickup and dropoff
+            const center = [(pickup.lat + dropoff.lat) / 2, (pickup.lng + dropoff.lng) / 2];
+            
+            if (deliveryMap) {
+                deliveryMap.remove();
+            }
+            
+            deliveryMap = L.map('deliveryMap').setView(center, 13);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(deliveryMap);
+            
+            // Add pickup marker
+            pickupMarker = L.marker(pickup.coords, {
+                icon: L.icon({
+                    iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDMyIDQwIj48cGF0aCBmaWxsPSIjRkY5ODAwIiBkPSJNMTYgMEM3IDAgMCAxMDAgNyAxOGM0IDUgOSAxMiAxNiAyMmM3LTEwIDEyLTE3IDE2LTIyYzcgMTUgMDI1IDE0IDE2IDE2YzAgMCAwIDAgMCAweiIvPjwvc3ZnPg==',
+                    iconSize: [32, 40],
+                    iconAnchor: [16, 40],
+                    popupAnchor: [0, -40]
+                })
+            }).addTo(deliveryMap).bindPopup('📦 Pickup Location<br>' + pickup.name);
+            
+            // Add dropoff marker
+            dropoffMarker = L.marker(dropoff.coords, {
+                icon: L.icon({
+                    iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDMyIDQwIj48cGF0aCBmaWxsPSIjMTBCOTgxIiBkPSJNMTYgMEM3IDAgMCAxMDAgNyAxOGM0IDUgOSAxMiAxNiAyMmM3LTEwIDEyLTE3IDE2LTIyYzcgMTUgMDI1IDE0IDE2IDE2YzAgMCAwIDAgMCAweiIvPjwvc3ZnPg==',
+                    iconSize: [32, 40],
+                    iconAnchor: [16, 40],
+                    popupAnchor: [0, -40]
+                })
+            }).addTo(deliveryMap).bindPopup('📍 Delivery Location<br>' + dropoff.name);
+            
+            // Add rider marker
+            riderMarker = L.marker(pickup.coords, {
+                icon: L.icon({
+                    iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzI1NjNlYiIvPjxjaXJjbGUgY3g9IjE2IiBjeT0iMTYiIHI9IjgiIGZpbGw9IiNmZmYiLz48L3N2Zz4=',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16],
+                    popupAnchor: [0, -16]
+                })
+            }).addTo(deliveryMap).bindPopup('🏍️ Your Location');
+            
+            // Draw route line
+            routeLine = L.polyline([pickup.coords, dropoff.coords], {
+                color: '#2563eb',
+                weight: 3,
+                opacity: 0.7,
+                dashArray: '5, 5'
+            }).addTo(deliveryMap);
+            
+            // Fit map to bounds
+            const bounds = L.latLngBounds([pickup.coords, dropoff.coords]);
+            deliveryMap.fitBounds(bounds, { padding: [50, 50] });
+            
+            console.log('✓ Delivery map initialized');
+        }
+
+        function centerMapOnDelivery() {
+            if (deliveryMap && riderMarker) {
+                deliveryMap.setView(riderMarker.getLatLng(), 15);
+            }
+        }
+
+        function toggleFullscreenMap() {
+            const mapContainer = document.getElementById('deliveryMap');
+            if (!document.fullscreenElement) {
+                mapContainer.requestFullscreen().catch(err => {
+                    console.log('Fullscreen request failed:', err);
+                    // Fallback: show message
+                    alert('Fullscreen not supported on this device');
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Simulate GPS tracking (real-time updates)
+        function startGPSSimulation(pickup, dropoff, estimatedTime) {
+            // Cancel any existing simulation
+            if (simulationInterval) {
+                clearInterval(simulationInterval);
+            }
+            
+            riderProgress = 0;
+            const totalSteps = Math.min(estimatedTime * 2, 120); // Update every 30 seconds in real time or 2x per minute
+            const stepInterval = (estimatedTime * 60 * 1000) / totalSteps; // Convert to milliseconds
+            
+            simulationInterval = setInterval(() => {
+                riderProgress++;
+                
+                if (riderProgress >= totalSteps) {
+                    clearInterval(simulationInterval);
+                    simulationInterval = null;
+                    return;
+                }
+                
+                // Calculate interpolated position between pickup and dropoff
+                const progress = riderProgress / totalSteps;
+                const currentLat = pickup.coords[0] + (dropoff.coords[0] - pickup.coords[0]) * progress;
+                const currentLng = pickup.coords[1] + (dropoff.coords[1] - pickup.coords[1]) * progress;
+                
+                if (riderMarker) {
+                    riderMarker.setLatLng([currentLat, currentLng]);
+                    
+                    // Update location text
+                    const status = progress < 0.3 ? 'Going to pickup' : progress < 0.7 ? 'Picking up order' : 'On way to delivery';
+                    document.getElementById('currentLocationText').textContent = status;
+                    
+                    // Calculate remaining distance and ETA
+                    const remainingDistance = ((1 - progress) * calculateDistance(pickup.coords, dropoff.coords)).toFixed(1);
+                    const remainingTime = Math.ceil((1 - progress) * estimatedTime);
+                    
+                    document.getElementById('mapDistance').textContent = remainingDistance + ' km';
+                    document.getElementById('remainETA').textContent = remainingTime + ' min';
+                }
+            }, stepInterval);
+        }
+
+        // Calculate distance between two coordinates (Haversine formula)
+        function calculateDistance(coords1, coords2) {
+            const [lat1, lng1] = coords1;
+            const [lat2, lng2] = coords2;
+            const R = 6371; // Earth's radius in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        // Modify showActiveDelivery to initialize map
+        const originalShowActiveDelivery = showActiveDelivery;
+        showActiveDelivery = function(order) {
+            originalShowActiveDelivery(order);
+            
+            // Wait for DOM to be ready, then initialize map
+            setTimeout(() => {
+                // Sample coordinates - in real app, get from database
+                const pickupCoords = {
+                    name: order.storeName,
+                    coords: [40.7128 + (Math.random() - 0.5) * 0.05, -74.0060 + (Math.random() - 0.5) * 0.05]
+                };
+                
+                const dropoffCoords = {
+                    name: order.dropoffAddress,
+                    coords: [40.7128 + (Math.random() - 0.5) * 0.1, -74.0060 + (Math.random() - 0.5) * 0.1]
+                };
+                
+                initializeDeliveryMap(pickupCoords, dropoffCoords);
+                startGPSSimulation(pickupCoords, dropoffCoords, parseInt(order.estimatedTime));
+                currentDelivery = { pickup: pickupCoords, dropoff: dropoffCoords };
+            }, 100);
+        };
     </script>
-    <script src=""></script>
 </body>
 </html>
