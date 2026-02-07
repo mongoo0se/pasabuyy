@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pa-Buy Bes! | Runner Dashboard</title>
-    <link rel="stylesheet" href="runner-style.css">
+    <link rel="stylesheet" href="runner.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,6 +39,9 @@
             </button>
             <button onclick="switchTab('earnings')" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
                 <i data-lucide="wallet" class="w-5 h-5"></i> Earnings
+            </button>
+            <button onclick="switchTab('profile')" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="user" class="w-5 h-5"></i> Profile
             </button>
         </nav>
 
@@ -753,10 +756,63 @@
 
 
             </section>
+
+            <!-- PROFILE SECTION -->
+            <section id="profile-section" class="content-section space-y-8">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold">My Profile</h3>
+                    <button onclick="openProfileEdit()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-semibold">Edit Profile</button>
+                </div>
+                
+                <!-- Profile Card -->
+                <div class="bg-white p-8 rounded-2xl border shadow-sm flex gap-8 items-center">
+                    <div class="text-center">
+                        <img id="profileImage" src="https://ui-avatars.com/api/?name=Rider&background=0D8ABC&color=fff" class="w-32 h-32 rounded-full shadow-md object-cover mx-auto">
+                        <input type="file" id="imageUpload" class="hidden" accept="image/*">
+                        <button onclick="document.getElementById('imageUpload').click()" class="mt-3 text-sm text-blue-600 hover:underline">Change Photo</button>
+                    </div>
+                    <div class="flex-1 space-y-3 text-sm">
+                        <p><strong>Name:</strong> <span id="profileName">Delivery Rider</span></p>
+                        <p><strong>Email:</strong> <span id="profileEmail">rider@email.com</span></p>
+                        <p><strong>Rating:</strong> <span id="profileRating">4.9 ⭐</span></p>
+                        <p><strong>Total Deliveries:</strong> <span id="profileDeliveries">342</span></p>
+                        <p><strong>Member Since:</strong> <span id="profileMemberSince">2024</span></p>
+                    </div>
+                </div>
+
+                <!-- Performance Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Acceptance Rate</p>
+                        <h3 class="text-2xl font-bold mt-2">92%</h3>
+                        <span class="text-slate-400 text-xs mt-2">Orders accepted</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">On-Time Delivery</p>
+                        <h3 class="text-2xl font-bold mt-2">98%</h3>
+                        <span class="text-slate-400 text-xs mt-2">Delivery rate</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Avg Delivery Time</p>
+                        <h3 class="text-2xl font-bold mt-2">18 min</h3>
+                        <span class="text-slate-400 text-xs mt-2">Average time</span>
+                    </div>
+                </div>
+
+                <!-- Change Password Section -->
+                <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                    <h4 class="font-bold mb-4">Change Password</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="password" id="oldPass" placeholder="Old Password" class="bg-slate-50 border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-100">
+                        <input type="password" id="newPass" placeholder="New Password" class="bg-slate-50 border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-100">
+                        <button onclick="changePassword()" class="bg-green-600 hover:bg-green-700 text-white rounded-xl px-4 font-semibold transition-all">Update</button>
+                    </div>
+                </div>
+
+            </section>
         </main>
     </div>
 
-    <script src=""></script>
     <script>
         // Initialize Icons
         lucide.createIcons();
@@ -764,6 +820,25 @@
         // Page Load Initialization
         document.addEventListener('DOMContentLoaded', function() {
             generateOrderCards();
+            
+            // Initialize profile
+            loadProfile();
+            
+            // Handle profile image upload
+            document.getElementById('imageUpload').addEventListener('change', function(e) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('profileImage').src = event.target.result;
+                    localStorage.setItem("profileImage", event.target.result);
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            });
+
+            // Load saved profile image if exists
+            const savedImage = localStorage.getItem("profileImage");
+            if (savedImage) {
+                document.getElementById('profileImage').src = savedImage;
+            }
         });
 
         // Tab Switching System
@@ -772,7 +847,8 @@
                 'dashboard': 'Dashboard Overview',
                 'orders': 'Available Orders',
                 'active': 'Active Delivery',
-                'earnings': 'Earnings & Analytics'
+                'earnings': 'Earnings & Analytics',
+                'profile': 'My Profile'
             };
             document.getElementById('page-title').innerText = titles[tabId];
 
@@ -792,6 +868,40 @@
         function logout() {
             window.location.href = '../index.html';
         }
+
+        // Profile Variables
+        let userProfile = JSON.parse(localStorage.getItem("userProfile")) || {name: "Delivery Rider", email: "rider@email.com"};
+
+        // Load Profile Data
+        function loadProfile() {
+            document.getElementById('profileName').innerText = userProfile.name;
+            document.getElementById('profileEmail').innerText = userProfile.email;
+        }
+
+        // Open Profile Edit Dialog
+        function openProfileEdit() {
+            const newName = prompt("Enter new name:", userProfile.name);
+            if (newName) {
+                userProfile.name = newName;
+                localStorage.setItem("userProfile", JSON.stringify(userProfile));
+                loadProfile();
+            }
+        }
+
+        // Change Password Function
+        function changePassword() {
+            const oldPass = document.getElementById('oldPass').value;
+            const newPass = document.getElementById('newPass').value;
+            if (!oldPass || !newPass) {
+                alert("Please fill all fields");
+                return;
+            }
+            alert("Password updated successfully (Demo only)");
+            document.getElementById('oldPass').value = "";
+            document.getElementById('newPass').value = "";
+        }
+
+
 
         // Generate Order Cards
         function generateOrderCards() {
