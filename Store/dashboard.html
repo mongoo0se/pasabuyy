@@ -198,10 +198,7 @@
             <section id="products-section" class="content-section space-y-6">
                 <div class="flex justify-between items-center">
                     <h3 class="text-xl font-bold">Product Catalog</h3>
-            <button onclick="if(!adminOnlyAction()) return; openModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-blue-100">
-                        <i data-lucide="plus" class="w-4 h-4"></i> Add New Product
-                    </button>
-                </div>
+                    <button onclick="if(!adminOnlyAction()) return; openModal()" class="admin-only bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-blue-100">
                 
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                     <table class="w-full text-left">
@@ -642,7 +639,7 @@
                         <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Active</span>
                     </td>
                     <td class="px-6 py-4">
-                        <button type="button" class="delete-product bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">Delete</button>
+                        <button type="button" class="admin-only delete-product bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">Delete</button>
                     </td>
                 </tr>
             `;
