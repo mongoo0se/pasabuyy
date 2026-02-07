@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Pa-Buy Bes!</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -17,118 +16,241 @@
 </head>
 <body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden">
 
+    <!-- Sidebar Navigation -->
     <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col z-20">
         <div class="p-6">
-            <div class="flex items-center gap-3 text-blue-600">
+            <div class="flex items-center gap-3">
                 <div class="bg-blue-600 text-white p-2 rounded-lg">
-                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
                 </div>
-                <span class="text-xl font-bold tracking-tight text-slate-800">Pa-Buy Bes!</span>
+                <span class="text-xl font-bold text-slate-800">Pa-Buy Bes!</span>
             </div>
         </div>
 
         <nav class="flex-1 px-4 space-y-1">
-            <button onclick="window.location.href='clientDashboard.html'" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
-                <i data-lucide="home" class="w-5 h-5"></i> Dashboard
-            </button>
-            <button onclick="window.location.href='stores.html'" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
-                <i data-lucide="store" class="w-5 h-5"></i> Stores
-            </button>
-            <button onclick="window.location.href='cart.html'" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
-                <i data-lucide="shopping-cart" class="w-5 h-5"></i> Cart
-            </button>
-            <button onclick="window.location.href='messages.html'" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
-                <i data-lucide="message-circle" class="w-5 h-5"></i> Messages
-            </button>
-            <button onclick="window.location.href='profile.html'" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
-                <i data-lucide="user" class="w-5 h-5"></i> Profile
-            </button>
+            <a href="clientDashboard.html" class="w-full flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-4m0 0l4 4"></path></svg>
+                Dashboard
+            </a>
+            <a href="stores.html" class="w-full flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4m8 11H8a2 2 0 01-2-2v-5a2 2 0 012-2h8a2 2 0 012 2v5a2 2 0 01-2 2z"></path></svg>
+                Stores
+            </a>
+            <a href="cart.html" class="w-full flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                Cart
+            </a>
+            <a href="messages.html" class="w-full flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                Messages
+            </a>
+            <a href="profile.html" class="w-full flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                Profile
+            </a>
         </nav>
 
         <div class="p-4 border-t border-gray-100">
             <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
-                <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Logout
             </button>
         </div>
     </aside>
 
+    <!-- Main Content -->
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
+        <!-- Header -->
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 flex-shrink-0">
             <h2 class="text-lg font-semibold text-slate-800">Checkout</h2>
             <div class="flex items-center gap-5">
                 <div class="relative">
-                    <button onclick="toggleNotifications()">
-                        <i data-lucide="bell" class="w-5 h-5 text-slate-400"></i>
+                    <button onclick="toggleNotifications()" class="hover:bg-gray-100 p-2 rounded-lg transition">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
                         <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
                     </button>
-                    <div id="notificationBox" class="hidden absolute right-0 mt-4 w-80 bg-white rounded-2xl shadow-xl border z-50">
+                    <div id="notificationBox" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border z-50">
                         <div class="p-4 border-b font-bold text-slate-800">Notifications</div>
                         <div class="max-h-72 overflow-y-auto divide-y">
                             <div class="p-4 hover:bg-slate-50">
-                                <p class="text-sm font-semibold">Order Processing</p>
-                                <p class="text-xs text-slate-500">Your order is being processed</p>
+                                <p class="text-sm font-semibold">Order Ready</p>
+                                <p class="text-xs text-slate-500">Your order is ready for checkout</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button onclick="toggleUserMenu()" class="hover:bg-gray-100 p-2 rounded-lg transition">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </button>
+                    <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border z-50">
+                        <div class="p-4 border-b">
+                            <p class="font-semibold text-slate-800">John Doe</p>
+                            <p class="text-xs text-slate-500">john@example.com</p>
+                        </div>
+                        <a href="profile.html" class="block px-4 py-3 hover:bg-gray-50">Edit Profile</a>
+                        <a href="profile.html" class="block px-4 py-3 hover:bg-gray-50">Settings</a>
+                        <button onclick="logout()" class="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50">Logout</button>
                     </div>
                 </div>
             </div>
         </header>
 
+        <!-- Scrollable Content Area -->
         <main class="flex-1 overflow-y-auto p-8">
-            <div class="max-w-4xl mx-auto space-y-6">
-                <h3 class="text-xl font-bold">Complete Your Order</h3>
+            <div class="max-w-5xl mx-auto space-y-6">
+                <div class="flex items-center gap-4">
+                    <a href="cart.html" class="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        Back to Cart
+                    </a>
+                </div>
+
+                <h3 class="text-2xl font-bold">Complete Your Order</h3>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Column: Forms -->
                     <div class="lg:col-span-2 space-y-6">
+                        <!-- Delivery Options -->
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                            <h4 class="font-bold text-lg mb-4">Delivery Option</h4>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-3 flex-1 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="delivery" value="delivery" checked class="w-4 h-4">
+                                    <span class="font-medium">Delivery</span>
+                                </label>
+                                <label class="flex items-center gap-3 flex-1 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="delivery" value="pickup" class="w-4 h-4">
+                                    <span class="font-medium">Pick-up</span>
+                                </label>
+                            </div>
+                        </div>
+
                         <!-- Delivery Address -->
-                        <div class="bg-white rounded-2xl border shadow-sm p-6">
-                            <h4 class="font-bold mb-4">Delivery Address</h4>
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                            <h4 class="font-bold text-lg mb-4">Delivery Address</h4>
                             <div class="space-y-4">
-                                <input type="text" placeholder="Street Address" class="w-full bg-slate-50 border rounded-xl px-4 py-3">
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">Full Name</label>
+                                    <input type="text" placeholder="Enter your full name" value="John Doe" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">Phone Number</label>
+                                    <input type="tel" placeholder="Enter your phone number" value="+63 912 345 6789" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">Street Address</label>
+                                    <input type="text" placeholder="Enter your address" value="123 Main St, Barangay, City" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                                </div>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" placeholder="City" class="bg-slate-50 border rounded-xl px-4 py-3">
-                                    <input type="text" placeholder="Postal Code" class="bg-slate-50 border rounded-xl px-4 py-3">
+                                    <div>
+                                        <label class="block text-sm font-semibold mb-2">City</label>
+                                        <input type="text" placeholder="City" value="Cebu" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold mb-2">Postal Code</label>
+                                        <input type="text" placeholder="Postal Code" value="6000" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Payment Method -->
-                        <div class="bg-white rounded-2xl border shadow-sm p-6">
-                            <h4 class="font-bold mb-4">Payment Method</h4>
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                            <h4 class="font-bold text-lg mb-4">Payment Method</h4>
                             <div class="space-y-3">
-                                <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-blue-50">
-                                    <input type="radio" name="payment" checked> Cash on Delivery
+                                <label class="flex items-center gap-3 p-4 border-2 border-blue-300 rounded-xl cursor-pointer bg-blue-50 hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="cod" checked class="w-4 h-4">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">Cash on Delivery (COD)</p>
+                                        <p class="text-sm text-slate-500">Pay when you receive your order</p>
+                                    </div>
                                 </label>
-                                <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-blue-50">
-                                    <input type="radio" name="payment"> Credit Card
+                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="card" class="w-4 h-4">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">Credit Card</p>
+                                        <p class="text-sm text-slate-500">Visa, Mastercard, or local cards</p>
+                                    </div>
                                 </label>
-                                <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-blue-50">
-                                    <input type="radio" name="payment"> Online Banking
+                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="bank" class="w-4 h-4">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">Online Banking</p>
+                                        <p class="text-sm text-slate-500">Direct bank transfer</p>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="wallet" class="w-4 h-4">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">Digital Wallet</p>
+                                        <p class="text-sm text-slate-500">GCash, PayMaya, or other e-wallets</p>
+                                    </div>
                                 </label>
                             </div>
+                        </div>
+
+                        <!-- Delivery Instructions -->
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                            <h4 class="font-bold text-lg mb-4">Delivery Instructions (Optional)</h4>
+                            <textarea placeholder="Add any special delivery instructions..." class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition resize-none" rows="4"></textarea>
                         </div>
                     </div>
 
-                    <!-- Order Summary -->
-                    <div class="bg-white rounded-2xl border shadow-sm p-6 h-fit">
-                        <h4 class="font-bold mb-4">Order Summary</h4>
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between">
-                                <span>Subtotal:</span>
-                                <span>$25.00</span>
+                    <!-- Right Column: Order Summary -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sticky top-6">
+                            <h4 class="font-bold text-lg mb-4">Order Summary</h4>
+                            
+                            <!-- Items -->
+                            <div class="space-y-3 mb-4 pb-4 border-b border-gray-200">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Burger × 2</span>
+                                    <span class="font-semibold">₱250.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Fries × 1</span>
+                                    <span class="font-semibold">₱80.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Drinks × 3</span>
+                                    <span class="font-semibold">₱150.00</span>
+                                </div>
                             </div>
-                            <div class="flex justify-between">
-                                <span>Delivery:</span>
-                                <span>$5.00</span>
+
+                            <!-- Totals -->
+                            <div class="space-y-2 mb-6">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Subtotal</span>
+                                    <span class="font-semibold">₱480.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Delivery Fee</span>
+                                    <span class="font-semibold">₱60.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Tax (5%)</span>
+                                    <span class="font-semibold">₱27.00</span>
+                                </div>
+                                <div class="border-t border-gray-200 pt-2 mt-2 flex justify-between">
+                                    <span class="font-bold">Total</span>
+                                    <span class="font-bold text-blue-600 text-lg">₱567.00</span>
+                                </div>
                             </div>
-                            <div class="border-t pt-3 flex justify-between text-lg font-bold">
-                                <span>Total:</span>
-                                <span class="text-blue-600">$30.00</span>
-                            </div>
+
+                            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition duration-200">
+                                Place Order
+                            </button>
+                            <button onclick="window.location.href='cart.html'" class="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-slate-800 font-bold py-3 rounded-xl transition duration-200">
+                                Continue Shopping
+                            </button>
                         </div>
-                        <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">
-                            Place Order
-                        </button>
                     </div>
                 </div>
             </div>
@@ -136,372 +258,31 @@
     </div>
 
     <script>
-        lucide.createIcons();
         function toggleNotifications() {
             document.getElementById('notificationBox').classList.toggle('hidden');
         }
+        
+        function toggleUserMenu() {
+            document.getElementById('userMenu').classList.toggle('hidden');
+        }
+
         document.addEventListener('click', (e) => {
             const notifBox = document.getElementById('notificationBox');
-            const notifButton = e.target.closest('[onclick*="toggleNotifications"]');
-            if (!notifBox.contains(e.target) && !notifButton) {
+            const userMenu = document.getElementById('userMenu');
+            const notifBtn = e.target.closest('button[onclick*="toggleNotifications"]');
+            const userBtn = e.target.closest('button[onclick*="toggleUserMenu"]');
+            
+            if (!notifBox.contains(e.target) && !notifBtn) {
                 notifBox.classList.add('hidden');
             }
+            if (!userMenu.contains(e.target) && !userBtn) {
+                userMenu.classList.add('hidden');
+            }
         });
+
         function logout() {
             window.location.href = '../index.html';
         }
     </script>
-</body>
-</html>
-  <title>Checkout - Pa-Buy, Bes</title>
-  <link rel="stylesheet" href="clientDashboard.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    .page-container {
-      width: 90%;
-      margin: 40px auto;
-      min-height: calc(100vh - 200px);
-    }
-
-    .page-title {
-      font-size: 28px;
-      color: var(--text-dark);
-      margin-bottom: 30px;
-    }
-
-    .checkout-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 350px;
-      gap: 30px;
-    }
-
-    .checkout-section {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }
-
-    .section-title {
-      font-size: 18px;
-      color: var(--text-dark);
-      margin: 0 0 20px 0;
-      padding-bottom: 12px;
-      border-bottom: 2px solid #e5e7eb;
-    }
-
-    .delivery-options {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .option-btn {
-      flex: 1;
-      padding: 12px;
-      border: 2px solid #e5e7eb;
-      background: white;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      color: var(--text-muted);
-      transition: all 0.2s;
-    }
-
-    .option-btn.active {
-      border-color: var(--emerald);
-      color: var(--emerald);
-      background: #f0fdfa;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text-dark);
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: inherit;
-      transition: border-color 0.2s;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: var(--emerald);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .payment-methods {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .payment-method {
-      padding: 16px;
-      border: 2px solid #e5e7eb;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: white;
-    }
-
-    .payment-method:hover {
-      border-color: var(--teal);
-      background: #f0fdfa;
-    }
-
-    .payment-method input[type="radio"] {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-    }
-
-    .payment-method.active {
-      border-color: var(--emerald);
-      background: #f0fdfa;
-    }
-
-    .payment-icon {
-      font-size: 24px;
-      color: var(--emerald);
-      width: 40px;
-      text-align: center;
-    }
-
-    .payment-info {
-      flex: 1;
-    }
-
-    .payment-info h4 {
-      margin: 0;
-      color: var(--text-dark);
-      font-size: 16px;
-    }
-
-    .payment-info p {
-      margin: 4px 0 0 0;
-      color: var(--text-muted);
-      font-size: 13px;
-    }
-
-    /* Order Summary */
-    .order-summary {
-      position: sticky;
-      top: 20px;
-      height: fit-content;
-    }
-
-    .receipt-item {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #f3f4f6;
-    }
-
-    .receipt-item:last-of-type {
-      border-bottom: none;
-    }
-
-    .receipt-item-name {
-      color: var(--text-dark);
-      flex: 1;
-    }
-
-    .receipt-item-qty {
-      color: var(--text-muted);
-      margin: 0 12px;
-    }
-
-    .receipt-item-price {
-      color: var(--emerald);
-      font-weight: 700;
-    }
-
-    .receipt-divider {
-      height: 2px;
-      background: #e5e7eb;
-      margin: 16px 0;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      color: var(--text-muted);
-    }
-
-    .summary-row.total {
-      font-weight: 700;
-      color: var(--text-dark);
-      font-size: 18px;
-      margin-top: 12px;
-    }
-
-    .final-checkout-btn {
-      width: 100%;
-      padding: 16px;
-      background: var(--emerald);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 20px;
-      transition: all 0.2s;
-    }
-
-    .final-checkout-btn:hover {
-      background: var(--emerald-dark);
-      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-    }
-
-    .back-link {
-      display: inline-block;
-      margin-bottom: 20px;
-      color: var(--emerald);
-      text-decoration: none;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .back-link:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 1024px) {
-      .checkout-wrapper {
-        grid-template-columns: 1fr;
-      }
-
-      .order-summary {
-        position: static;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
-    <div class="top-icons">
-      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
-      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
-      <i class="fa-solid fa-user" id="profileIcon"></i>
-    </div>
-  </header>
-
-  <div class="page-container">
-    <a class="back-link" onclick="window.location.href='cart.html'">← Back to Cart</a>
-    <h2 class="page-title">Checkout</h2>
-
-    <div class="checkout-wrapper">
-      <!-- Main Checkout Form -->
-      <div>
-        <!-- Delivery Options -->
-        <div class="checkout-section">
-          <h3 class="section-title">Delivery Option</h3>
-          <div class="delivery-options">
-            <button class="option-btn active" data-delivery="delivery">
-              <i class="fa-solid fa-truck"></i> Delivery
-            </button>
-            <button class="option-btn" data-delivery="pickup">
-              <i class="fa-solid fa-location-dot"></i> Pick-up
-            </button>
-          </div>
-        </div>
-
-        <!-- Delivery Address -->
-        <div class="checkout-section">
-          <h3 class="section-title">Delivery Address</h3>
-          <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" placeholder="Enter your full name" value="John Doe" />
-          </div>
-          <div class="form-group">
-            <label>Phone Number</label>
-            <input type="tel" placeholder="Enter your phone number" value="+63 912 345 6789" />
-          </div>
-          <div class="form-group">
-            <label>Address</label>
-            <input type="text" placeholder="Enter your address" value="123 Main St, Barangay, City" />
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>City</label>
-              <input type="text" placeholder="City" value="Cebu" />
-            </div>
-            <div class="form-group">
-              <label>Postal Code</label>
-              <input type="text" placeholder="Postal Code" value="6000" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Payment Method -->
-        <div class="checkout-section">
-          <h3 class="section-title">Payment Method</h3>
-          <div class="payment-methods" id="paymentMethods">
-            <!-- Payment methods will be rendered here -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Order Summary Sidebar -->
-      <div class="order-summary checkout-section">
-        <h3 class="section-title">Order Summary</h3>
-        <div id="orderItemsReceipt"></div>
-        
-        <div class="receipt-divider"></div>
-
-        <div class="summary-row">
-          <span>Subtotal:</span>
-          <span id="receiptSubtotal">₱0.00</span>
-        </div>
-        <div class="summary-row">
-          <span>Delivery Fee:</span>
-          <span id="receiptDeliveryFee">₱0.00</span>
-        </div>
-        <div class="summary-row">
-          <span>Tax:</span>
-          <span id="receiptTax">₱0.00</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total:</span>
-          <span id="receiptTotal">₱0.00</span>
-        </div>
-
-        <button id="finalCheckoutBtn" class="final-checkout-btn">
-          Complete Order
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script src="checkout.js"></script>
-  <script src="clientDashboard.js"></script>
 </body>
 </html>
