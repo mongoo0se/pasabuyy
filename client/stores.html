@@ -317,7 +317,7 @@
                         <!-- Footer -->
                         <div class="bg-gray-50 p-6 border-t flex gap-3 sticky bottom-0">
                             <button onclick="closeStoreModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-lg transition">Close</button>
-                            <button onclick="window.location.href='cart.html'" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Browse Full Menu</button>
+                            <button onclick="openFullMenu('${storeName}', '${storeType}', '${rating}', '${deliveryTime}', '${deliveryFee}', '${minOrder}')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Browse Full Menu</button>
                         </div>
                     </div>
                 </div>
@@ -347,6 +347,14 @@
             if (modal) {
                 modal.remove();
             }
+        }
+
+        function openFullMenu(name, type, rating, time, fee, min) {
+            const params = new URLSearchParams({
+                name, type, rating, time, fee, min
+            });
+
+            window.location.href = `storedialog.html?${params.toString()}`;
         }
 
         function addToCart(itemName) {
