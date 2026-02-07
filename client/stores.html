@@ -137,7 +137,7 @@
                                 <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱40</p>
                                 <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱150</p>
                             </div>
-                            <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                            <button onclick="openStoreModal('Main Restaurant', 'International Cuisine', '4.8', '25-35 mins', '₱40', '₱150')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
                         </div>
                     </div>
 
@@ -154,7 +154,7 @@
                                 <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱35</p>
                                 <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱200</p>
                             </div>
-                            <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                            <button onclick="openStoreModal('Pizza Paradise', 'Italian & Pizza', '4.6', '20-30 mins', '₱35', '₱200')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
                         </div>
                     </div>
 
@@ -171,7 +171,7 @@
                                 <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱30</p>
                                 <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱100</p>
                             </div>
-                            <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                            <button onclick="openStoreModal('Coffee Corner', 'Cafe & Pastries', '4.9', '15-20 mins', '₱30', '₱100')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
                         </div>
                     </div>
 
@@ -188,7 +188,7 @@
                                 <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱40</p>
                                 <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱120</p>
                             </div>
-                            <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                            <button onclick="openStoreModal('Burger House', 'Fast Food & Burgers', '4.7', '20-25 mins', '₱40', '₱120')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
                         </div>
                     </div>
 
@@ -205,7 +205,7 @@
                                 <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱50</p>
                                 <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱250</p>
                             </div>
-                            <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                            <button onclick="openStoreModal('Sushi & Roll', 'Japanese & Sushi', '4.5', '30-40 mins', '₱50', '₱250')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
                         </div>
                     </div>
 
@@ -222,7 +222,7 @@
                                 <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱30</p>
                                 <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱150</p>
                             </div>
-                            <button class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                            <button onclick="openStoreModal('Dessert Paradise', 'Desserts & Sweets', '4.8', '15-25 mins', '₱30', '₱150')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
                         </div>
                     </div>
                 </div>
@@ -258,6 +258,103 @@
             });
         }
 
+        // Open Store Modal
+        function openStoreModal(storeName, storeType, rating, deliveryTime, deliveryFee, minOrder) {
+            const modalHTML = `
+                <div id="storeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-96 overflow-y-auto">
+                        <!-- Header -->
+                        <div class="sticky top-0 bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 flex justify-between items-start">
+                            <div>
+                                <h2 class="text-3xl font-bold">${storeName}</h2>
+                                <p class="text-blue-100 mt-1">${storeType}</p>
+                                <div class="mt-3 flex gap-4 text-sm">
+                                    <span class="bg-white text-blue-600 px-3 py-1 rounded-full font-semibold">⭐ ${rating}</span>
+                                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">📦 ${deliveryTime}</span>
+                                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">🚚 ${deliveryFee}</span>
+                                </div>
+                            </div>
+                            <button onclick="closeStoreModal()" class="text-white hover:bg-blue-700 p-2 rounded-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-6">
+                            <div class="mb-6">
+                                <h3 class="font-bold text-lg mb-3">Popular Items</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition cursor-pointer" onclick="addToCart('Signature Dish')">
+                                        <span class="font-semibold">Signature Dish</span>
+                                        <span class="text-blue-600 font-bold">₱299</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition cursor-pointer" onclick="addToCart('Classic Combo')">
+                                        <span class="font-semibold">Classic Combo</span>
+                                        <span class="text-blue-600 font-bold">₱449</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition cursor-pointer" onclick="addToCart('Premium Selection')">
+                                        <span class="font-semibold">Premium Selection</span>
+                                        <span class="text-blue-600 font-bold">₱599</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition cursor-pointer" onclick="addToCart('Seasonal Special')">
+                                        <span class="font-semibold">Seasonal Special</span>
+                                        <span class="text-blue-600 font-bold">₱349</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <h3 class="font-bold text-lg mb-3">Store Info</h3>
+                                <div class="space-y-2 text-sm text-gray-600">
+                                    <p><strong>Minimum Order:</strong> ${minOrder}</p>
+                                    <p><strong>Delivery Time:</strong> ${deliveryTime}</p>
+                                    <p><strong>Delivery Fee:</strong> ${deliveryFee}</p>
+                                    <p><strong>Rating:</strong> ${rating} ⭐</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="bg-gray-50 p-6 border-t flex gap-3 sticky bottom-0">
+                            <button onclick="closeStoreModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-lg transition">Close</button>
+                            <button onclick="window.location.href='cart.html'" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Browse Full Menu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes slideUp {
+                        from {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                    #storeModal > div {
+                        animation: slideUp 0.3s ease-out;
+                    }
+                </style>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeStoreModal() {
+            const modal = document.getElementById('storeModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function addToCart(itemName) {
+            alert(`✅ "${itemName}" has been added to your cart!`);
+            closeStoreModal();
+            window.location.href = 'cart.html';
+        }
+
         const notificationBtn = document.getElementById('notificationBtn');
         const notificationDropdown = document.getElementById('notificationDropdown');
         const userMenuBtn = document.getElementById('userMenuBtn');
@@ -286,6 +383,14 @@
             alert('Logging out...');
             window.location.href = '../index.html';
         }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('storeModal');
+            if (modal && e.target === modal) {
+                closeStoreModal();
+            }
+        });
     </script>
 </body>
 </html>
