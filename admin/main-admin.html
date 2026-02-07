@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProStore | Master Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root { font-family: 'Inter', sans-serif; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* Smooth Tab Transitions */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glassmorphism for Modal */
+        .modal-bg { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden" x-data="adminMaster()">
+
+    <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col z-20">
+        <div class="p-6">
+            <div class="flex items-center gap-3 text-blue-600">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-800">Pa-Buy Bes!</span>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+            <button class="nav-btn active w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-blue-600 bg-blue-50 font-semibold">
+                <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Dashboard
+            </button>
+            <a href="runners-admin.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="truck" class="w-5 h-5"></i> Runners
+            </a>
+            <a href="store-admin.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="store" class="w-5 h-5"></i> Stores
+            </a>
+            <a href="client-admin.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="users" class="w-5 h-5"></i> Clients
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-gray-100">
+            <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
+            <h2 id="page-title" class="text-lg font-semibold text-slate-800">Master Control Center</h2>
+            <div class="flex items-center gap-5">
+                <div class="relative">
+                    <i data-lucide="bell" class="w-5 h-5 text-slate-400 cursor-pointer"></i>
+                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                </div>
+                <div class="flex items-center gap-3 pl-5 border-l">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" class="w-8 h-8 rounded-full shadow-sm">
+                    <span class="text-sm font-medium text-slate-700">Master Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8">
+            
+            <section id="dashboard-section" class="content-section active space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Total Runners</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="stats.runners"></h3>
+                        <span class="text-blue-500 text-xs font-bold mt-2 flex items-center gap-1">
+                            <i data-lucide="arrow-up-right" class="w-3 h-3"></i> Active
+                        </span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Stores On-board</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="stats.stores"></h3>
+                        <span class="text-slate-400 text-xs mt-2">Total registered</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Total Clients</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="stats.clients"></h3>
+                        <span class="text-slate-400 text-xs mt-2">Active users</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Pending Reviews</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="pendingStores.length + pendingRunners.length"></h3>
+                        <span class="text-orange-500 text-xs font-bold mt-2 flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> Waiting</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b flex justify-between items-center">
+                            <h4 class="font-bold text-slate-800">Store Applications</h4>
+                            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold" x-text="pendingStores.length"></span>
+                        </div>
+                        <table class="w-full text-left">
+                            <tbody class="divide-y divide-gray-50">
+                                <template x-for="store in pendingStores" :key="store.id">
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-4 font-semibold text-slate-700" x-text="store.name"></td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button @click="openReview(store, 'store')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">Review</button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b flex justify-between items-center">
+                            <h4 class="font-bold text-slate-800">Runner Applicants</h4>
+                            <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-bold" x-text="pendingRunners.length"></span>
+                        </div>
+                        <table class="w-full text-left">
+                            <tbody class="divide-y divide-gray-50">
+                                <template x-for="runner in pendingRunners" :key="runner.id">
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-4 font-semibold text-slate-700" x-text="runner.name"></td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button @click="openReview(runner, 'runner')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">Review</button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b">
+                        <h4 class="font-bold text-slate-800">Approval History</h4>
+                    </div>
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Name</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Type</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Email</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            <template x-for="item in acceptedHistory" :key="item.id">
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 font-semibold text-slate-700" x-text="item.name"></td>
+                                    <td class="px-6 py-4 text-xs text-slate-500 uppercase" x-text="item.type"></td>
+                                    <td class="px-6 py-4 text-slate-600 text-sm" x-text="item.email"></td>
+                                    <td class="px-6 py-4"><span class="text-green-600 font-bold text-sm"><i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i> Approved</span></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="reviewModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4" x-show="showModal" x-cloak>
+        <div class="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl scale-95 transition-transform duration-300">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold">Verification Review</h3>
+                <button @click="showModal = false" class="p-2 hover:bg-gray-100 rounded-full"><i data-lucide="x"></i></button>
+            </div>
+            <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-slate-800" x-text="reviewData?.name"></h2>
+                    <p class="text-blue-600 text-sm mt-1" x-text="reviewData?.email"></p>
+                </div>
+
+                <div x-show="reviewType === 'store'" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-xl">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-1">Phone</p>
+                            <p class="font-semibold text-slate-800" x-text="reviewData?.phone"></p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-1">Location</p>
+                            <p class="font-semibold text-slate-800" x-text="reviewData?.location"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 uppercase mb-3">Business Permit</p>
+                        <div class="w-full h-40 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center">
+                            <div class="text-center text-slate-400">
+                                <i data-lucide="file-text" class="w-8 h-8 mx-auto mb-2"></i>
+                                <p class="text-xs">business_permit.jpg</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="reviewType === 'runner'" class="space-y-4">
+                    <div class="bg-slate-50 p-4 rounded-xl">
+                        <p class="text-xs font-bold text-slate-500 uppercase mb-1">Contact</p>
+                        <p class="font-semibold text-slate-800" x-text="reviewData?.phone"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 uppercase mb-3">Student ID</p>
+                        <div class="w-full h-40 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl border-2 border-dashed border-yellow-200 flex items-center justify-center">
+                            <div class="text-center text-yellow-600">
+                                <i data-lucide="id-card" class="w-8 h-8 mx-auto mb-2"></i>
+                                <p class="text-xs">essu_student_id.jpg</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <button @click="processDecision('approve')" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i> Approve & Send Email
+                    </button>
+                    <button @click="processDecision('decline')" class="w-full text-red-600 hover:bg-red-50 font-bold py-3 rounded-xl transition">
+                        Decline Application
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        // Initialize Icons
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+
+        function adminMaster() {
+            return {
+                showModal: false,
+                isProcessing: false,
+                reviewData: null,
+                reviewType: '',
+                acceptedHistory: [],
+                stats: { runners: 18, stores: 9, clients: 245 },
+                pendingStores: [
+                    { id: 1, name: 'Borongan Bake Shop', email: 'bakery@email.com', phone: '0912-333-4444', location: 'Real St. Borongan', type: 'store' },
+                    { id: 2, name: 'Burger Stop', email: 'burger@stop.com', phone: '0915-111-2222', location: 'Campesao', type: 'store' }
+                ],
+                pendingRunners: [
+                    { id: 10, name: 'Mark Ramos', email: 'mark.r@essu.edu.ph', phone: '0945-888-9999', type: 'runner' },
+                    { id: 11, name: 'Aira Cruz', email: 'aira.c@essu.edu.ph', phone: '0933-444-5555', type: 'runner' }
+                ],
+                openReview(data, type) {
+                    this.reviewData = data;
+                    this.reviewType = type;
+                    this.showModal = true;
+                },
+                processDecision(action) {
+                    if (action === 'approve') {
+                        this.showModal = false;
+                        this.isProcessing = true;
+                        setTimeout(() => {
+                            this.isProcessing = false;
+                            this.finalize();
+                            alert("Done! Approval email dispatched successfully.");
+                        }, 2000);
+                    } else {
+                        if(confirm('Delete application?')) {
+                            this.removePending();
+                            this.showModal = false;
+                        }
+                    }
+                },
+                finalize() {
+                    this.acceptedHistory.unshift({...this.reviewData});
+                    const key = this.reviewType === 'store' ? 'stores' : 'runners';
+                    this.stats[key]++;
+                    
+                    // Logic to send to other pages via localStorage
+                    let existing = JSON.parse(localStorage.getItem(key) || '[]');
+                    existing.push(this.reviewData);
+                    localStorage.setItem(key, JSON.stringify(existing));
+
+                    this.removePending();
+                },
+                removePending() {
+                    if(this.reviewType === 'store') this.pendingStores = this.pendingStores.filter(s => s.id !== this.reviewData.id);
+                    else this.pendingRunners = this.pendingRunners.filter(r => r.id !== this.reviewData.id);
+                }
+            }
+        }
+
+        function logout() {
+            window.location.href = '../index.html';
+        }
+    </script>
+</body>
+</html>
