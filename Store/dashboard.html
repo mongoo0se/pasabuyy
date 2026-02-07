@@ -74,12 +74,57 @@
             <h2 id="page-title" class="text-lg font-semibold text-slate-800">Dashboard Overview</h2>
             <div class="flex items-center gap-5">
                 <div class="relative">
-                    <i data-lucide="bell" class="w-5 h-5 text-slate-400 cursor-pointer"></i>
-                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    <button onclick="toggleNotifications()">
+                        <i data-lucide="bell" class="w-5 h-5 text-slate-400"></i>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+
+                    <!-- Notification Dropdown -->
+                    <div id="notificationBox"
+                        class="hidden absolute right-0 mt-4 w-80 bg-white rounded-2xl shadow-xl border z-50">
+                        <div class="p-4 border-b font-bold text-slate-800">
+                            Notifications
+                        </div>
+
+                        <div class="max-h-72 overflow-y-auto divide-y">
+                            <div class="p-4 hover:bg-slate-50">
+                                <p class="text-sm font-semibold">New Order Received</p>
+                                <p class="text-xs text-slate-500">Order #ORD-1023 • 2 mins ago</p>
+                            </div>
+                            <div class="p-4 hover:bg-slate-50">
+                                <p class="text-sm font-semibold text-orange-600">Low Stock Alert</p>
+                                <p class="text-xs text-slate-500">iPhone Case • 5 items left</p>
+                            </div>
+                            <div class="p-4 hover:bg-slate-50">
+                                <p class="text-sm font-semibold">System Update</p>
+                                <p class="text-xs text-slate-500">Dashboard updated successfully</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center gap-3 pl-5 border-l">
-                    <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" class="w-8 h-8 rounded-full shadow-sm">
-                    <span class="text-sm font-medium text-slate-700">Store Admin</span>
+                <div class="relative">
+                    <button onclick="toggleAdminMenu()" class="flex items-center gap-3 pl-5 border-l">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff"
+                            class="w-8 h-8 rounded-full shadow-sm">
+                        <span class="text-sm font-medium text-slate-700">Store Admin</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                    </button>
+
+                    <!-- Admin Dropdown -->
+                    <div id="adminMenu"
+                        class="hidden absolute right-0 mt-4 w-56 bg-white rounded-2xl shadow-xl border z-50">
+                        <button onclick="openSettingsModal()"
+                            class="w-full flex items-center gap-3 p-4 hover:bg-slate-50">
+                            <i data-lucide="settings" class="w-4 h-4"></i> Store Settings
+                        </button>
+                        <button class="w-full flex items-center gap-3 p-4 hover:bg-slate-50">
+                            <i data-lucide="shield" class="w-4 h-4"></i> Security
+                        </button>
+                        <button onclick="logout()"
+                            class="w-full flex items-center gap-3 p-4 text-red-500 hover:bg-red-50">
+                            <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
@@ -170,6 +215,127 @@
                 </div>
             </section>
 
+            <section id="orders-section" class="content-section space-y-6">
+
+                <!-- Header -->
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold">Order Management</h3>
+                    <span class="text-sm text-slate-500">Track and update customer orders</span>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">Total Orders</p>
+                        <h3 class="text-2xl font-bold mt-1">245</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">Pending</p>
+                        <h3 class="text-2xl font-bold text-orange-500 mt-1">18</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">Delivered</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1">210</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">Cancelled</p>
+                        <h3 class="text-2xl font-bold text-red-500 mt-1">17</h3>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Customer</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Payment</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-semibold">#ORD-1023</td>
+                                <td class="px-6 py-4">Juan Dela Cruz</td>
+                                <td class="px-6 py-4 font-bold">$120.00</td>
+                                <td class="px-6 py-4">Cash on Delivery</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-3 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">
+                                        Pending
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button onclick="openOrderModal('#ORD-1023','Juan Dela Cruz','$120.00','Cash on Delivery','Pending')" class="text-blue-600 hover:underline text-sm">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <section id="customers-section" class="content-section space-y-6">
+
+                <!-- Header -->
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold">Customer Directory</h3>
+                    <input type="text" placeholder="Search customer..."
+                        class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 outline-none">
+                </div>
+
+                <!-- Customer Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">Total Customers</p>
+                        <h3 class="text-2xl font-bold mt-1">138</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">Repeat Buyers</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1">89</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">Inactive</p>
+                        <h3 class="text-2xl font-bold text-red-500 mt-1">12</h3>
+                    </div>
+                </div>
+
+                <!-- Customers Table -->
+                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Customer</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Email</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Orders</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total Spent</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-semibold">Maria Santos</td>
+                                <td class="px-6 py-4 text-slate-500">maria@email.com</td>
+                                <td class="px-6 py-4">12</td>
+                                <td class="px-6 py-4 font-bold">$540.00</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                                        Active
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button onclick="openCustomerModal('Maria Santos','maria@email.com','12','$540.00','Active')" class="text-blue-600 hover:underline text-sm">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
         </main>
     </div>
 
@@ -204,6 +370,104 @@
                 </div>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl mt-4 transition-all shadow-lg shadow-blue-200">
                     Confirm & Save Product
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="orderModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold">Order Details</h3>
+                <button onclick="closeOrderModal()" class="p-2 hover:bg-gray-100 rounded-full">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-4 text-sm">
+                <p><strong>Order ID:</strong> <span id="oId"></span></p>
+                <p><strong>Customer:</strong> <span id="oCustomer"></span></p>
+                <p><strong>Total:</strong> <span id="oTotal"></span></p>
+                <p><strong>Payment Method:</strong> <span id="oPayment"></span></p>
+                <p><strong>Status:</strong> <span id="oStatus"></span></p>
+
+                <div class="pt-4 border-t">
+                    <h4 class="font-semibold mb-2">Items</h4>
+                    <ul class="list-disc list-inside text-slate-600">
+                        <li>Wireless Headphones ×1</li>
+                        <li>Phone Case ×2</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="customerModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold">Customer Profile</h3>
+                <button onclick="closeCustomerModal()" class="p-2 hover:bg-gray-100 rounded-full">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-4 text-sm">
+                <p><strong>Name:</strong> <span id="cName"></span></p>
+                <p><strong>Email:</strong> <span id="cEmail"></span></p>
+                <p><strong>Total Orders:</strong> <span id="cOrders"></span></p>
+                <p><strong>Total Spent:</strong> <span id="cSpent"></span></p>
+                <p><strong>Status:</strong> <span id="cStatus"></span></p>
+
+                <div class="pt-4 border-t">
+                    <h4 class="font-semibold mb-2">Recent Orders</h4>
+                    <ul class="list-disc list-inside text-slate-600">
+                        <li>#ORD-1023 – $120</li>
+                        <li>#ORD-1017 – $85</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold">Store Settings</h3>
+                <button onclick="closeSettingsModal()" class="p-2 hover:bg-gray-100 rounded-full">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <form class="p-6 space-y-4">
+                <div>
+                    <label class="text-sm font-semibold">Store Name</label>
+                    <input type="text" value="Pa-Buy Bes!"
+                        class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold">Profit Margin (%)</label>
+                    <input type="number" value="20"
+                        class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold">Delivery Fee ($)</label>
+                    <input type="number" value="5"
+                        class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold">Store Status</label>
+                    <select class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                        <option>Open</option>
+                        <option>Closed</option>
+                    </select>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">
+                    Save Changes
                 </button>
             </form>
         </div>
@@ -329,6 +593,66 @@
         // Logout handler
         function logout() {
             window.location.href = '../index.html';
+        }
+
+        // ORDER MODAL
+        const orderModal = document.getElementById('orderModal');
+
+        function openOrderModal(id, customer, total, payment, status) {
+            document.getElementById('oId').innerText = id;
+            document.getElementById('oCustomer').innerText = customer;
+            document.getElementById('oTotal').innerText = total;
+            document.getElementById('oPayment').innerText = payment;
+            document.getElementById('oStatus').innerText = status;
+
+            orderModal.classList.remove('hidden');
+            orderModal.classList.add('flex');
+        }
+
+        function closeOrderModal() {
+            orderModal.classList.add('hidden');
+            orderModal.classList.remove('flex');
+        }
+
+        // CUSTOMER MODAL
+        const customerModal = document.getElementById('customerModal');
+
+        function openCustomerModal(name, email, orders, spent, status) {
+            document.getElementById('cName').innerText = name;
+            document.getElementById('cEmail').innerText = email;
+            document.getElementById('cOrders').innerText = orders;
+            document.getElementById('cSpent').innerText = spent;
+            document.getElementById('cStatus').innerText = status;
+
+            customerModal.classList.remove('hidden');
+            customerModal.classList.add('flex');
+        }
+
+        function closeCustomerModal() {
+            customerModal.classList.add('hidden');
+            customerModal.classList.remove('flex');
+        }
+
+        // NOTIFICATION DROPDOWN
+        function toggleNotifications() {
+            document.getElementById('notificationBox').classList.toggle('hidden');
+        }
+
+        // ADMIN MENU DROPDOWN
+        function toggleAdminMenu() {
+            document.getElementById('adminMenu').classList.toggle('hidden');
+        }
+
+        // STORE SETTINGS MODAL
+        function openSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('hidden');
+            document.getElementById('settingsModal').classList.add('flex');
+            document.getElementById('adminMenu').classList.add('hidden');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.add('hidden');
+            document.getElementById('settingsModal').classList.remove('flex');
         }
     </script>
 </body>
