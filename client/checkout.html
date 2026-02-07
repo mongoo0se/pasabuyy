@@ -1,8 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Pa-Buy Bes!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        :root { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col z-20">
+        <div class="p-6">
+            <div class="flex items-center gap-3 text-blue-600">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-800">Pa-Buy Bes!</span>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+            <button onclick="window.location.href='clientDashboard.html'" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="home" class="w-5 h-5"></i> Dashboard
+            </button>
+            <button onclick="window.location.href='stores.html'" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="store" class="w-5 h-5"></i> Stores
+            </button>
+            <button onclick="window.location.href='cart.html'" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="shopping-cart" class="w-5 h-5"></i> Cart
+            </button>
+            <button onclick="window.location.href='messages.html'" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="message-circle" class="w-5 h-5"></i> Messages
+            </button>
+            <button onclick="window.location.href='profile.html'" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="user" class="w-5 h-5"></i> Profile
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-gray-100">
+            <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
+            <h2 class="text-lg font-semibold text-slate-800">Checkout</h2>
+            <div class="flex items-center gap-5">
+                <div class="relative">
+                    <button onclick="toggleNotifications()">
+                        <i data-lucide="bell" class="w-5 h-5 text-slate-400"></i>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+                    <div id="notificationBox" class="hidden absolute right-0 mt-4 w-80 bg-white rounded-2xl shadow-xl border z-50">
+                        <div class="p-4 border-b font-bold text-slate-800">Notifications</div>
+                        <div class="max-h-72 overflow-y-auto divide-y">
+                            <div class="p-4 hover:bg-slate-50">
+                                <p class="text-sm font-semibold">Order Processing</p>
+                                <p class="text-xs text-slate-500">Your order is being processed</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <h3 class="text-xl font-bold">Complete Your Order</h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Delivery Address -->
+                        <div class="bg-white rounded-2xl border shadow-sm p-6">
+                            <h4 class="font-bold mb-4">Delivery Address</h4>
+                            <div class="space-y-4">
+                                <input type="text" placeholder="Street Address" class="w-full bg-slate-50 border rounded-xl px-4 py-3">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" placeholder="City" class="bg-slate-50 border rounded-xl px-4 py-3">
+                                    <input type="text" placeholder="Postal Code" class="bg-slate-50 border rounded-xl px-4 py-3">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="bg-white rounded-2xl border shadow-sm p-6">
+                            <h4 class="font-bold mb-4">Payment Method</h4>
+                            <div class="space-y-3">
+                                <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-blue-50">
+                                    <input type="radio" name="payment" checked> Cash on Delivery
+                                </label>
+                                <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-blue-50">
+                                    <input type="radio" name="payment"> Credit Card
+                                </label>
+                                <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer hover:bg-blue-50">
+                                    <input type="radio" name="payment"> Online Banking
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="bg-white rounded-2xl border shadow-sm p-6 h-fit">
+                        <h4 class="font-bold mb-4">Order Summary</h4>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between">
+                                <span>Subtotal:</span>
+                                <span>$25.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Delivery:</span>
+                                <span>$5.00</span>
+                            </div>
+                            <div class="border-t pt-3 flex justify-between text-lg font-bold">
+                                <span>Total:</span>
+                                <span class="text-blue-600">$30.00</span>
+                            </div>
+                        </div>
+                        <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">
+                            Place Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        function toggleNotifications() {
+            document.getElementById('notificationBox').classList.toggle('hidden');
+        }
+        document.addEventListener('click', (e) => {
+            const notifBox = document.getElementById('notificationBox');
+            const notifButton = e.target.closest('[onclick*="toggleNotifications"]');
+            if (!notifBox.contains(e.target) && !notifButton) {
+                notifBox.classList.add('hidden');
+            }
+        });
+        function logout() {
+            window.location.href = '../index.html';
+        }
+    </script>
+</body>
+</html>
   <title>Checkout - Pa-Buy, Bes</title>
   <link rel="stylesheet" href="clientDashboard.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
