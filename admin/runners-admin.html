@@ -136,37 +136,65 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                    <div class="p-6 border-b">
-                        <h4 class="font-bold text-slate-800">Delivery Logs</h4>
-                    </div>
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b border-slate-100">
-                            <tr>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Runner</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Location</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Payment</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-50">
-                            <template x-for="log in logs" :key="log.id">
-                                <tr class="hover:bg-slate-50 transition">
-                                    <td class="px-6 py-4 font-bold text-blue-600" x-text="log.id"></td>
-                                    <td class="px-6 py-4 font-semibold text-slate-700" x-text="log.runner"></td>
-                                    <td class="px-6 py-4 text-slate-600 flex items-center gap-2">
-                                        <i data-lucide="map-pin" class="w-4 h-4 text-blue-600"></i>
-                                        <span x-text="log.location"></span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span :class="log.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'" class="text-xs font-bold px-3 py-1 rounded-full" x-text="log.status"></span>
-                                    </td>
-                                    <td class="px-6 py-4 text-xs text-slate-600" x-text="log.payment"></td>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b">
+                            <h4 class="font-bold text-slate-800">Delivery Logs</h4>
+                        </div>
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 border-b border-slate-100">
+                                <tr>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Runner</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Location</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Payment</th>
                                 </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                <template x-for="log in logs" :key="log.id">
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-4 font-bold text-blue-600" x-text="log.id"></td>
+                                        <td class="px-6 py-4 font-semibold text-slate-700" x-text="log.runner"></td>
+                                        <td class="px-6 py-4 text-slate-600 flex items-center gap-2">
+                                            <i data-lucide="map-pin" class="w-4 h-4 text-blue-600"></i>
+                                            <span x-text="log.location"></span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span :class="log.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'" class="text-xs font-bold px-3 py-1 rounded-full" x-text="log.status"></span>
+                                        </td>
+                                        <td class="px-6 py-4 text-xs text-slate-600" x-text="log.payment"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+                        <div class="p-6 border-b flex justify-between items-center">
+                            <h4 class="font-bold text-slate-800">Runner Reviews</h4>
+                            <i data-lucide="message-square" class="w-5 h-5 text-blue-500"></i>
+                        </div>
+                        <div class="p-4 space-y-4 overflow-y-auto max-h-[400px]">
+                            <template x-for="review in reviews" :key="review.id">
+                                <div class="p-4 rounded-xl border border-gray-50 bg-slate-50/50">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <p class="text-sm font-bold text-slate-800" x-text="review.client"></p>
+                                            <p class="text-[10px] text-slate-400" x-text="'Reviewing: ' + review.runner"></p>
+                                        </div>
+                                        <div class="flex text-yellow-500">
+                                            <template x-for="i in review.stars">
+                                                <i data-lucide="star" class="w-3 h-3 fill-yellow-500"></i>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-slate-600 italic" x-text="'&quot;' + review.comment + '&quot;'"></p>
+                                    <p class="text-[10px] text-slate-400 mt-2 text-right" x-text="review.date"></p>
+                                </div>
                             </template>
-                        </tbody>
-                    </table>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -175,7 +203,7 @@
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
-       
+        
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
         });
@@ -191,6 +219,12 @@
                     { id: '#ORD-9901', runner: 'James Wilson', location: 'Library South Wing', status: 'Delivered', payment: 'Paid (Wallet)' },
                     { id: '#ORD-9905', runner: 'James Wilson', location: 'Science Lab B-12', status: 'In Progress', payment: 'COD (Pending)' },
                     { id: '#ORD-9882', runner: 'Aisha Khan', location: 'Dormitory Block A', status: 'Delivered', payment: 'Paid (Online)' }
+                ],
+                reviews: [
+                    { id: 1, runner: 'James Wilson', client: 'Maria Santos', stars: 5, comment: 'Very polite and delivered the food hot! Highly recommended.', date: '2 mins ago' },
+                    { id: 2, runner: 'Mark Ramos', client: 'Kevin Lee', stars: 4, comment: 'A bit late but very careful with the fragile items.', date: '1 hour ago' },
+                    { id: 3, runner: 'Aisha Khan', client: 'Sarah G.', stars: 5, comment: 'Super fast delivery. Found my location easily.', date: 'Yesterday' },
+                    { id: 4, runner: 'James Wilson', client: 'John Doe', stars: 5, comment: 'The best runner in the campus!', date: 'Yesterday' }
                 ]
             }
         }

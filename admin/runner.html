@@ -53,7 +53,7 @@
                 <div class="flex gap-4">
                     <div class="bg-indigo-50 px-5 py-2 rounded-2xl border border-indigo-100 flex flex-col items-center">
                         <p class="text-[10px] font-black text-indigo-600 uppercase">Total Admin Revenue (5%)</p>
-                        <p class="text-sm font-black text-indigo-950" x-text="'$' + totalRevenue.toFixed(2)"></p>
+                        <p class="text-sm font-black text-indigo-950" x-text="'₱' + totalRevenue.toFixed(2)"></p>
                     </div>
                     <div class="bg-green-50 px-5 py-2 rounded-2xl border border-green-100 flex flex-col items-center">
                         <p class="text-[10px] font-black text-green-600 uppercase">GPS Signal</p>
@@ -105,16 +105,15 @@
 
                 <div class="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6 border-b flex justify-between items-center">
-                        <h4 class="font-black text-xs text-gray-500 uppercase tracking-widest">Delivery & Payment Log</h4>
+                        <h4 class="font-black text-xs text-gray-500 uppercase tracking-widest">Delivery & Customer Feedback Log</h4>
                     </div>
                     <table class="w-full text-left">
                         <thead>
                             <tr class="bg-gray-50 text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                 <th class="p-5">Order ID</th>
                                 <th class="p-5">Runner</th>
-                                <th class="p-5">Payment Method</th>
-                                <th class="p-5">Total</th>
-                                <th class="p-5 text-indigo-600">Admin (5%)</th>
+                                <th class="p-5">Payment / Revenue</th>
+                                <th class="p-5">Customer Review</th>
                                 <th class="p-5">Status</th>
                                 <th class="p-5">Verification</th>
                             </tr>
@@ -125,13 +124,20 @@
                                     <td class="p-5 font-black text-indigo-600" x-text="log.id"></td>
                                     <td class="p-5 font-bold text-gray-700" x-text="log.runner"></td>
                                     <td class="p-5">
+                                        <div class="text-[10px] font-bold text-gray-400 uppercase mb-1" x-text="log.paymentType"></div>
                                         <div class="flex items-center gap-2">
-                                            <i :class="log.paymentType === 'Cash' ? 'fa-money-bill-wave text-green-500' : 'fa-credit-card text-blue-500'" class="fas text-xs"></i>
-                                            <span class="font-bold text-gray-600 text-xs" x-text="log.paymentType"></span>
+                                            <span class="font-black text-gray-700" x-text="'₱' + log.amount.toFixed(2)"></span>
+                                            <span class="text-[10px] bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-lg font-black" x-text="'+₱' + (log.amount * 0.05).toFixed(2)"></span>
                                         </div>
                                     </td>
-                                    <td class="p-5 font-bold text-gray-700 text-xs" x-text="'$' + log.amount.toFixed(2)"></td>
-                                    <td class="p-5 font-black text-indigo-600 text-xs" x-text="'$' + (log.amount * 0.05).toFixed(2)"></td>
+                                    <td class="p-5">
+                                        <div class="flex items-center gap-1 mb-1">
+                                            <template x-for="i in 5">
+                                                <i class="fas fa-star text-[10px]" :class="i <= log.customerRating ? 'text-yellow-400' : 'text-gray-200'"></i>
+                                            </template>
+                                        </div>
+                                        <p class="text-[11px] text-gray-500 italic leading-tight max-w-[200px]" x-text="'&quot;' + log.customerComment + '&quot;'"></p>
+                                    </td>
                                     <td class="p-5">
                                         <span :class="log.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
                                               class="text-[10px] font-black px-3 py-1 rounded-full uppercase" x-text="log.status">
@@ -163,9 +169,39 @@
                     { name: 'Mark Ramos', rating: '4.5', delivered: 120, isOnline: false, lat: 14.5950, lng: 120.9880 }
                 ],
                 logs: [
-                    { id: '#ORD-9901', runner: 'James Wilson', amount: 150.00, paymentType: 'Credit Card', location: 'Library South Wing', status: 'Delivered', proofPhoto: 'https://images.unsplash.com/photo-1531353826977-0941b4779a1c?auto=format&fit=crop&q=80&w=400' },
-                    { id: '#ORD-9905', runner: 'Aisha Khan', amount: 75.50, paymentType: 'Cash', location: 'Science Lab B-12', status: 'Delivered', proofPhoto: 'https://images.unsplash.com/photo-1533560904424-a0c61dc306fc?auto=format&fit=crop&q=80&w=400' },
-                    { id: '#ORD-9882', runner: 'Mark Ramos', amount: 200.00, paymentType: 'Digital Wallet', location: 'Dormitory Block A', status: 'Delivered', proofPhoto: 'https://images.unsplash.com/photo-1582733775063-9712a61d3140?auto=format&fit=crop&q=80&w=400' }
+                    { 
+                        id: '#ORD-9901', 
+                        runner: 'James Wilson', 
+                        amount: 150.00, 
+                        paymentType: 'Credit Card', 
+                        location: 'Library South Wing', 
+                        status: 'Delivered', 
+                        customerRating: 5,
+                        customerComment: 'Very fast delivery and polite runner!',
+                        proofPhoto: 'https://images.unsplash.com/photo-1531353826977-0941b4779a1c?auto=format&fit=crop&q=80&w=400' 
+                    },
+                    { 
+                        id: '#ORD-9905', 
+                        runner: 'Aisha Khan', 
+                        amount: 75.50, 
+                        paymentType: 'Cash', 
+                        location: 'Science Lab B-12', 
+                        status: 'Delivered', 
+                        customerRating: 4,
+                        customerComment: 'Food was still hot. Great job.',
+                        proofPhoto: 'https://images.unsplash.com/photo-1533560904424-a0c61dc306fc?auto=format&fit=crop&q=80&w=400' 
+                    },
+                    { 
+                        id: '#ORD-9882', 
+                        runner: 'Mark Ramos', 
+                        amount: 200.00, 
+                        paymentType: 'Digital Wallet', 
+                        location: 'Dormitory Block A', 
+                        status: 'Delivered', 
+                        customerRating: 5,
+                        customerComment: 'Excellent service, found my room easily.',
+                        proofPhoto: 'https://images.unsplash.com/photo-1582733775063-9712a61d3140?auto=format&fit=crop&q=80&w=400' 
+                    }
                 ],
                 init() {
                     this.initMap();
