@@ -7,18 +7,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
         :root { font-family: 'Inter', sans-serif; }
 
-        
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        
         .content-section {
             display: none;
             animation: fadeIn 0.4s ease-out;
@@ -31,6 +30,9 @@
         }
 
         .modal-bg { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+        
+        /* Map height constraint */
+        #map { height: 400px; width: 100%; z-index: 1; }
     </style>
 </head>
 <body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden" x-data="runnerStats()">
@@ -85,7 +87,6 @@
 
         <main class="flex-1 overflow-y-auto p-8">
 
-            
             <section id="dashboard-section" class="content-section active space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
@@ -103,6 +104,23 @@
                         <h3 class="text-2xl font-bold mt-2">4.4</h3>
                         <span class="text-yellow-500 text-xs font-bold mt-2">★★★★★</span>
                     </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-slate-800">ESSU Campus GPS Tracker</h4>
+                            <p class="text-xs text-slate-500">Live monitoring of active runners</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                            </span>
+                            <span class="text-xs font-bold text-green-600 uppercase tracking-wider">Live</span>
+                        </div>
+                    </div>
+                    <div id="map"></div>
                 </div>
 
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -184,7 +202,7 @@
                                             <p class="text-[10px] text-slate-400" x-text="'Reviewing: ' + review.runner"></p>
                                         </div>
                                         <div class="flex text-yellow-500">
-                                            <template x-for="i in review.stars">
+                                            <template x-for="i in Array.from({length: review.stars})">
                                                 <i data-lucide="star" class="w-3 h-3 fill-yellow-500"></i>
                                             </template>
                                         </div>
@@ -197,16 +215,38 @@
                     </div>
                 </div>
             </section>
-
         </main>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
-        
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
+            initMap();
         });
+
+        function initMap() {
+            // Center map on ESSU Borongan Coordinates
+            const essuCoords = [11.6094, 125.4287];
+            const map = L.map('map').setView(essuCoords, 17);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Mock Runner Locations around ESSU
+            const runnerLocations = [
+                { name: "James Wilson", lat: 11.6098, lng: 125.4290 },
+                { name: "Aisha Khan", lat: 11.6085, lng: 125.4280 },
+                { name: "Mark Ramos", lat: 11.6105, lng: 125.4275 }
+            ];
+
+            runnerLocations.forEach(loc => {
+                const marker = L.marker([loc.lat, loc.lng]).addTo(map);
+                marker.bindPopup(`<b>${loc.name}</b><br>Status: On Delivery`);
+            });
+        }
 
         function runnerStats() {
             return {
