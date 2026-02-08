@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProStore | Store Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root { font-family: 'Inter', sans-serif; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* Smooth Tab Transitions */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glassmorphism for Modal */
+        .modal-bg { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden" x-data="storeManager()">
+
+    <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col z-20">
+        <div class="p-6">
+            <div class="flex items-center gap-3 text-blue-600">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-800">Pa-Buy Bes!</span>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+            <a href="main-admin.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Dashboard
+            </a>
+            <a href="runners-admin.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="truck" class="w-5 h-5"></i> Runners
+            </a>
+            <button class="nav-btn active w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-blue-600 bg-blue-50 font-semibold">
+                <i data-lucide="store" class="w-5 h-5"></i> Stores
+            </button>
+            <a href="client-admin.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="users" class="w-5 h-5"></i> Clients
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-gray-100">
+            <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
+            <h2 id="page-title" class="text-lg font-semibold text-slate-800">Store Management</h2>
+            <div class="flex items-center gap-5">
+                <div class="relative">
+                    <i data-lucide="bell" class="w-5 h-5 text-slate-400 cursor-pointer"></i>
+                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                </div>
+                <div class="flex items-center gap-3 pl-5 border-l">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" class="w-8 h-8 rounded-full shadow-sm">
+                    <span class="text-sm font-medium text-slate-700">Store Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8">
+            
+            <section id="dashboard-section" class="content-section active space-y-8">
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800 uppercase text-sm tracking-wide">Registered Entities</h3>
+                        <div class="flex gap-2 text-xs font-bold">
+                            <span class="px-3 py-1 bg-green-100 text-green-600 rounded-full">ACTIVE</span>
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-600 rounded-full">INACTIVE</span>
+                            <span class="px-3 py-1 bg-red-100 text-red-600 rounded-full">SUSPENDED</span>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 border-b border-slate-100">
+                                <tr>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Store Name</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Contact Details</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total Sales</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Platform Cut</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-center">Analytics</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                <template x-for="store in stores" :key="store.id">
+                                    <tr class="hover:bg-slate-50 transition group">
+                                        <td class="px-6 py-4">
+                                            <div class="font-semibold text-slate-800" x-text="store.name"></div>
+                                            <div class="text-xs text-slate-400 font-mono uppercase" x-text="store.id"></div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-sm font-semibold text-slate-700"><i data-lucide="phone" class="w-4 h-4 inline mr-1 text-blue-600"></i> <span x-text="store.phone"></span></div>
+                                            <div class="text-sm text-blue-600 font-medium" x-text="store.email"></div>
+                                        </td>
+                                        <td class="px-6 py-4 font-bold text-slate-800" x-text="'₱' + store.sales.toLocaleString()"></td>
+                                        <td class="px-6 py-4">
+                                            <span class="bg-green-50 text-green-600 px-3 py-1 rounded-lg font-bold text-xs" x-text="'₱' + (store.sales * 0.05).toLocaleString()"></span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <select x-model="store.status" 
+                                                    :class="getStatusClass(store.status)"
+                                                    class="text-xs font-bold px-3 py-1.5 rounded-full outline-none appearance-none cursor-pointer border-none">\n                                                <option value="Active">Active</option>
+                                                <option value="Inactive">Inactive</option>
+                                                <option value="Suspended">Suspended</option>
+                                            </select>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <button @click="viewAnalytics(store)" class="text-blue-600 hover:text-blue-800 hover:scale-110 transition"><i data-lucide="chart-pie" class="w-5 h-5"></i></button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div x-show="activeStore" x-cloak class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in slide-in-from-bottom-4 duration-500">
+                    
+                    <div class="lg:col-span-2 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-lg" x-text="(activeStore?.name || '') + ' - Revenue Analytics'"></h3>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Daily Performance Overview</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="text-xs font-bold bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition">D</button>
+                                <button class="text-xs font-bold bg-blue-600 text-white px-3 py-1.5 rounded-lg shadow">W</button>
+                                <button class="text-xs font-bold bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition">M</button>
+                            </div>
+                        </div>
+                        <canvas id="revenueChart" height="120"></canvas>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-widest mb-6 text-center">Order Completion Rate</h3>
+                        <div class="relative flex justify-center">
+                             <canvas id="orderChart"></canvas>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mt-8">
+                            <div class="text-center">
+                                <p class="text-xs font-bold text-green-600 uppercase">Completed</p>
+                                <p class="text-2xl font-bold text-slate-800 mt-2" x-text="activeStore?.completed"></p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs font-bold text-red-600 uppercase">Cancelled</p>
+                                <p class="text-2xl font-bold text-slate-800 mt-2" x-text="activeStore?.cancelled"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="analyticsModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4" x-show="activeStore" x-cloak>
+        <div class="bg-white rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl scale-95 transition-transform duration-300">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold" x-text="(activeStore?.name || '') + ' Analytics'"></h3>
+                <button @click="closeAnalytics()" class="p-2 hover:bg-gray-100 rounded-full"><i data-lucide="x"></i></button>
+            </div>
+            <div class="p-6 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold text-slate-800 mb-4">Revenue Trend</h4>
+                        <canvas id="revenueChart" height="100"></canvas>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 mb-4">Order Completion</h4>
+                        <canvas id="orderChart" height="100"></canvas>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-green-50 p-4 rounded-xl">
+                        <p class="text-xs text-green-600 font-bold uppercase">Completed Orders</p>
+                        <p class="text-xl font-bold text-green-700 mt-2" x-text="activeStore?.completed || 0"></p>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-xl">
+                        <p class="text-xs text-red-600 font-bold uppercase">Cancelled Orders</p>
+                        <p class="text-xl font-bold text-red-700 mt-2" x-text="activeStore?.cancelled || 0"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        function storeManager() {
+            return {
+                activeStore: null,
+                revenueChart: null,
+                orderChart: null,
+                salesChart: null,
+                stores: [
+                    { id: 'ST-882', name: 'Borongan Bake Shop', phone: '0912-333-4444', email: 'bakery@email.com', sales: 45200, status: 'Active', completed: 145, cancelled: 12 },
+                    { id: 'ST-901', name: 'Burger Stop', phone: '0915-111-2222', email: 'burger@stop.com', sales: 28400, status: 'Active', completed: 89, cancelled: 4 },
+                    { id: 'ST-112', name: 'Local Coffee Co', phone: '0920-555-8888', email: 'brew@gmail.com', sales: 12500, status: 'Inactive', completed: 42, cancelled: 15 },
+                    { id: 'ST-443', name: 'Pizza Hub', phone: '0933-444-5555', email: 'pizza@hub.com', sales: 0, status: 'Suspended', completed: 0, cancelled: 0 }
+                ],
+                getStatusClass(status) {
+                    return {
+                        'bg-green-100 text-green-600': status === 'Active',
+                        'bg-yellow-100 text-yellow-600': status === 'Inactive',
+                        'bg-red-100 text-red-600': status === 'Suspended',
+                    };
+                },
+                viewAnalytics(store) {
+                    this.activeStore = store;
+                    document.getElementById('analyticsModal').classList.remove('hidden');
+                    document.getElementById('analyticsModal').classList.add('flex');
+                    this.$nextTick(() => {
+                        this.initCharts(store);
+                    });
+                },
+                closeAnalytics() {
+                    this.activeStore = null;
+                    document.getElementById('analyticsModal').classList.add('hidden');
+                    document.getElementById('analyticsModal').classList.remove('flex');
+                    if (this.revenueChart) this.revenueChart.destroy();
+                    if (this.orderChart) this.orderChart.destroy();
+                },
+                initCharts(store) {
+                    if (this.revenueChart) this.revenueChart.destroy();
+                    if (this.orderChart) this.orderChart.destroy();
+
+                    // Revenue Chart (Trend Line)
+                    const revCtx = document.getElementById('revenueChart').getContext('2d');
+                    this.revenueChart = new Chart(revCtx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                            datasets: [{
+                                label: 'Revenue (₱)',
+                                data: [5000, 7000, 4500, 8000, 12000, 15000, 14000],
+                                borderColor: '#2563eb',
+                                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                                fill: true,
+                                tension: 0.4,
+                                borderWidth: 3,
+                                pointRadius: 4,
+                                pointBackgroundColor: '#fff',
+                                pointBorderColor: '#2563eb',
+                                pointBorderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: { legend: { display: false } },
+                            scales: { y: { grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                        }
+                    });
+
+                    // Order Chart (Doughnut)
+                    const ordCtx = document.getElementById('orderChart').getContext('2d');
+                    this.orderChart = new Chart(ordCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Completed', 'Cancelled'],
+                            datasets: [{
+                                data: [store.completed, store.cancelled],
+                                backgroundColor: ['#22c55e', '#ef4444'],
+                                borderWidth: 0,
+                                cutout: '75%'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                },
+                init() {
+                    // Initialize sales chart on dashboard
+                    this.$nextTick(() => {
+                        const ctx = document.getElementById('salesChart');
+                        if (ctx) {
+                            this.salesChart = new Chart(ctx.getContext('2d'), {
+                                type: 'line',
+                                data: {
+                                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                                    datasets: [{
+                                        label: 'Revenue (₱)',
+                                        data: [18000, 24000, 15000, 32000, 28000, 41000, 45000],
+                                        borderColor: '#2563eb',
+                                        borderWidth: 3,
+                                        tension: 0.4,
+                                        fill: true,
+                                        backgroundColor: (context) => {
+                                            const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 400);
+                                            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
+                                            gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
+                                            return gradient;
+                                        },
+                                        pointBackgroundColor: '#fff',
+                                        pointBorderColor: '#2563eb',
+                                        pointBorderWidth: 2,
+                                        pointRadius: 4
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: { legend: { display: false } },
+                                    scales: {
+                                        y: { grid: { color: '#f1f5f9' }, ticks: { font: { family: 'Inter' } } },
+                                        x: { grid: { display: false } }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        }
+
+        function logout() {
+            window.location.href = '../index.html';
+        }
+
+        // Initialize after Alpine is loaded
+        document.addEventListener('alpine:init', () => {
+            storeManager().init();
+        });
+    </script>
+</body>
+</html>
