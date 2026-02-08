@@ -88,7 +88,7 @@
         <main class="flex-1 overflow-y-auto p-8">
 
             <section id="dashboard-section" class="content-section active space-y-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                         <p class="text-slate-500 text-sm font-medium">Active Runners</p>
                         <h3 class="text-2xl font-bold mt-2" x-text="runners.length"></h3>
@@ -103,6 +103,11 @@
                         <p class="text-slate-500 text-sm font-medium">Avg Rating</p>
                         <h3 class="text-2xl font-bold mt-2">4.4</h3>
                         <span class="text-yellow-500 text-xs font-bold mt-2">★★★★★</span>
+                    </div>
+                    <div class="bg-blue-600 p-6 rounded-2xl border border-blue-700 shadow-md">
+                        <p class="text-blue-100 text-sm font-medium">Admin Revenue (5%)</p>
+                        <h3 class="text-2xl font-bold mt-2 text-white" x-text="'₱' + calculateTotalAdminRevenue()"></h3>
+                        <span class="text-blue-200 text-xs font-bold mt-2 flex items-center gap-1"><i data-lucide="trending-up" class="w-3 h-3"></i> From total earnings</span>
                     </div>
                 </div>
 
@@ -144,9 +149,13 @@
                                         <p class="text-xs font-bold text-slate-500 uppercase">Pending</p>
                                         <p class="text-lg font-bold text-orange-600 mt-1" x-text="runner.pending"></p>
                                     </div>
-                                    <div class="bg-white p-3 rounded-lg col-span-2">
-                                        <p class="text-xs font-bold text-slate-500 uppercase">Earnings</p>
-                                        <p class="text-lg font-bold text-green-700 mt-1" x-text="'₱' + runner.earnings"></p>
+                                    <div class="bg-white p-3 rounded-lg">
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase">Total Paid</p>
+                                        <p class="text-md font-bold text-slate-700 mt-1" x-text="'₱' + runner.earnings"></p>
+                                    </div>
+                                    <div class="bg-blue-600 p-3 rounded-lg">
+                                        <p class="text-[10px] font-bold text-blue-100 uppercase">Admin (5%)</p>
+                                        <p class="text-md font-bold text-white mt-1" x-text="'₱' + (parseFloat(runner.earnings.replace(',','')) * 0.05).toFixed(2)"></p>
                                     </div>
                                 </div>
                             </div>
@@ -227,7 +236,6 @@
         });
 
         function initMap() {
-            // Center map on ESSU Borongan Coordinates
             const essuCoords = [11.6094, 125.4287];
             const map = L.map('map').setView(essuCoords, 17);
 
@@ -235,7 +243,6 @@
                 attribution: '© OpenStreetMap contributors'
             }).addTo(map);
 
-            // Mock Runner Locations around ESSU
             const runnerLocations = [
                 { name: "James Wilson", lat: 11.6098, lng: 125.4290 },
                 { name: "Aisha Khan", lat: 11.6085, lng: 125.4280 },
@@ -255,6 +262,13 @@
                     { name: 'Aisha Khan', rating: '4.0', delivered: 285, pending: 0, earnings: '8,900.20' },
                     { name: 'Mark Ramos', rating: '4.5', delivered: 120, pending: 1, earnings: '4,200.00' }
                 ],
+                // Function to calculate the 5% revenue from all runner earnings
+                calculateTotalAdminRevenue() {
+                    let total = this.runners.reduce((sum, runner) => {
+                        return sum + parseFloat(runner.earnings.replace(',', ''));
+                    }, 0);
+                    return (total * 0.05).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                },
                 logs: [
                     { id: '#ORD-9901', runner: 'James Wilson', location: 'Library South Wing', status: 'Delivered', payment: 'Paid (Wallet)' },
                     { id: '#ORD-9905', runner: 'James Wilson', location: 'Science Lab B-12', status: 'In Progress', payment: 'COD (Pending)' },
