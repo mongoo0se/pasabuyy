@@ -1,534 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pick-up - Pa-Buy, Bes</title>
-  <link rel="stylesheet" href="clientDashboard.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    .page-container {
-      width: 90%;
-      margin: 40px auto;
-      min-height: calc(100vh - 200px);
-    }
-    .page-title {
-      font-size: 28px;
-      color: var(--text-dark);
-      margin-bottom: 30px;
-    }
-    .back-link {
-      display: inline-block;
-      margin-bottom: 20px;
-      color: var(--emerald);
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .back-link:hover {
-      text-decoration: underline;
-    }
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-    }
-    .empty-state i {
-      font-size: 64px;
-      color: var(--teal);
-      margin-bottom: 20px;
-    }
-
-    /* Section Titles */
-    .section-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin: 32px 0 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .section-title i {
-      color: var(--emerald);
-      font-size: 24px;
-    }
-
-    /* Active Pick-up Order */
-    .active-order-container {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 24px;
-      margin-bottom: 40px;
-    }
-
-    @media (max-width: 1024px) {
-      .active-order-container {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .order-card {
-      background: var(--card);
-      border-radius: 22px;
-      padding: 28px;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-    }
-
-    .order-status-badge {
-      display: inline-block;
-      padding: 8px 16px;
-      border-radius: 50px;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
-
-    .order-status-badge.ready {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .order-header {
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .order-from {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .order-store-name {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text-dark);
-    }
-
-    /* Order Items */
-    .order-items {
-      margin: 24px 0;
-    }
-
-    .order-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 0;
-      border-bottom: 1px solid #f1f5f9;
-    }
-
-    .order-item:last-child {
-      border-bottom: none;
-    }
-
-    .item-name-qty {
-      flex: 1;
-    }
-
-    .item-name {
-      font-weight: 600;
-      color: var(--text-dark);
-      margin-bottom: 4px;
-    }
-
-    .item-qty {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .item-price {
-      font-weight: 600;
-      color: var(--text-dark);
-      min-width: 80px;
-      text-align: right;
-    }
-
-    /* Order Summary */
-    .order-summary {
-      background: #f8fafc;
-      padding: 20px;
-      border-radius: 12px;
-      margin-top: 20px;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-
-    .summary-row.total {
-      font-weight: 700;
-      font-size: 18px;
-      color: var(--emerald);
-      padding-top: 12px;
-      border-top: 2px solid #e2e8f0;
-    }
-
-    /* Pickup Details Card */
-    .pickup-details-card {
-      background: var(--card);
-      border-radius: 22px;
-      padding: 24px;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-    }
-
-    .pickup-details-card h3 {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 24px;
-      color: var(--text-dark);
-    }
-
-    .pickup-info-section {
-      margin-bottom: 20px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .pickup-info-section:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .pickup-label {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .pickup-value {
-      font-size: 15px;
-      color: var(--text-dark);
-      font-weight: 500;
-    }
-
-    .location-highlight {
-      background: #fef3c7;
-      padding: 12px;
-      border-radius: 8px;
-      border-left: 4px solid #f59e0b;
-    }
-
-    .instructions-text {
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--text-dark);
-    }
-
-    .pickup-action-btn {
-      width: 100%;
-      background: var(--emerald);
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      margin-top: 20px;
-    }
-
-    .pickup-action-btn:hover {
-      background: var(--emerald-dark);
-    }
-
-    /* Pickup Store Cards Grid */
-    .pickup-stores-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px;
-      padding-bottom: 40px;
-    }
-
-    .store-pickup-card {
-      background: var(--card);
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease;
-      cursor: pointer;
-    }
-
-    .store-pickup-card:hover {
-      transform: translateY(-6px);
-    }
-
-    .store-pickup-img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .store-pickup-info {
-      padding: 18px;
-    }
-
-    .store-pickup-name {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 6px;
-    }
-
-    .store-pickup-category {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .store-pickup-location {
-      font-size: 13px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-
-    .store-pickup-rating {
-      font-size: 14px;
-      color: var(--text-dark);
-      font-weight: 500;
-    }
-
-    .badge-safe-zone {
-      display: inline-block;
-      background: #dcfce7;
-      color: #166534;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-top: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pickup Locations - Essu Express</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .sidebar-nav-item:hover { background-color: rgba(59, 130, 246, 0.1); }
+        .sidebar-nav-item.active { background-color: rgb(59, 130, 246); color: white; }
+    </style>
 </head>
-<body>
-  <header>
-    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
-    <div class="top-icons">
-      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
-      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
-      <i class="fa-solid fa-user" id="profileIcon"></i>
+<body class="bg-gray-50 text-gray-900">
+    <div class="flex h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="font-bold text-xl">Essu</span>
+                </div>
+                <div class="bg-blue-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600">User Role:</p>
+                    <p class="font-semibold text-blue-600" id="userRole">Customer</p>
+                </div>
+            </div>
+            <nav class="p-4 space-y-2">
+                <a href="clientDashboard.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-2m-9-2l4 2m0 0l4-2"></path></svg>
+                        <span>Dashboard</span>
+                    </div>
+                </a>
+                <a href="stores.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V11a2 2 0 012-2z"></path></svg>
+                        <span>Stores</span>
+                    </div>
+                </a>
+                <a href="cart.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 20a2 2 0 11-4 0 2 2 0 014 0zm10 0a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <span>Cart</span>
+                    </div>
+                </a>
+                <a href="delivery.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Delivery</span>
+                    </div>
+                </a>
+                <a href="messages.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                        <span>Messages</span>
+                    </div>
+                </a>
+                <a href="profile.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <span>Profile</span>
+                    </div>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Header -->
+            <header class="bg-white shadow-sm sticky top-0 z-40">
+                <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                    <h1 class="text-2xl font-bold">Pickup Locations</h1>
+                    <div class="flex items-center gap-4">
+                        <div class="relative">
+                            <button id="notificationBtn" class="p-2 hover:bg-gray-100 rounded-lg transition-all relative">
+                                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+                            <div id="notificationDropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl hidden z-50">
+                                <div class="p-4 border-b border-gray-200"><h3 class="font-semibold">Notifications</h3></div>
+                                <div class="max-h-96 overflow-y-auto">
+                                    <div class="p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer">
+                                        <p class="font-semibold text-sm">Pickup Ready</p>
+                                        <p class="text-xs text-gray-600">Your order is ready for pickup</p>
+                                        <p class="text-xs text-gray-500 mt-1">30 minutes ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <button id="userMenuBtn" class="p-2 hover:bg-gray-100 rounded-lg transition-all">
+                                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            </button>
+                            <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl hidden z-50">
+                                <a href="profile.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-200">Profile</a>
+                                <a href="#" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-200">Settings</a>
+                                <button onclick="logout()" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Pickup Location Card 1 -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all cursor-pointer">
+                        <div class="bg-blue-100 h-32 relative">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <svg class="w-16 h-16 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-semibold text-lg mb-2">Main Store</h3>
+                            <p class="text-sm text-gray-600 mb-3">123 Main Street, Downtown</p>
+                            <div class="space-y-2 text-sm">
+                                <p><span class="text-gray-600">Distance:</span> <span class="font-semibold">2.5 km away</span></p>
+                                <p><span class="text-gray-600">Hours:</span> <span class="font-semibold">10 AM - 9 PM</span></p>
+                                <p><span class="text-gray-600">Status:</span> <span class="font-semibold text-green-600">Open Now</span></p>
+                            </div>
+                            <button class="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">Select Pickup</button>
+                        </div>
+                    </div>
+
+                    <!-- Pickup Location Card 2 -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all cursor-pointer">
+                        <div class="bg-green-100 h-32 relative">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-semibold text-lg mb-2">Plaza Location</h3>
+                            <p class="text-sm text-gray-600 mb-3">456 Market Avenue, North Side</p>
+                            <div class="space-y-2 text-sm">
+                                <p><span class="text-gray-600">Distance:</span> <span class="font-semibold">4.2 km away</span></p>
+                                <p><span class="text-gray-600">Hours:</span> <span class="font-semibold">9 AM - 10 PM</span></p>
+                                <p><span class="text-gray-600">Status:</span> <span class="font-semibold text-green-600">Open Now</span></p>
+                            </div>
+                            <button class="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">Select Pickup</button>
+                        </div>
+                    </div>
+
+                    <!-- Pickup Location Card 3 -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all cursor-pointer">
+                        <div class="bg-purple-100 h-32 relative">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <svg class="w-16 h-16 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-semibold text-lg mb-2">West Station</h3>
+                            <p class="text-sm text-gray-600 mb-3">789 West End, Residential</p>
+                            <div class="space-y-2 text-sm">
+                                <p><span class="text-gray-600">Distance:</span> <span class="font-semibold">1.8 km away</span></p>
+                                <p><span class="text-gray-600">Hours:</span> <span class="font-semibold">11 AM - 8 PM</span></p>
+                                <p><span class="text-gray-600">Status:</span> <span class="font-semibold text-orange-600">Closes in 30 mins</span></p>
+                            </div>
+                            <button class="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">Select Pickup</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Ready for Pickup -->
+                <div class="mt-10 bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-xl font-semibold">Orders Ready for Pickup</h2>
+                    </div>
+                    <div class="divide-y divide-gray-200">
+                        <div class="p-6 flex items-start justify-between">
+                            <div>
+                                <h3 class="font-semibold mb-2">Order #12345</h3>
+                                <p class="text-sm text-gray-600 mb-2">Location: Main Store</p>
+                                <p class="text-sm text-gray-600">Items: Burger Combo x2, Fries x1</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold mb-3">Ready</span>
+                                <button class="block bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 font-semibold">Pickup Now</button>
+                            </div>
+                        </div>
+                        <div class="p-6 flex items-start justify-between">
+                            <div>
+                                <h3 class="font-semibold mb-2">Order #12346</h3>
+                                <p class="text-sm text-gray-600 mb-2">Location: Plaza Location</p>
+                                <p class="text-sm text-gray-600">Items: Salad Bowl x1, Coffee x2</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold mb-3">Preparing</span>
+                                <button class="block bg-gray-400 text-white px-4 py-2 rounded-lg cursor-not-allowed font-semibold" disabled>Not Ready</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
-  </header>
 
-  <nav class="nav-bar">
-    <button class="nav-btn" data-page="stores">Stores</button>
-    <button class="nav-btn" data-page="delivery">Delivery</button>
-    <button class="nav-btn active" data-page="pickup">Pick-up</button>
-  </nav>
+    <script>
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userMenu = document.getElementById('userMenu');
 
-  <div class="page-container">
-    <a class="back-link" onclick="window.location.href='clientDashboard.html'">← Back to Dashboard</a>
-    <h2 class="page-title">Pick-up Orders</h2>
+        notificationBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('hidden');
+            userMenu.classList.add('hidden');
+        });
 
-    <!-- Active Pick-up Order Section -->
-    <div class="active-order-container">
-      <!-- Main Order Info -->
-      <div>
-        <div class="order-card">
-          <span class="order-status-badge ready">✓ Ready for Pick-up</span>
-          
-          <div class="order-header">
-            <div class="order-from">Order from:</div>
-            <div class="order-store-name">Pa-Buy Kitchen</div>
-          </div>
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userMenu.classList.toggle('hidden');
+            notificationDropdown.classList.add('hidden');
+        });
 
-          <!-- Order Items -->
-          <div class="order-items">
-            <div class="order-item">
-              <div class="item-name-qty">
-                <div class="item-name">Adobo & Rice Combo</div>
-                <div class="item-qty">x2</div>
-              </div>
-              <div class="item-price">₱460.00</div>
-            </div>
+        document.addEventListener('click', (e) => {
+            const isNotificationArea = e.target.closest('#notificationBtn') || e.target.closest('#notificationDropdown');
+            const isUserMenuArea = e.target.closest('#userMenuBtn') || e.target.closest('#userMenu');
+            if (!isNotificationArea) notificationDropdown.classList.add('hidden');
+            if (!isUserMenuArea) userMenu.classList.add('hidden');
+        });
 
-            <div class="order-item">
-              <div class="item-name-qty">
-                <div class="item-name">Spring Rolls</div>
-                <div class="item-qty">x1</div>
-              </div>
-              <div class="item-price">₱85.00</div>
-            </div>
-
-            <div class="order-item">
-              <div class="item-name-qty">
-                <div class="item-name">Iced Mango Juice</div>
-                <div class="item-qty">x2</div>
-              </div>
-              <div class="item-price">₱90.00</div>
-            </div>
-          </div>
-
-          <!-- Order Summary -->
-          <div class="order-summary">
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <span>₱635.00</span>
-            </div>
-            <div class="summary-row">
-              <span>Service Fee</span>
-              <span>₱20.00</span>
-            </div>
-            <div class="summary-row total">
-              <span>Amount to Pay</span>
-              <span>₱655.00</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pickup Details -->
-      <div class="pickup-details-card">
-        <h3>Pick-up Information</h3>
-
-        <div class="pickup-info-section">
-          <div class="pickup-label">Pick-up Location</div>
-          <div class="location-highlight">
-            <div class="pickup-value" style="margin-bottom: 6px;">Campus Safe Zone - Building A</div>
-            <div class="instructions-text">Near the main gate, beside the information booth</div>
-          </div>
-        </div>
-
-        <div class="pickup-info-section">
-          <div class="pickup-label">Order Number</div>
-          <div class="pickup-value">#PU-82945</div>
-        </div>
-
-        <div class="pickup-info-section">
-          <div class="pickup-label">Estimated Ready Time</div>
-          <div class="pickup-value">2:30 PM</div>
-        </div>
-
-        <div class="pickup-info-section">
-          <div class="pickup-label">Pickup Instructions</div>
-          <div class="instructions-text">
-            1. Proceed to the Campus Safe Zone<br>
-            2. Show your order number: #PU-82945<br>
-            3. Present valid ID<br>
-            4. Pay the amount due<br>
-            5. Receive your order
-          </div>
-        </div>
-
-        <button class="pickup-action-btn">
-          <i class="fa-solid fa-check"></i> Mark as Picked Up
-        </button>
-      </div>
-    </div>
-
-    <!-- Available Pick-up Stores Section -->
-    <h3 class="section-title">
-      <i class="fa-solid fa-building"></i>
-      Campus Safe Zone Stores
-    </h3>
-
-    <div class="pickup-stores-grid">
-      <!-- Store 1 -->
-      <div class="store-pickup-card">
-        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c" alt="Pa-Buy Kitchen" class="store-pickup-img" />
-        <div class="store-pickup-info">
-          <div class="store-pickup-name">Pa-Buy Kitchen</div>
-          <div class="store-pickup-category">Filipino Cuisine</div>
-          <div class="store-pickup-location">
-            <i class="fa-solid fa-map-pin"></i>
-            Building A
-          </div>
-          <div class="store-pickup-rating">4.9 ⭐ (200 reviews)</div>
-          <div class="badge-safe-zone">SAFE ZONE</div>
-        </div>
-      </div>
-
-      <!-- Store 2 -->
-      <div class="store-pickup-card">
-        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd" alt="Bes Burger House" class="store-pickup-img" />
-        <div class="store-pickup-info">
-          <div class="store-pickup-name">Bes Burger House</div>
-          <div class="store-pickup-category">Fast Food</div>
-          <div class="store-pickup-location">
-            <i class="fa-solid fa-map-pin"></i>
-            Building B
-          </div>
-          <div class="store-pickup-rating">4.8 ⭐ (150 reviews)</div>
-          <div class="badge-safe-zone">SAFE ZONE</div>
-        </div>
-      </div>
-
-      <!-- Store 3 -->
-      <div class="store-pickup-card">
-        <img src="https://images.unsplash.com/photo-1512568400610-62da28bc8a13" alt="Teal Cup" class="store-pickup-img" />
-        <div class="store-pickup-info">
-          <div class="store-pickup-name">Teal Cup</div>
-          <div class="store-pickup-category">Café & Pastries</div>
-          <div class="store-pickup-location">
-            <i class="fa-solid fa-map-pin"></i>
-            Building C
-          </div>
-          <div class="store-pickup-rating">4.7 ⭐ (120 reviews)</div>
-          <div class="badge-safe-zone">SAFE ZONE</div>
-        </div>
-      </div>
-
-      <!-- Store 4 -->
-      <div class="store-pickup-card">
-        <img src="https://images.unsplash.com/photo-1571115765669-251cb3cee4dc" alt="Pizza Palace" class="store-pickup-img" />
-        <div class="store-pickup-info">
-          <div class="store-pickup-name">Pizza Palace</div>
-          <div class="store-pickup-category">Italian Pizza</div>
-          <div class="store-pickup-location">
-            <i class="fa-solid fa-map-pin"></i>
-            Building D
-          </div>
-          <div class="store-pickup-rating">4.7 ⭐ (95 reviews)</div>
-          <div class="badge-safe-zone">SAFE ZONE</div>
-        </div>
-      </div>
-
-      <!-- Store 5 -->
-      <div class="store-pickup-card">
-        <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df" alt="Sushi Master" class="store-pickup-img" />
-        <div class="store-pickup-info">
-          <div class="store-pickup-name">Sushi Master</div>
-          <div class="store-pickup-category">Japanese Food</div>
-          <div class="store-pickup-location">
-            <i class="fa-solid fa-map-pin"></i>
-            Building A
-          </div>
-          <div class="store-pickup-rating">4.9 ⭐ (220 reviews)</div>
-          <div class="badge-safe-zone">SAFE ZONE</div>
-        </div>
-      </div>
-
-      <!-- Store 6 -->
-      <div class="store-pickup-card">
-        <img src="https://images.unsplash.com/photo-1565958011457-ce93c6900144" alt="Taco Fiesta" class="store-pickup-img" />
-        <div class="store-pickup-info">
-          <div class="store-pickup-name">Taco Fiesta</div>
-          <div class="store-pickup-category">Mexican Food</div>
-          <div class="store-pickup-location">
-            <i class="fa-solid fa-map-pin"></i>
-            Building C
-          </div>
-          <div class="store-pickup-rating">4.5 ⭐ (140 reviews)</div>
-          <div class="badge-safe-zone">SAFE ZONE</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="clientDashboard.js"></script>
+        function logout() {
+            alert('Logging out...');
+            window.location.href = '../index.html';
+        }
+    </script>
 </body>
 </html>

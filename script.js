@@ -14,18 +14,32 @@ function login() {
     z.style.left = "0";
 }
 
-// Optional: Alert the user's role on submit
+// Handle login for all roles
 document.getElementById('login').addEventListener('submit', function(e) {
     e.preventDefault();
-    const role = this.querySelector('select').value;
+    const role = document.getElementById("login-role").value;
+    const adminKey = document.getElementById("login-admin-key").value;
+    const correctKey = "BES-ADMIN-2024";
 
-    // Redirect store partners to the store dashboard
-    if (role === 'store') {
-        window.location.href = 'Store/dashboard.html';
+    // Validate admin key if logging in as admin
+    if (role === "admin" && adminKey !== correctKey) {
+        alert("Invalid Admin Key, Bes! You are not authorized.");
         return;
     }
 
-    alert("Logging in as " + role + "... Bes is on the way!");
+    // Store role for the session
+    localStorage.setItem("role", role);
+
+    // Redirect based on role
+    if (role === 'store') {
+        window.location.href = 'Store/dashboard.html';
+    } else if (role === 'client') {
+        window.location.href = 'client/clientDashboard.html';
+    } else if (role === 'runner') {
+        window.location.href = 'runner/runner-dashboard.html';
+    } else if (role === 'admin') {
+        window.location.href = 'admin/runner.html';
+    }
 });
 
 var x = document.getElementById("login");

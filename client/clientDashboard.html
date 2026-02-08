@@ -1,79 +1,516 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pa-Buy, Bes</title>
-  <link rel="stylesheet" href="clientDashboard.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pa-Buy Bes! Client Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root { font-family: 'Inter', sans-serif; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* Smooth Tab Transitions */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glassmorphism for Modal */
+        .modal-bg { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden">
 
-  <header>
-    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
-    <div class="top-icons">
-      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
-      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
-      <i class="fa-solid fa-user" id="profileIcon"></i>
-    </div>
-  </header>
-
-  <nav class="nav-bar">
-    <button class="nav-btn active" data-page="stores">Stores</button>
-    <button class="nav-btn" data-page="delivery">Delivery</button>
-    <button class="nav-btn" data-page="pickup">Pick-up</button>
-  </nav>
-
-  <div class="slideshow" id="slideshow"></div>
-
-  <div class="search-container">
-    <input type="text" id="searchInput" placeholder="Search for food, shops, or deals..." />
-    <button id="searchBtn" class="search-btn"><i class="fa-solid fa-search"></i></button>
-  </div>
-
-  <h2 class="section-title">Featured Stores & Products</h2>
-  <section class="cards-container">
-    <div class="food-card">
-      <img src="https://images.unsplash.com/photo-1604908176997-4315a9d8e7d9" />
-      <div class="food-info">
-        <h3>Burger Combo</h3>
-        <p>Bes Burger House</p>
-        <div class="meta">
-          <span>25–30 mins</span>
-          <span>Delivery</span>
+    <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col z-20">
+        <div class="p-6">
+            <div class="flex items-center gap-3 text-blue-600">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-800">Pa-Buy Bes!</span>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div class="food-card">
-      <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe" />
-      <div class="food-info">
-        <h3>Chicken Rice</h3>
-        <p>Pa-Buy Kitchen</p>
-        <div class="meta">
-          <span>20–25 mins</span>
-          <span>Delivery</span>
+        <nav class="flex-1 px-4 space-y-1">
+            <button onclick="switchTab('dashboard')" class="nav-btn active w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-blue-600 bg-blue-50 font-semibold">
+                <i data-lucide="home" class="w-5 h-5"></i> Dashboard
+            </button>
+            <a href="stores.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100 no-underline block">
+                <i data-lucide="store" class="w-5 h-5"></i> Stores
+            </a>
+            <button onclick="switchTab('orders')" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="shopping-cart" class="w-5 h-5"></i> My Orders
+            </button>
+            <a href="messages.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100 no-underline block">
+                <i data-lucide="message-circle" class="w-5 h-5"></i> Messages
+            </a>
+            <a href="profile.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100 no-underline block">
+                <i data-lucide="user" class="w-5 h-5"></i> Profile
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-gray-100">
+            <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+            </button>
         </div>
-      </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
+            <h2 id="page-title" class="text-lg font-semibold text-slate-800">Dashboard Overview</h2>
+            <div class="flex items-center gap-5">
+                <div class="relative">
+                    <button onclick="toggleNotifications()">
+                        <i data-lucide="bell" class="w-5 h-5 text-slate-400"></i>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+
+                    <!-- Notification Dropdown -->
+                    <div id="notificationBox"
+                        class="hidden absolute right-0 mt-4 w-80 bg-white rounded-2xl shadow-xl border z-50">
+                        <div class="p-4 border-b font-bold text-slate-800">
+                            Notifications
+                        </div>
+
+                        <div class="max-h-72 overflow-y-auto divide-y">
+                            <div class="p-4 hover:bg-slate-50">
+                                <p class="text-sm font-semibold">Order Delivered</p>
+                                <p class="text-xs text-slate-500">Your order #ORD-1023 • 2 mins ago</p>
+                            </div>
+                            <div class="p-4 hover:bg-slate-50">
+                                <p class="text-sm font-semibold text-green-600">New Store Available</p>
+                                <p class="text-xs text-slate-500">Check out the latest restaurants</p>
+                            </div>
+                            <div class="p-4 hover:bg-slate-50">
+                                <p class="text-sm font-semibold">Special Promo</p>
+                                <p class="text-xs text-slate-500">50% off on selected items today</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button onclick="toggleUserMenu()" class="flex items-center gap-3 pl-5 border-l">
+                        <img src="https://ui-avatars.com/api/?name=Customer&background=0D8ABC&color=fff"
+                            class="w-8 h-8 rounded-full shadow-sm">
+                        <span class="text-sm font-medium text-slate-700">Customer</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                    </button>
+
+                    <!-- User Dropdown -->
+                    <div id="userMenu"
+                        class="hidden absolute right-0 mt-4 w-56 bg-white rounded-2xl shadow-xl border z-50">
+                        <button class="w-full flex items-center gap-3 p-4 hover:bg-slate-50">
+                            <i data-lucide="user" class="w-4 h-4"></i> My Profile
+                        </button>
+                        <button class="w-full flex items-center gap-3 p-4 hover:bg-slate-50">
+                            <i data-lucide="settings" class="w-4 h-4"></i> Settings
+                        </button>
+                        <button onclick="logout()"
+                            class="w-full flex items-center gap-3 p-4 text-red-500 hover:bg-red-50">
+                            <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8">
+            
+            <section id="dashboard-section" class="content-section active space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Total Orders</p>
+                        <h3 class="text-2xl font-bold mt-2">12</h3>
+                        <span class="text-green-500 text-xs font-bold mt-2 flex items-center gap-1">
+                            <i data-lucide="arrow-up-right" class="w-3 h-3"></i> +2 this month
+                        </span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Pending Orders</p>
+                        <h3 class="text-2xl font-bold mt-2">2</h3>
+                        <span class="text-blue-500 text-xs font-bold mt-2 italic">Est. arrival in 30 mins</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Total Spent</p>
+                        <h3 class="text-2xl font-bold mt-2">$540.00</h3>
+                        <span class="text-slate-400 text-xs mt-2">Across 12 orders</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Favorite Stores</p>
+                        <h3 class="text-2xl font-bold mt-2">5</h3>
+                        <span class="text-slate-400 text-xs mt-2">Saved for quick access</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <h4 class="font-bold text-slate-800 mb-6">Order History</h4>
+                        <canvas id="orderChart" height="140"></canvas>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <h4 class="font-bold text-slate-800 mb-6">Recent Activity</h4>
+                        <div class="space-y-6">
+                            <div class="flex gap-4">
+                                <div class="w-2 h-2 mt-2 rounded-full bg-green-500"></div>
+                                <div>
+                                    <p class="text-sm font-medium">Order #1023 delivered</p>
+                                    <p class="text-xs text-slate-400">2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="w-2 h-2 mt-2 rounded-full bg-blue-500"></div>
+                                <div>
+                                    <p class="text-sm font-medium">New store nearby</p>
+                                    <p class="text-xs text-slate-400">1 day ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="stores-section" class="content-section space-y-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold">Favorite Stores</h3>
+                    <div class="flex gap-3">
+                        <input type="text" placeholder="Search stores..."
+                            class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 outline-none">
+                        <a href="stores.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-colors">View All Stores</a>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Store</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Category</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Rating</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Est. Time</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="store-list-body" class="divide-y divide-gray-50">
+                            <tr>
+                                <td class="px-6 py-4 font-medium italic text-slate-400" colspan="6">No favorite stores yet. Add stores to your favorites!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="orders-section" class="content-section space-y-6">
+
+                <!-- Header -->
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold">My Orders</h3>
+                    <div class="flex gap-3">
+                        <a href="cart.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-colors">View Cart</a>
+                        <a href="delivery.html" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-colors">Tracking</a>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">Total Orders</p>
+                        <h3 class="text-2xl font-bold mt-1">12</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">In Progress</p>
+                        <h3 class="text-2xl font-bold text-blue-500 mt-1">2</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">Completed</p>
+                        <h3 class="text-2xl font-bold text-green-600 mt-1">10</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                        <p class="text-sm text-slate-500">Cancelled</p>
+                        <h3 class="text-2xl font-bold text-red-500 mt-1">0</h3>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Store</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-semibold">#ORD-1023</td>
+                                <td class="px-6 py-4">Bes Burger House</td>
+                                <td class="px-6 py-4 font-bold">$45.50</td>
+                                <td class="px-6 py-4">Feb 7, 2026</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                                        Delivered
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button onclick="openOrderModal('#ORD-1023','Bes Burger House','$45.50','Feb 7, 2026','Delivered')" class="text-blue-600 hover:underline text-sm">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <section id="messages-section" class="content-section space-y-6">
+
+                <!-- Header -->
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold">Messages</h3>
+                    <div class="flex gap-3">
+                        <input type="text" placeholder="Search conversations..."
+                            class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 outline-none">
+                        <a href="messages.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-colors">Open Chat</a>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">From</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Message</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-semibold">Bes Burger House</td>
+                                <td class="px-6 py-4 text-slate-600">Your order is being prepared...</td>
+                                <td class="px-6 py-4">2 mins ago</td>
+                                <td class="px-6 py-4">
+                                    <button class="text-blue-600 hover:underline text-sm">Reply</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <section id="profile-section" class="content-section space-y-6">
+
+                <!-- Header -->
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold">My Profile</h3>
+                    <a href="profile.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-colors">Full Profile</a>
+                </div>
+
+                <!-- Profile Info -->
+                <div class="bg-white rounded-2xl border shadow-sm p-6 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm font-semibold text-slate-700">First Name</label>
+                            <input type="text" value="Juan"
+                                class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-slate-700">Last Name</label>
+                            <input type="text" value="Dela Cruz"
+                                class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold text-slate-700">Email</label>
+                        <input type="email" value="juan@email.com"
+                            class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold text-slate-700">Phone</label>
+                        <input type="text" value="+63 912 345 6789"
+                            class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold text-slate-700">Address</label>
+                        <textarea rows="3" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">123 Main Street, City, Province 12345</textarea>
+                    </div>
+
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">
+                        Update Profile
+                    </button>
+                </div>
+
+            </section>
+
+        </main>
     </div>
 
-    <div class="food-card">
-      <img src="https://images.unsplash.com/photo-1529042410759-befb1204b468" />
-      <div class="food-info">
-        <h3>Milk Tea Promo</h3>
-        <p>Teal Cup</p>
-        <div class="meta">
-          <span>15–20 mins</span>
-          <span>Pick-up</span>
+    <div id="orderModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold">Order Details</h3>
+                <button onclick="closeOrderModal()" class="p-2 hover:bg-gray-100 rounded-full">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-4 text-sm">
+                <p><strong>Order ID:</strong> <span id="oId"></span></p>
+                <p><strong>Store:</strong> <span id="oStore"></span></p>
+                <p><strong>Total:</strong> <span id="oTotal"></span></p>
+                <p><strong>Order Date:</strong> <span id="oDate"></span></p>
+                <p><strong>Status:</strong> <span id="oStatus"></span></p>
+
+                <div class="pt-4 border-t">
+                    <h4 class="font-semibold mb-2">Items</h4>
+                    <ul class="list-disc list-inside text-slate-600">
+                        <li>Burger Combo ×1</li>
+                        <li>Fries ×2</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </section>
 
-  <h2 class="section-title">Recommended Riders</h2>
-  <section class="riders-container" id="ridersContainer">
-  </section>
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
 
-  <script src="clientDashboard.js"></script>
+        // 1. Tab Switching System
+        function switchTab(tabId) {
+            // Update Title
+            const titles = {
+                'dashboard': 'Dashboard Overview',
+                'stores': 'Favorite Stores',
+                'orders': 'My Orders',
+                'messages': 'Messages',
+                'profile': 'My Profile'
+            };
+            document.getElementById('page-title').innerText = titles[tabId];
+
+            // Toggle Active Sections
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(`${tabId}-section`).classList.add('active');
+
+            // Update Sidebar UI
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-blue-600', 'bg-blue-50', 'font-semibold');
+                btn.classList.add('text-slate-600');
+            });
+            event.currentTarget.classList.add('text-blue-600', 'bg-blue-50', 'font-semibold');
+        }
+
+        // 2. Order Chart Initialization
+        const ctx = document.getElementById('orderChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                datasets: [{
+                    label: 'Orders',
+                    data: [2, 3, 1, 4, 2],
+                    borderColor: '#2563eb',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: (context) => {
+                        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                        gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
+                        gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
+                        return gradient;
+                    },
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#2563eb',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: '#f1f5f9' }, ticks: { font: { family: 'Inter' } } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // NOTIFICATION DROPDOWN
+        function toggleNotifications() {
+            document.getElementById('notificationBox').classList.toggle('hidden');
+        }
+
+        // Close notification when clicking outside
+        document.addEventListener('click', (e) => {
+            const notifBox = document.getElementById('notificationBox');
+            const notifButton = e.target.closest('[onclick*="toggleNotifications"]');
+            if (!notifBox.contains(e.target) && !notifButton) {
+                notifBox.classList.add('hidden');
+            }
+        });
+
+        // USER MENU DROPDOWN
+        function toggleUserMenu() {
+            document.getElementById('userMenu').classList.toggle('hidden');
+        }
+
+        // Close user menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const userMenu = document.getElementById('userMenu');
+            const userButton = e.target.closest('[onclick*="toggleUserMenu"]');
+            if (!userMenu.contains(e.target) && !userButton) {
+                userMenu.classList.add('hidden');
+            }
+        });
+
+        // ORDER MODAL
+        const orderModal = document.getElementById('orderModal');
+
+        function openOrderModal(id, store, total, date, status) {
+            document.getElementById('oId').innerText = id;
+            document.getElementById('oStore').innerText = store;
+            document.getElementById('oTotal').innerText = total;
+            document.getElementById('oDate').innerText = date;
+            document.getElementById('oStatus').innerText = status;
+
+            orderModal.classList.remove('hidden');
+            orderModal.classList.add('flex');
+        }
+
+        function closeOrderModal() {
+            orderModal.classList.add('hidden');
+            orderModal.classList.remove('flex');
+        }
+
+        // Logout handler
+        function logout() {
+            window.location.href = '../index.html';
+        }
+    </script>
 </body>
 </html>

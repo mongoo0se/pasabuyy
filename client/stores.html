@@ -1,155 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stores - Pa-Buy, Bes</title>
-  <link rel="stylesheet" href="clientDashboard.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    .page-container {
-      width: 90%;
-      margin: 40px auto;
-      min-height: calc(100vh - 200px);
-    }
-    .page-title {
-      font-size: 28px;
-      color: var(--text-dark);
-      margin-bottom: 20px;
-    }
-    .stores-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-      padding-bottom: 40px;
-    }
-    .store-card {
-      background: var(--card);
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease;
-      cursor: pointer;
-    }
-    .store-card:hover {
-      transform: translateY(-6px);
-    }
-    .store-img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      display: block;
-    }
-    .store-info {
-      padding: 16px;
-    }
-    .store-info h3 {
-      margin: 0 0 6px;
-    }
-    .store-info p {
-      margin: 4px 0;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-    .back-link {
-      display: inline-block;
-      margin-bottom: 20px;
-      color: var(--emerald);
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .back-link:hover {
-      text-decoration: underline;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stores - Essu Express</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .sidebar-nav-item:hover { background-color: rgba(59, 130, 246, 0.1); }
+        .sidebar-nav-item.active { background-color: rgb(59, 130, 246); color: white; }
+    </style>
 </head>
-<body>
-  <header>
-    <h1 id="homeLink" class="header-title">Pa-Buy, Bes</h1>
-    <div class="top-icons">
-      <i class="fa-solid fa-cart-shopping" id="cartIcon"></i>
-      <i class="fa-solid fa-comment-dots" id="messagesIcon"></i>
-      <i class="fa-solid fa-user" id="profileIcon"></i>
+<body class="bg-gray-50 text-gray-900">
+    <div class="flex h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <span class="font-bold text-xl">Essu</span>
+                </div>
+                <div class="bg-blue-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600">User Role:</p>
+                    <p class="font-semibold text-blue-600" id="userRole">Customer</p>
+                </div>
+            </div>
+            <nav class="p-4 space-y-2">
+                <a href="clientDashboard.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-2m-9-2l4 2m0 0l4-2"></path></svg>
+                        <span>Dashboard</span>
+                    </div>
+                </a>
+                <a href="stores.html" class="sidebar-nav-item active block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V11a2 2 0 012-2z"></path></svg>
+                        <span>Stores</span>
+                    </div>
+                </a>
+                <a href="cart.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 20a2 2 0 11-4 0 2 2 0 014 0zm10 0a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <span>Cart</span>
+                    </div>
+                </a>
+                <a href="delivery.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Delivery</span>
+                    </div>
+                </a>
+                <a href="messages.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                        <span>Messages</span>
+                    </div>
+                </a>
+                <a href="profile.html" class="sidebar-nav-item block px-4 py-3 rounded-lg text-gray-700 transition-all">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <span>Profile</span>
+                    </div>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Header -->
+            <header class="bg-white shadow-sm sticky top-0 z-40">
+                <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                    <h1 class="text-2xl font-bold">Browse Stores</h1>
+                    <div class="flex items-center gap-4">
+                        <div class="relative flex-1 max-w-xs">
+                            <input type="text" placeholder="Search stores..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <svg class="absolute right-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        <div class="relative">
+                            <button id="notificationBtn" class="p-2 hover:bg-gray-100 rounded-lg transition-all relative">
+                                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+                            <div id="notificationDropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl hidden z-50">
+                                <div class="p-4 border-b border-gray-200"><h3 class="font-semibold">Notifications</h3></div>
+                                <div class="max-h-96 overflow-y-auto">
+                                    <div class="p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer">
+                                        <p class="font-semibold text-sm">New Store Available</p>
+                                        <p class="text-xs text-gray-600">Fresh Bistro is now available nearby</p>
+                                        <p class="text-xs text-gray-500 mt-1">2 hours ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <button id="userMenuBtn" class="p-2 hover:bg-gray-100 rounded-lg transition-all">
+                                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            </button>
+                            <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl hidden z-50">
+                                <a href="profile.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-200">Profile</a>
+                                <a href="#" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-200">Settings</a>
+                                <button onclick="logout()" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="p-6">
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+                    <div class="flex gap-4 flex-wrap">
+                        <button onclick="filterStores('all')" class="filter-btn px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" data-category="all">All</button>
+                        <button onclick="filterStores('restaurants')" class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200" data-category="restaurants">Restaurants</button>
+                        <button onclick="filterStores('cafes')" class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200" data-category="cafes">Cafes</button>
+                        <button onclick="filterStores('bakeries')" class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200" data-category="bakeries">Bakeries</button>
+                        <button onclick="filterStores('fastfood')" class="filter-btn px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200" data-category="fastfood">Fast Food</button>
+                    </div>
+                </div>
+
+                <!-- Store Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="storeGrid">
+                    <!-- Store Card 1 -->
+                    <div class="store-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all cursor-pointer" data-category="restaurants">
+                        <div class="h-40 bg-gradient-to-br from-blue-400 to-blue-600 relative">
+                            <div class="absolute top-3 right-3 bg-yellow-400 px-3 py-1 rounded-full text-sm font-semibold">4.8 ⭐</div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Main Restaurant</h3>
+                            <p class="text-sm text-gray-600 mb-3">International Cuisine</p>
+                            <div class="space-y-2 text-sm mb-4">
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Time:</span> 25-35 mins</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱40</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱150</p>
+                            </div>
+                            <button onclick="openStoreModal('Main Restaurant', 'International Cuisine', '4.8', '25-35 mins', '₱40', '₱150')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                        </div>
+                    </div>
+
+                    <!-- Store Card 2 -->
+                    <div class="store-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all cursor-pointer" data-category="restaurants">
+                        <div class="h-40 bg-gradient-to-br from-green-400 to-green-600 relative">
+                            <div class="absolute top-3 right-3 bg-yellow-400 px-3 py-1 rounded-full text-sm font-semibold">4.6 ⭐</div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Pizza Paradise</h3>
+                            <p class="text-sm text-gray-600 mb-3">Italian & Pizza</p>
+                            <div class="space-y-2 text-sm mb-4">
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Time:</span> 20-30 mins</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱35</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱200</p>
+                            </div>
+                            <button onclick="openStoreModal('Pizza Paradise', 'Italian & Pizza', '4.6', '20-30 mins', '₱35', '₱200')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                        </div>
+                    </div>
+
+                    <!-- Store Card 3 -->
+                    <div class="store-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all cursor-pointer" data-category="cafes">
+                        <div class="h-40 bg-gradient-to-br from-purple-400 to-purple-600 relative">
+                            <div class="absolute top-3 right-3 bg-yellow-400 px-3 py-1 rounded-full text-sm font-semibold">4.9 ⭐</div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Coffee Corner</h3>
+                            <p class="text-sm text-gray-600 mb-3">Cafe & Pastries</p>
+                            <div class="space-y-2 text-sm mb-4">
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Time:</span> 15-20 mins</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱30</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱100</p>
+                            </div>
+                            <button onclick="openStoreModal('Coffee Corner', 'Cafe & Pastries', '4.9', '15-20 mins', '₱30', '₱100')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                        </div>
+                    </div>
+
+                    <!-- Store Card 4 -->
+                    <div class="store-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all cursor-pointer" data-category="fastfood">
+                        <div class="h-40 bg-gradient-to-br from-orange-400 to-orange-600 relative">
+                            <div class="absolute top-3 right-3 bg-yellow-400 px-3 py-1 rounded-full text-sm font-semibold">4.7 ⭐</div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Burger House</h3>
+                            <p class="text-sm text-gray-600 mb-3">Fast Food & Burgers</p>
+                            <div class="space-y-2 text-sm mb-4">
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Time:</span> 20-25 mins</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱40</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱120</p>
+                            </div>
+                            <button onclick="openStoreModal('Burger House', 'Fast Food & Burgers', '4.7', '20-25 mins', '₱40', '₱120')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                        </div>
+                    </div>
+
+                    <!-- Store Card 5 -->
+                    <div class="store-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all cursor-pointer" data-category="restaurants">
+                        <div class="h-40 bg-gradient-to-br from-red-400 to-red-600 relative">
+                            <div class="absolute top-3 right-3 bg-yellow-400 px-3 py-1 rounded-full text-sm font-semibold">4.5 ⭐</div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Sushi & Roll</h3>
+                            <p class="text-sm text-gray-600 mb-3">Japanese & Sushi</p>
+                            <div class="space-y-2 text-sm mb-4">
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Time:</span> 30-40 mins</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱50</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱250</p>
+                            </div>
+                            <button onclick="openStoreModal('Sushi & Roll', 'Japanese & Sushi', '4.5', '30-40 mins', '₱50', '₱250')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                        </div>
+                    </div>
+
+                    <!-- Store Card 6 -->
+                    <div class="store-card bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all cursor-pointer" data-category="bakeries">
+                        <div class="h-40 bg-gradient-to-br from-pink-400 to-pink-600 relative">
+                            <div class="absolute top-3 right-3 bg-yellow-400 px-3 py-1 rounded-full text-sm font-semibold">4.8 ⭐</div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Dessert Paradise</h3>
+                            <p class="text-sm text-gray-600 mb-3">Desserts & Sweets</p>
+                            <div class="space-y-2 text-sm mb-4">
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Time:</span> 15-25 mins</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Delivery Fee:</span> ₱30</p>
+                                <p class="text-gray-700"><span class="text-gray-600">Min Order:</span> ₱150</p>
+                            </div>
+                            <button onclick="openStoreModal('Dessert Paradise', 'Desserts & Sweets', '4.8', '15-25 mins', '₱30', '₱150')" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 font-semibold">View Store</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
-  </header>
 
-  <nav class="nav-bar">
-    <button class="nav-btn active" data-page="stores">Stores</button>
-    <button class="nav-btn" data-page="delivery">Delivery</button>
-    <button class="nav-btn" data-page="pickup">Pick-up</button>
-  </nav>
+    <script>
+        // Store filtering
+        function filterStores(category) {
+            const storeCards = document.querySelectorAll('.store-card');
+            const filterButtons = document.querySelectorAll('.filter-btn');
 
-  <div class="page-container">
-    <a class="back-link" onclick="window.location.href='clientDashboard.html'">← Back to Dashboard</a>
-    <h2 class="page-title">All Stores</h2>
-    <div class="stores-grid">
-      <div class="store-card">
-        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd" alt="Bes Burger House" class="store-img" />
-        <div class="store-info">
-          <h3>Bes Burger House</h3>
-          <p>Fast Food • Open Now</p>
-          <p>4.8 ⭐ (150 reviews)</p>
-        </div>
-      </div>
-      <div class="store-card">
-        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c" alt="Pa-Buy Kitchen" class="store-img" />
-        <div class="store-info">
-          <h3>Pa-Buy Kitchen</h3>
-          <p>Filipino • Open Now</p>
-          <p>4.9 ⭐ (200 reviews)</p>
-        </div>
-      </div>
-      <div class="store-card">
-        <img src="https://images.unsplash.com/photo-1512568400610-62da28bc8a13" alt="Teal Cup" class="store-img" />
-        <div class="store-info">
-          <h3>Teal Cup</h3>
-          <p>Café • Open Now</p>
-          <p>4.7 ⭐ (120 reviews)</p>
-        </div>
-      </div>
-      <div class="store-card">
-        <img src="https://images.unsplash.com/photo-1535521954131-ef3fa48c5b97" alt="Dragon Express" class="store-img" />
-        <div class="store-info">
-          <h3>Dragon Express</h3>
-          <p>Asian • Open Now</p>
-          <p>4.6 ⭐ (180 reviews)</p>
-        </div>
-      </div>
-      <div class="store-card">
-        <img src="https://images.unsplash.com/photo-1571115765669-251cb3cee4dc" alt="Pizza Palace" class="store-img" />
-        <div class="store-info">
-          <h3>Pizza Palace</h3>
-          <p>Italian • Open Now</p>
-          <p>4.7 ⭐ (95 reviews)</p>
-        </div>
-      </div>
-      <div class="store-card">
-        <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df" alt="Sushi Master" class="store-img" />
-        <div class="store-info">
-          <h3>Sushi Master</h3>
-          <p>Japanese • Open Now</p>
-          <p>4.9 ⭐ (220 reviews)</p>
-        </div>
-      </div>
-      <div class="store-card">
-        <img src="https://images.unsplash.com/photo-1565958011457-ce93c6900144" alt="Taco Fiesta" class="store-img" />
-        <div class="store-info">
-          <h3>Taco Fiesta</h3>
-          <p>Mexican • Open Now</p>
-          <p>4.5 ⭐ (140 reviews)</p>
-        </div>
-      </div>
-      <div class="store-card">
-        <img src="https://images.unsplash.com/photo-1543521521-5fc751e2a00c" alt="Thrive Salads" class="store-img" />
-        <div class="store-info">
-          <h3>Thrive Salads</h3>
-          <p>Healthy • Open Now</p>
-          <p>4.6 ⭐ (110 reviews)</p>
-        </div>
-      </div>
-    </div>
-  </div>
+            // Update button styles
+            filterButtons.forEach(btn => {
+                if (btn.dataset.category === category) {
+                    btn.classList.remove('bg-gray-100', 'text-gray-700');
+                    btn.classList.add('bg-blue-500', 'text-white');
+                } else {
+                    btn.classList.remove('bg-blue-500', 'text-white');
+                    btn.classList.add('bg-gray-100', 'text-gray-700');
+                }
+            });
 
-  <script src="clientDashboard.js"></script>
+            // Filter stores
+            storeCards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    card.classList.add('animate-fadeIn');
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Open Store Modal
+        function openStoreModal(storeName, storeType, rating, deliveryTime, deliveryFee, minOrder) {
+            const modalHTML = `
+                <div id="storeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-96 overflow-y-auto">
+                        <!-- Header -->
+                        <div class="sticky top-0 bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 flex justify-between items-start">
+                            <div>
+                                <h2 class="text-3xl font-bold">${storeName}</h2>
+                                <p class="text-blue-100 mt-1">${storeType}</p>
+                                <div class="mt-3 flex gap-4 text-sm">
+                                    <span class="bg-white text-blue-600 px-3 py-1 rounded-full font-semibold">⭐ ${rating}</span>
+                                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">📦 ${deliveryTime}</span>
+                                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">🚚 ${deliveryFee}</span>
+                                </div>
+                            </div>
+                            <button onclick="closeStoreModal()" class="text-white hover:bg-blue-700 p-2 rounded-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-6">
+                            <div class="mb-6">
+                                <h3 class="font-bold text-lg mb-3">Popular Items</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition cursor-pointer" onclick="addToCart('Signature Dish')">
+                                        <span class="font-semibold">Signature Dish</span>
+                                        <span class="text-blue-600 font-bold">₱299</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition cursor-pointer" onclick="addToCart('Classic Combo')">
+                                        <span class="font-semibold">Classic Combo</span>
+                                        <span class="text-blue-600 font-bold">₱449</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition cursor-pointer" onclick="addToCart('Premium Selection')">
+                                        <span class="font-semibold">Premium Selection</span>
+                                        <span class="text-blue-600 font-bold">₱599</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition cursor-pointer" onclick="addToCart('Seasonal Special')">
+                                        <span class="font-semibold">Seasonal Special</span>
+                                        <span class="text-blue-600 font-bold">₱349</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <h3 class="font-bold text-lg mb-3">Store Info</h3>
+                                <div class="space-y-2 text-sm text-gray-600">
+                                    <p><strong>Minimum Order:</strong> ${minOrder}</p>
+                                    <p><strong>Delivery Time:</strong> ${deliveryTime}</p>
+                                    <p><strong>Delivery Fee:</strong> ${deliveryFee}</p>
+                                    <p><strong>Rating:</strong> ${rating} ⭐</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="bg-gray-50 p-6 border-t flex gap-3 sticky bottom-0">
+                            <button onclick="closeStoreModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-lg transition">Close</button>
+                            <button onclick="openFullMenu('${storeName}', '${storeType}', '${rating}', '${deliveryTime}', '${deliveryFee}', '${minOrder}')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Browse Full Menu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes slideUp {
+                        from {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                    #storeModal > div {
+                        animation: slideUp 0.3s ease-out;
+                    }
+                </style>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeStoreModal() {
+            const modal = document.getElementById('storeModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function openFullMenu(name, type, rating, time, fee, min) {
+            const params = new URLSearchParams({
+                name, type, rating, time, fee, min
+            });
+
+            window.location.href = `storedialog.html?${params.toString()}`;
+        }
+
+        function addToCart(itemName) {
+            alert(`✅ "${itemName}" has been added to your cart!`);
+            closeStoreModal();
+            window.location.href = 'cart.html';
+        }
+
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userMenu = document.getElementById('userMenu');
+
+        notificationBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('hidden');
+            userMenu.classList.add('hidden');
+        });
+
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userMenu.classList.toggle('hidden');
+            notificationDropdown.classList.add('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            const isNotificationArea = e.target.closest('#notificationBtn') || e.target.closest('#notificationDropdown');
+            const isUserMenuArea = e.target.closest('#userMenuBtn') || e.target.closest('#userMenu');
+            if (!isNotificationArea) notificationDropdown.classList.add('hidden');
+            if (!isUserMenuArea) userMenu.classList.add('hidden');
+        });
+
+        function logout() {
+            alert('Logging out...');
+            window.location.href = '../index.html';
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('storeModal');
+            if (modal && e.target === modal) {
+                closeStoreModal();
+            }
+        });
+    </script>
 </body>
 </html>
