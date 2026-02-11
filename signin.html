@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pa-buy, Bes! | Sign In & Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-box">
+            <h1 class="logo">Pa-buy, <span>Bes!</span></h1>
+            <div class="button-box">
+                <div id="btn"></div>
+                <button type="button" class="toggle-btn" onclick="login()">Log In</button>
+                <button type="button" class="toggle-btn" onclick="register()">Register</button>
+            </div>
+            <form id="login" class="input-group">
+                <select class="input-field" id="login-role" onchange="checkLoginRole()" required>
+                    <option value="" disabled selected>Login as...</option>
+                    <option value="client">Client (Pabili User)</option>
+                    <option value="runner">Runner (Tagabili)</option>
+                    <option value="store">Store Partner</option>
+                    <option value="admin">System Admin</option>
+                </select>
+                <div id="login-admin-key-container" style="display: none;">
+                    <input type="password" id="login-admin-key" class="input-field" placeholder="Admin Secret Key">
+                </div>
+                <input type="email" class="input-field" placeholder="Email Address" required>
+                <input type="password" class="input-field" placeholder="Password" required>
+                <button type="submit" class="submit-btn">Welcome Back!</button>
+            </form>
+            <form id="register" class="input-group">
+                <select class="input-field" id="role-select" onchange="checkRole()" required>
+                    <option value="" disabled selected>Register as...</option>
+                    <option value="client">Client</option>
+                    <option value="runner">Runner</option>
+                    <option value="store">Store</option>
+                    <option value="admin">System Admin</option>
+                </select>
+                <div id="admin-key-container" style="display: none;">
+                    <input type="password" id="admin-key" class="input-field" placeholder="Enter Admin Secret Key">
+                </div>
+                <input type="text" class="input-field" placeholder="Full Name / Store Name" required>
+                <input type="email" class="input-field" placeholder="Email" required>
+                <input type="password" class="input-field" placeholder="Create Password" required>
+                <button type="submit" class="submit-btn">Create Account</button>
+            </form>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

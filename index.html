@@ -3,56 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pa-buy, Bes! | Login & Sign Up</title>
+    <title>Pa-buy, Bes! | ESSU Campus Marketplace</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="form-box">
+    <div class="homepage-container">
+        <header>
             <h1 class="logo">Pa-buy, <span>Bes!</span></h1>
-            
-            <div class="button-box">
-                <div id="btn"></div>
-                <button type="button" class="toggle-btn" onclick="login()">Log In</button>
-                <button type="button" class="toggle-btn" onclick="register()">Register</button>
+            <nav>
+                <a href="signin.html" class="nav-btn">Sign In / Register</a>
+            </nav>
+        </header>
+        <main>
+            <section class="intro">
+                <h2>Pa-buy, Bes! — ESSU Campus Marketplace</h2>
+                    <p>Pa-buy, Bes! is the official campus marketplace for Eastern Samar State University (ESSU). Built for students, faculty, and staff across ESSU campuses, our platform makes it easy to request campus shopping (pabili), arrange on-campus deliveries, and connect with approved campus stores and student runners.</p>
+                    <ul class="features-list">
+                        <li><strong>For Students:</strong> Request items from nearby stores, share payments, and get quick on-campus delivery.</li>
+                        <li><strong>For Runners:</strong> Earn part-time income by delivering within ESSU campuses with flexible schedules.</li>
+                        <li><strong>For Campus Stores &amp; Partners:</strong> Reach the ESSU community and offer campus-exclusive deals.</li>
+                    </ul>
+                    <a href="signin.html" class="cta-btn">Join Now!</a>
+            </section>
+
+            <section class="mission-vision">
+                <div class="mv-item">
+                    <h3>Our Mission</h3>
+                    <p>To provide a safe, reliable, and student-centered campus marketplace that connects the ESSU community to convenient purchasing and delivery services while supporting local campus businesses and student livelihoods.</p>
+                </div>
+                <div class="mv-item">
+                    <h3>Our Vision</h3>
+                    <p>To be the leading campus marketplace across ESSU campuses—empowering students, enabling micro-entrepreneurship, and improving everyday campus life.</p>
+                </div>
+            </section>
+
+            <section class="services">
+                <h3>Services</h3>
+                <ul class="services-list">
+                    <li>Pabili (Campus Shopping Requests)</li>
+                    <li>On-campus Delivery (Runner Service)</li>
+                    <li>Store Partner Listings & Campus Promotions</li>
+                    <li>Group Orders and Shared Payments</li>
+                </ul>
+            </section>
+        </main>
+        <footer>
+            <div class="footer-top">
+                <nav class="footer-links">
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact Us</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="services.html">Services</a>
+                </nav>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com" target="_blank" aria-label="Facebook">
+                        <!-- Facebook SVG -->
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07C2 17.07 5.66 21.21 10.44 22v-7.03H7.9v-2.9h2.54V9.41c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.45h-1.25c-1.23 0-1.62.77-1.62 1.56v1.87h2.77l-.44 2.9h-2.33V22C18.34 21.21 22 17.07 22 12.07z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com" target="_blank" aria-label="Instagram">
+                        <!-- Instagram SVG -->
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10 2c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3h10zM12 7.5A4.5 4.5 0 1 0 12 16.5 4.5 4.5 0 1 0 12 7.5zm0 2A2.5 2.5 0 1 1 12 14.5 2.5 2.5 0 1 1 12 9.5zM17.5 6A1 1 0 1 1 17.5 4 1 1 0 0 1 17.5 6z"/></svg>
+                    </a>
+                </div>
             </div>
-
-            <form id="login" class="input-group">
-                <select class="input-field" id="login-role" onchange="checkLoginRole()" required>
-                    <option value="" disabled selected>Login as...</option>
-                    <option value="client">Client (Pabili User)</option>
-                    <option value="runner">Runner (Tagabili)</option>
-                    <option value="store">Store Partner</option>
-                    <option value="admin">System Admin</option> </select>
-            
-                <div id="login-admin-key-container" style="display: none;">
-                    <input type="password" id="login-admin-key" class="input-field" placeholder="Admin Secret Key">
-                </div>
-            
-                <input type="email" class="input-field" placeholder="Email Address" required>
-                <input type="password" class="input-field" placeholder="Password" required>
-                <button type="submit" class="submit-btn">Welcome Back!</button>
-            </form>
-
-            <form id="register" class="input-group">
-                <select class="input-field" id="role-select" onchange="checkRole()" required>
-                    <option value="" disabled selected>Register as...</option>
-                    <option value="client">Client</option>
-                    <option value="runner">Runner</option>
-                    <option value="store">Store</option>
-                    <option value="admin">System Admin</option> </select>
-            
-                <div id="admin-key-container" style="display: none;">
-                    <input type="password" id="admin-key" class="input-field" placeholder="Enter Admin Secret Key">
-                </div>
-            
-                <input type="text" class="input-field" placeholder="Full Name / Store Name" required>
-                <input type="email" class="input-field" placeholder="Email" required>
-                <input type="password" class="input-field" placeholder="Create Password" required>
-                <button type="submit" class="submit-btn">Join the Fam</button>
-            </form>
-        </div>
+            <p class="copyright">&copy; 2026 Pa-buy, Bes! — Serving Eastern Samar State University communities.</p>
+        </footer>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>
