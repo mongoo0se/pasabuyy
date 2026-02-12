@@ -256,15 +256,9 @@
                 reviewData: null,
                 reviewType: '',
                 acceptedHistory: [],
-                stats: { runners: 18, stores: 9, clients: 245 },
-                pendingStores: [
-                    { id: 1, name: 'Borongan Bake Shop', email: 'bakery@email.com', phone: '0912-333-4444', location: 'Real St. Borongan', type: 'store' },
-                    { id: 2, name: 'Burger Stop', email: 'burger@stop.com', phone: '0915-111-2222', location: 'Campesao', type: 'store' }
-                ],
-                pendingRunners: [
-                    { id: 10, name: 'Mark Ramos', email: 'mark.r@essu.edu.ph', phone: '0945-888-9999', type: 'runner' },
-                    { id: 11, name: 'Aira Cruz', email: 'aira.c@essu.edu.ph', phone: '0933-444-5555', type: 'runner' }
-                ],
+                stats: { runners: 0, stores: 0, clients: 0 },
+                pendingStores: [],
+                pendingRunners: [],
                 openReview(data, type) {
                     this.reviewData = data;
                     this.reviewType = type;
@@ -291,11 +285,7 @@
                     const key = this.reviewType === 'store' ? 'stores' : 'runners';
                     this.stats[key]++;
                     
-                    // Logic to send to other pages via localStorage
-                    let existing = JSON.parse(localStorage.getItem(key) || '[]');
-                    existing.push(this.reviewData);
-                    localStorage.setItem(key, JSON.stringify(existing));
-
+                    // Logic to add to accepted history (in-memory only). Persist via server when ready.
                     this.removePending();
                 },
                 removePending() {

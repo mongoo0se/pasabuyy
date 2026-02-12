@@ -23,6 +23,11 @@ body {
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
+/* Ensure the auth container is centered on pages like signin.html */
+.container {
+    margin: 64px auto;
+}
+
 /* Specific styling for the admin key field to make it stand out */
 #admin-key {
     border-bottom: 2px solid #ff4757;

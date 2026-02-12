@@ -222,12 +222,7 @@
                 revenueChart: null,
                 orderChart: null,
                 salesChart: null,
-                stores: [
-                    { id: 'ST-882', name: 'Borongan Bake Shop', phone: '0912-333-4444', email: 'bakery@email.com', sales: 45200, status: 'Active', completed: 145, cancelled: 12 },
-                    { id: 'ST-901', name: 'Burger Stop', phone: '0915-111-2222', email: 'burger@stop.com', sales: 28400, status: 'Active', completed: 89, cancelled: 4 },
-                    { id: 'ST-112', name: 'Local Coffee Co', phone: '0920-555-8888', email: 'brew@gmail.com', sales: 12500, status: 'Inactive', completed: 42, cancelled: 15 },
-                    { id: 'ST-443', name: 'Pizza Hub', phone: '0933-444-5555', email: 'pizza@hub.com', sales: 0, status: 'Suspended', completed: 0, cancelled: 0 }
-                ],
+                stores: [],
                 getStatusClass(status) {
                     return {
                         'bg-green-100 text-green-600': status === 'Active',
@@ -260,9 +255,9 @@
                         type: 'line',
                         data: {
                             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                            datasets: [{
+                                datasets: [{
                                 label: 'Revenue (₱)',
-                                data: [5000, 7000, 4500, 8000, 12000, 15000, 14000],
+                                data: [],
                                 borderColor: '#2563eb',
                                 backgroundColor: 'rgba(37, 99, 235, 0.1)',
                                 fill: true,
@@ -309,9 +304,9 @@
                                 type: 'line',
                                 data: {
                                     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                                    datasets: [{
+                                        datasets: [{
                                         label: 'Revenue (₱)',
-                                        data: [18000, 24000, 15000, 32000, 28000, 41000, 45000],
+                                        data: [],
                                         borderColor: '#2563eb',
                                         borderWidth: 3,
                                         tension: 0.4,

@@ -1,48 +1,5 @@
-// Sample cart data structure
-let cartData = {
-  items: [
-    {
-      id: 1,
-      storeId: 1,
-      storeName: "Bes Burger House",
-      productName: "Burger Combo",
-      price: 299.99,
-      image: "https://images.unsplash.com/photo-1604908176997-4315a9d8e7d9",
-      quantity: 2,
-      selected: false
-    },
-    {
-      id: 2,
-      storeId: 1,
-      storeName: "Bes Burger House",
-      productName: "Cheese Fries",
-      price: 129.99,
-      image: "https://images.unsplash.com/photo-1585238341710-4abb7fc62f58",
-      quantity: 1,
-      selected: false
-    },
-    {
-      id: 3,
-      storeId: 2,
-      storeName: "Pa-Buy Kitchen",
-      productName: "Chicken Rice",
-      price: 199.99,
-      image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe",
-      quantity: 3,
-      selected: false
-    },
-    {
-      id: 4,
-      storeId: 3,
-      storeName: "Teal Cup",
-      productName: "Milk Tea Promo",
-      price: 89.99,
-      image: "https://images.unsplash.com/photo-1529042410759-befb1204b468",
-      quantity: 1,
-      selected: false
-    }
-  ]
-};
+// Cart data structure (start empty — server will provide real data)
+let cartData = { items: [] };
 
 const DELIVERY_FEE = 50;
 const TAX_RATE = 0.08;
@@ -221,11 +178,8 @@ function updateSelectAllCheckbox() {
 document.getElementById('checkoutBtn').addEventListener('click', () => {
   const selectedItems = cartData.items.filter(item => item.selected);
   if (selectedItems.length > 0) {
-    // Store selected items in sessionStorage
-    sessionStorage.setItem('checkoutItems', JSON.stringify({
-      items: selectedItems,
-      totals: calculateTotals()
-    }));
+    // Client-side storage removed; integrate server-side checkout to pass selected items
+    alert('Selected items will be sent to server for checkout.');
     window.location.href = 'checkout.html';
   }
 });

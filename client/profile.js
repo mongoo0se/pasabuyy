@@ -1,24 +1,5 @@
 // Payment methods data
-let paymentMethods = [
-  {
-    id: 1,
-    type: 'credit-card',
-    name: 'Visa',
-    cardNumber: '4532 •••• •••• 1234',
-    fullNumber: '4532123456789012',
-    holder: 'John Doe',
-    expiry: '12/25'
-  },
-  {
-    id: 2,
-    type: 'credit-card',
-    name: 'Mastercard',
-    cardNumber: '5425 •••• •••• 5678',
-    fullNumber: '5425234567890123',
-    holder: 'John Doe',
-    expiry: '08/26'
-  }
-];
+let paymentMethods = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   // Tab switching
@@ -249,15 +230,15 @@ function deletePaymentMethod(methodId) {
 }
 
 function resetPersonalForm() {
-  document.getElementById('fullName').value = 'John Doe';
-  document.getElementById('email').value = 'john@example.com';
-  document.getElementById('phone').value = '+63 912 345 6789';
-  document.getElementById('dob').value = '1995-05-15';
-  document.getElementById('gender').value = 'male';
-  document.getElementById('department').value = 'College of IT';
-  document.getElementById('course').value = 'Computer Science';
-  document.getElementById('section').value = '1A';
-  document.getElementById('address').value = '123 Main St, Barangay, City';
+  document.getElementById('fullName').value = '';
+  document.getElementById('email').value = '';
+  document.getElementById('phone').value = '';
+  document.getElementById('dob').value = '';
+  document.getElementById('gender').value = '';
+  document.getElementById('department').value = '';
+  document.getElementById('course').value = '';
+  document.getElementById('section').value = '';
+  document.getElementById('address').value = '';
 }
 
 function resetSecurityForm() {

@@ -1,66 +1,5 @@
-// Sample conversations data
-const conversationsData = [
-  {
-    id: 1,
-    name: 'Bes Burger House',
-    type: 'store',
-    avatar: 'https://images.unsplash.com/photo-1604908176997-4315a9d8e7d9?w=100&h=100&fit=crop',
-    status: 'Usually responds quickly',
-    messages: [
-      { id: 1, sender: 'store', text: 'Hello! Welcome to Bes Burger House', timestamp: '10:00 AM' },
-      { id: 2, sender: 'user', text: 'Hi! Can I check your menu?', timestamp: '10:05 AM' },
-      { id: 3, sender: 'store', text: 'Of course! Here\'s our menu link...', timestamp: '10:06 AM' },
-      { id: 4, sender: 'user', text: 'Thanks! I\'ll order soon', timestamp: '10:10 AM' },
-      { id: 5, sender: 'store', text: 'Great! Looking forward to your order', timestamp: '10:11 AM' }
-    ]
-  },
-  {
-    id: 2,
-    name: 'John Martinez',
-    type: 'rider',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-    status: 'Online',
-    messages: [
-      { id: 1, sender: 'user', text: 'Are you available for delivery?', timestamp: '09:30 AM' },
-      { id: 2, sender: 'rider', text: 'Yes, I\'m available now!', timestamp: '09:35 AM' },
-      { id: 3, sender: 'user', text: 'Great! I have a delivery from Pa-Buy Kitchen', timestamp: '09:40 AM' },
-      { id: 4, sender: 'rider', text: 'I\'m on my way! ETA 15 mins', timestamp: '09:45 AM' }
-    ]
-  },
-  {
-    id: 3,
-    name: 'Pa-Buy Kitchen',
-    type: 'store',
-    avatar: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=100&h=100&fit=crop',
-    status: 'Last seen 2 hours ago',
-    messages: [
-      { id: 1, sender: 'user', text: 'I received my order. Thank you!', timestamp: '08:00 AM' },
-      { id: 2, sender: 'store', text: 'You\'re welcome! Please rate us if you liked the food', timestamp: '08:05 AM' }
-    ]
-  },
-  {
-    id: 4,
-    name: 'Teal Cup Cafe',
-    type: 'store',
-    avatar: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=100&h=100&fit=crop',
-    status: 'Online',
-    messages: [
-      { id: 1, sender: 'user', text: 'Hi, I\'d like to place an order', timestamp: '11:00 AM' },
-      { id: 2, sender: 'store', text: 'Sure! What would you like to order?', timestamp: '11:05 AM' }
-    ]
-  },
-  {
-    id: 5,
-    name: 'Sarah Chen',
-    type: 'rider',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
-    status: 'Offline',
-    messages: [
-      { id: 1, sender: 'user', text: 'Thanks for the fast delivery!', timestamp: 'Yesterday' },
-      { id: 2, sender: 'rider', text: 'Happy to help! See you next time', timestamp: 'Yesterday' }
-    ]
-  }
-];
+// Start with empty conversations. Server will provide real data.
+const conversationsData = [];
 
 let currentConversationId = null;
 
@@ -224,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
-  // Select first conversation by default
+  // No default selection when there are no conversations
   if (conversationsData.length > 0) {
     selectConversation(conversationsData[0].id);
   }

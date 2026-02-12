@@ -101,8 +101,8 @@
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                         <p class="text-slate-500 text-sm font-medium">Avg Rating</p>
-                        <h3 class="text-2xl font-bold mt-2">4.4</h3>
-                        <span class="text-yellow-500 text-xs font-bold mt-2">★★★★★</span>
+                        <h3 class="text-2xl font-bold mt-2">—</h3>
+                        <span class="text-yellow-500 text-xs font-bold mt-2">—</span>
                     </div>
                     <div class="bg-blue-600 p-6 rounded-2xl border border-blue-700 shadow-md">
                         <p class="text-blue-100 text-sm font-medium">Admin Revenue (5%)</p>
@@ -243,11 +243,7 @@
                 attribution: '© OpenStreetMap contributors'
             }).addTo(map);
 
-            const runnerLocations = [
-                { name: "James Wilson", lat: 11.6098, lng: 125.4290 },
-                { name: "Aisha Khan", lat: 11.6085, lng: 125.4280 },
-                { name: "Mark Ramos", lat: 11.6105, lng: 125.4275 }
-            ];
+            const runnerLocations = [];
 
             runnerLocations.forEach(loc => {
                 const marker = L.marker([loc.lat, loc.lng]).addTo(map);
@@ -257,11 +253,7 @@
 
         function runnerStats() {
             return {
-                runners: [
-                    { name: 'James Wilson', rating: '4.8', delivered: 412, pending: 3, earnings: '12,400.50' },
-                    { name: 'Aisha Khan', rating: '4.0', delivered: 285, pending: 0, earnings: '8,900.20' },
-                    { name: 'Mark Ramos', rating: '4.5', delivered: 120, pending: 1, earnings: '4,200.00' }
-                ],
+                runners: [],
                 // Function to calculate the 5% revenue from all runner earnings
                 calculateTotalAdminRevenue() {
                     let total = this.runners.reduce((sum, runner) => {
@@ -269,17 +261,9 @@
                     }, 0);
                     return (total * 0.05).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 },
-                logs: [
-                    { id: '#ORD-9901', runner: 'James Wilson', location: 'Library South Wing', status: 'Delivered', payment: 'Paid (Wallet)' },
-                    { id: '#ORD-9905', runner: 'James Wilson', location: 'Science Lab B-12', status: 'In Progress', payment: 'COD (Pending)' },
-                    { id: '#ORD-9882', runner: 'Aisha Khan', location: 'Dormitory Block A', status: 'Delivered', payment: 'Paid (Online)' }
-                ],
-                reviews: [
-                    { id: 1, runner: 'James Wilson', client: 'Maria Santos', stars: 5, comment: 'Very polite and delivered the food hot! Highly recommended.', date: '2 mins ago' },
-                    { id: 2, runner: 'Mark Ramos', client: 'Kevin Lee', stars: 4, comment: 'A bit late but very careful with the fragile items.', date: '1 hour ago' },
-                    { id: 3, runner: 'Aisha Khan', client: 'Sarah G.', stars: 5, comment: 'Super fast delivery. Found my location easily.', date: 'Yesterday' },
-                    { id: 4, runner: 'James Wilson', client: 'John Doe', stars: 5, comment: 'The best runner in the campus!', date: 'Yesterday' }
-                ]
+                logs: [],
+                reviews: []
+                
             }
         }
 

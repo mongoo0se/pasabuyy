@@ -1,69 +1,21 @@
-const slides = [
-  "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
-  "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
-  "https://images.unsplash.com/photo-1521305916504-4a1121188589",
-  "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
-  "https://images.unsplash.com/photo-1555939594-58d7cb561818",
-  "https://images.unsplash.com/photo-1529624190104-dba937c5a919"
-];
+const slides = [];
 
-const riders = [
-  {
-    name: "John Martinez",
-    rating: 4.9,
-    reviews: 1250,
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
-    status: "Available"
-  },
-  {
-    name: "Sarah Chen",
-    rating: 4.8,
-    reviews: 980,
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
-    status: "Available"
-  },
-  {
-    name: "Miguel Santos",
-    rating: 4.7,
-    reviews: 1100,
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
-    status: "On a delivery"
-  },
-  {
-    name: "Alex Johnson",
-    rating: 4.9,
-    reviews: 1500,
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop",
-    status: "Available"
-  },
-  {
-    name: "Lisa Wang",
-    rating: 4.6,
-    reviews: 850,
-    avatar: "https://images.unsplash.com/photo-1517841905240-74386c5a21b6?w=100&h=100&fit=crop",
-    status: "Available"
-  },
-  {
-    name: "Carlos Rodriguez",
-    rating: 4.8,
-    reviews: 1200,
-    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop",
-    status: "Available"
-  }
-];
+const riders = [];
 
 let currentSlide = 0;
 const slideshow = document.getElementById("slideshow");
 
 // Slideshow functionality - only on dashboard
 if (slideshow) {
-  function showSlide() {
-    slideshow.style.backgroundImage = `url(${slides[currentSlide]})`;
-    currentSlide = (currentSlide + 1) % slides.length;
-  }
+  if (slides.length > 0) {
+    function showSlide() {
+      slideshow.style.backgroundImage = `url(${slides[currentSlide]})`;
+      currentSlide = (currentSlide + 1) % slides.length;
+    }
 
-  showSlide();
-  setInterval(showSlide, 5000);
+    showSlide();
+    setInterval(showSlide, 5000);
+  }
 }
 
 // Render riders - only on dashboard
@@ -254,15 +206,8 @@ function performSearch(query) {
   const foodCards = document.querySelectorAll(".food-card");
   let resultsFound = 0;
   
-  // Sample products database
-  const allProducts = [
-    { name: "Burger Combo", store: "Bes Burger House", type: "burger" },
-    { name: "Cheese Fries", store: "Bes Burger House", type: "fries" },
-    { name: "Chicken Rice", store: "Pa-Buy Kitchen", type: "chicken" },
-    { name: "Milk Tea Promo", store: "Teal Cup", type: "beverage" },
-    { name: "Pizza", store: "Bes Burger House", type: "pizza" },
-    { name: "Sushi", store: "Pa-Buy Kitchen", type: "sushi" }
-  ];
+  // Sample products removed; backend should provide search index
+  const allProducts = [];
   
   // Filter products
   const filteredProducts = allProducts.filter(product =>

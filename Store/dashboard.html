@@ -73,13 +73,13 @@
         <main class="flex-1 overflow-y-auto p-8">
             <section id="dashboard-section" class="content-section active space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Total Revenue</p><h3 class="text-2xl font-bold mt-2">$24,500.00</h3><span class="text-green-500 text-xs font-bold mt-2 flex items-center gap-1"><i data-lucide="arrow-up-right" class="w-3 h-3"></i> +14%</span></div>
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Active Orders</p><h3 class="text-2xl font-bold mt-2">154</h3><span class="text-blue-500 text-xs font-bold mt-2 italic">8 Pending</span></div>
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Total Products</p><h3 class="text-2xl font-bold mt-2">1,205</h3><span class="text-slate-400 text-xs mt-2">Across 12 Categories</span></div>
-                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Conversion Rate</p><h3 class="text-2xl font-bold mt-2">3.2%</h3><span class="text-red-400 text-xs font-bold mt-2 flex items-center gap-1"><i data-lucide="arrow-down-right" class="w-3 h-3"></i> -0.4%</span></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Total Revenue</p><h3 id="metric-revenue" class="text-2xl font-bold mt-2">$0.00</h3><span id="metric-revenue-change" class="text-green-500 text-xs font-bold mt-2 flex items-center gap-1" style="visibility:hidden"><i data-lucide="arrow-up-right" class="w-3 h-3"></i> +0%</span></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Active Orders</p><h3 id="metric-orders" class="text-2xl font-bold mt-2">0</h3><span id="metric-orders-pending" class="text-blue-500 text-xs font-bold mt-2 italic" style="visibility:hidden">0 Pending</span></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Total Products</p><h3 id="metric-products" class="text-2xl font-bold mt-2">0</h3><span id="metric-products-cat" class="text-slate-400 text-xs mt-2">Across 0 Categories</span></div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><p class="text-slate-500 text-sm font-medium">Conversion Rate</p><h3 id="metric-conversion" class="text-2xl font-bold mt-2">0%</h3><span id="metric-conversion-change" class="text-red-400 text-xs font-bold mt-2 flex items-center gap-1" style="visibility:hidden"><i data-lucide="arrow-down-right" class="w-3 h-3"></i> 0%</span></div>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><h4 class="font-bold text-slate-800 mb-6">Sales Analytics</h4><canvas id="salesChart" height="140"></canvas></div>
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><h4 class="font-bold text-slate-800 mb-6">Sales Analytics</h4><canvas id="salesChart" height="140"></canvas><p id="noChartMessage" class="text-sm text-slate-400 mt-3">No sales data available.</p></div>
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><h4 class="font-bold text-slate-800 mb-6">Recent Activities</h4><div class="space-y-6"><div class="flex gap-4"><div class="w-2 h-2 mt-2 rounded-full bg-blue-500"></div><div><p class="text-sm font-medium">New order #8829</p><p class="text-xs text-slate-400">2 minutes ago</p></div></div><div class="flex gap-4"><div class="w-2 h-2 mt-2 rounded-full bg-orange-500"></div><div><p class="text-sm font-medium">Product "iPhone 15" is low in stock</p><p class="text-xs text-slate-400">1 hour ago</p></div></div></div></div>
                 </div>
             </section>
@@ -103,21 +103,21 @@
                 <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
                     <table class="w-full text-left">
                         <thead class="bg-slate-50 border-b"><tr><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Customer</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Payment</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th></tr></thead>
-                        <tbody class="divide-y"><tr class="hover:bg-slate-50"><td class="px-6 py-4 font-semibold">#ORD-1023</td><td class="px-6 py-4">Juan Dela Cruz</td><td class="px-6 py-4 font-bold">$120.00</td><td class="px-6 py-4">Cash on Delivery</td><td class="px-6 py-4"><span class="px-3 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">Pending</span></td><td class="px-6 py-4"><button onclick="openOrderModal('#ORD-1023','Juan Dela Cruz','$120.00','Cash on Delivery','Pending')" class="text-blue-600 hover:underline text-sm">View</button></td></tr></tbody>
+                        <tbody id="ordersTableBody" class="divide-y"><tr><td class="px-6 py-4 font-medium italic text-slate-400" colspan="6">No orders available.</td></tr></tbody>
                     </table>
                 </div>
             </section>
             <section id="customers-section" class="content-section space-y-6">
                 <div class="flex justify-between items-center"><h3 class="text-xl font-bold">Customer Directory</h3><input type="text" placeholder="Search customer..." class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 outline-none"></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Total Customers</p><h3 class="text-2xl font-bold mt-1">138</h3></div>
-                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Repeat Buyers</p><h3 class="text-2xl font-bold text-green-600 mt-1">89</h3></div>
-                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Inactive</p><h3 class="text-2xl font-bold text-red-500 mt-1">12</h3></div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Total Customers</p><h3 id="metric-customers" class="text-2xl font-bold mt-1">0</h3></div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Repeat Buyers</p><h3 id="metric-repeat" class="text-2xl font-bold text-green-600 mt-1">0</h3></div>
+                    <div class="bg-white p-5 rounded-2xl border shadow-sm"><p class="text-sm text-slate-500">Inactive</p><h3 id="metric-inactive" class="text-2xl font-bold text-red-500 mt-1">0</h3></div>
                 </div>
                 <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
                     <table class="w-full text-left">
                         <thead class="bg-slate-50 border-b"><tr><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Customer</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Email</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Orders</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total Spent</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th><th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th></tr></thead>
-                        <tbody class="divide-y"><tr class="hover:bg-slate-50"><td class="px-6 py-4 font-semibold">Maria Santos</td><td class="px-6 py-4 text-slate-500">maria@email.com</td><td class="px-6 py-4">12</td><td class="px-6 py-4 font-bold">$540.00</td><td class="px-6 py-4"><span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Active</span></td><td class="px-6 py-4"><button onclick="openCustomerModal('Maria Santos','maria@email.com','12','$540.00','Active')" class="text-blue-600 hover:underline text-sm">View</button></td></tr></tbody>
+                        <tbody id="customersTableBody" class="divide-y"><tr><td class="px-6 py-4 font-medium italic text-slate-400" colspan="6">No customers available.</td></tr></tbody>
                     </table>
                 </div>
             </section>
@@ -154,12 +154,12 @@
     </div>
 
     <script>
-        // Global variables
-        let currentUserRole = localStorage.getItem("role") || "staff";
-        let storeSettings = JSON.parse(localStorage.getItem("storeSettings")) || {storeName: "Pa-Buy Bes!",profitMargin: 20,deliveryFee: 5,status: "Open"};
+        // Global variables (no local defaults — ready for server data)
+        let currentUserRole = null; // role will be provided by server/session
+        let storeSettings = {}; // populate from server
         let sessionTimer;
-        let securityLogs = JSON.parse(localStorage.getItem("securityLogs")) || [];
-        let userProfile = JSON.parse(localStorage.getItem("userProfile")) || {name: "Store Admin",email: "admin@email.com"};
+        let securityLogs = []; // in-memory only
+        let userProfile = {name: "", email: ""};
 
         // Global DOM references
         let modal, productListBody, productForm, ctx, orderModal, customerModal, settingsForm;
@@ -181,9 +181,8 @@
 
         function switchRole(role) {
             currentUserRole = role;
-            localStorage.setItem("role", role);
             applyRolePermissions();
-            logSecurity(`Switched to ${role} role`);
+            // server should persist role/session; no local storage persistence here
         }
 
         function switchTab(tabId) {
@@ -245,9 +244,8 @@
             storeSettings.profitMargin = parseFloat(document.getElementById('profitMargin').value);
             storeSettings.deliveryFee = parseFloat(document.getElementById('deliveryFee').value);
             storeSettings.status = document.getElementById('storeStatus').value;
-            localStorage.setItem("storeSettings", JSON.stringify(storeSettings));
-            logSecurity("Updated store settings");
-            alert("Store settings saved!");
+            // TODO: persist settings to server via API
+            alert("Store settings saved (local only). Connect to server to persist.");
             closeSettingsModal();
         }
 
@@ -271,7 +269,7 @@
 
         function logSecurity(action) {
             securityLogs.unshift({action,time: new Date().toLocaleString()});
-            localStorage.setItem("securityLogs", JSON.stringify(securityLogs));
+            // kept in memory only; remove localStorage persistence for clean integration
         }
 
         function loadProfile() {
@@ -284,7 +282,6 @@
             const newName = prompt("Enter new name:", userProfile.name);
             if (newName) {
                 userProfile.name = newName;
-                localStorage.setItem("userProfile", JSON.stringify(userProfile));
                 loadProfile();
                 logSecurity("Updated profile name");
                 loadActivityLog();
@@ -345,24 +342,24 @@
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: [],
                     datasets: [{
                         label: 'Revenue ($)',
-                        data: [18000, 24000, 15000, 32000, 28000, 41000, 45000],
+                        data: [],
                         borderColor: '#2563eb',
                         borderWidth: 3,
                         tension: 0.4,
                         fill: true,
                         backgroundColor: (context) => {
                             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
+                            gradient.addColorStop(0, 'rgba(37, 99, 235, 0.08)');
                             gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
                             return gradient;
                         },
                         pointBackgroundColor: '#fff',
                         pointBorderColor: '#2563eb',
                         pointBorderWidth: 2,
-                        pointRadius: 4
+                        pointRadius: 0
                     }]
                 },
                 options: {responsive: true,plugins: { legend: { display: false } },scales: {y: { grid: { color: '#f1f5f9' }, ticks: { font: { family: 'Inter' } } },x: { grid: { display: false } }}}
@@ -391,15 +388,11 @@
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     document.getElementById('profileImage').src = event.target.result;
-                    localStorage.setItem("profileImage", event.target.result);
                     logSecurity("Updated profile picture");
                     loadActivityLog();
                 };
                 reader.readAsDataURL(e.target.files[0]);
             });
-
-            const savedImage = localStorage.getItem("profileImage");
-            if (savedImage) {document.getElementById('profileImage').src = savedImage;}
 
             applyRolePermissions();
             loadProfile();
