@@ -768,7 +768,24 @@
                 btn.classList.remove('text-blue-600', 'bg-blue-50', 'font-semibold');
                 btn.classList.add('text-slate-600');
             });
-            event.currentTarget.classList.add('text-blue-600', 'bg-blue-50', 'font-semibold');
+            // Safely add active styles to the triggering element if available,
+            // or try to locate a matching nav button by onclick attribute.
+            try {
+                let activeBtn = null;
+                if (typeof event !== 'undefined' && event && event.currentTarget) {
+                    activeBtn = event.currentTarget;
+                } else {
+                    activeBtn = document.querySelector(`.nav-btn[onclick*="switchTab('${tabId}')"]`);
+                }
+                if (activeBtn && activeBtn.classList) {
+                    activeBtn.classList.add('text-blue-600', 'bg-blue-50', 'font-semibold');
+                }
+            } catch (e) {
+                // ignore if event not available or selector fails
+            }
+            // Hide user menu if open (useful when switching from dropdown)
+            const userMenu = document.getElementById('userMenu');
+            if (userMenu && !userMenu.classList.contains('hidden')) userMenu.classList.add('hidden');
         }
 
         // 2. Order Chart Initialization
