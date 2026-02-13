@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8 font-sans">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-sm">
+        <button onclick="goBack()" class="mb-4 bg-slate-100 px-3 py-2 rounded-xl">← Back</button>
+        <h1 class="text-2xl font-bold mb-4">Checkout</h1>
+
+        <div id="orderSummary" class="border p-4 rounded-lg mb-4">
+            <!-- order summary injected -->
+        </div>
+
+        <div class="mb-4">
+            <h3 class="font-semibold mb-2">Payment Method</h3>
+            <label class="inline-flex items-center mr-4"><input type="radio" name="pay" value="cod" checked> <span class="ml-2">Cash on Delivery</span></label>
+            <label class="inline-flex items-center mr-4"><input type="radio" name="pay" value="online"> <span class="ml-2">Pay Online</span></label>
+            <label class="inline-flex items-center"><input type="radio" name="pay" value="pickup"> <span class="ml-2">Pickup</span></label>
+        </div>
+
+        <div id="payOnlineBox" class="mb-4 hidden">
+            <p class="text-sm text-slate-600 mb-2">Proceed to your e-wallet to pay (simulated).</p>
+            <button id="payNowBtn" onclick="simulatePay()" class="bg-green-600 text-white px-4 py-2 rounded-xl">Pay with GCash</button>
+        </div>
+
+        <div>
+            <button id="finalizeBtn" onclick="finalizeOrder()" class="bg-blue-600 text-white px-4 py-2 rounded-xl">Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        function goBack(){ history.back(); }
+
+        const pending = JSON.parse(localStorage.getItem('pendingOrder') || 'null');
+        if (!pending) {
+            document.getElementById('orderSummary').innerHTML = '<p class="text-sm text-red-500">No order found.</p>';
+        } else {
+            renderSummary(pending);
+        }
+
+        function renderSummary(o){
+            document.getElementById('orderSummary').innerHTML = `
+                <div class="flex gap-4">
+                    <img src="${o.productImage || 'https://via.placeholder.com/80'}" class="w-24 h-24 rounded-lg object-cover">
+                    <div>
+                        <div class="font-semibold">${o.productName}</div>
+                        <div class="text-sm text-slate-500">${o.store}</div>
+                        <div class="text-sm text-slate-500">${o.date}</div>
+                        <div class="mt-2">Qty: ${o.quantity}</div>
+                    </div>
+                </div>
+                <div class="mt-4 border-t pt-3">
+                    <div class="flex justify-between"><span>Item</span><span>$${(o.price).toFixed(2)}</span></div>
+                    <div class="flex justify-between"><span>Shipping</span><span>$${(o.shipping).toFixed(2)}</span></div>
+                    <div class="flex justify-between font-bold mt-2"><span>Total</span><span>$${(o.price*o.quantity + o.shipping).toFixed(2)}</span></div>
+                </div>
+            `;
+        }
+
+        document.querySelectorAll('input[name="pay"]').forEach(r => r.addEventListener('change', (e) => {
+            const v = e.target.value;
+            document.getElementById('payOnlineBox').classList.toggle('hidden', v !== 'online');
+        }));
+
+        function simulatePay(){
+            // simulate redirect and success
+            alert('Simulating GCash payment... (successful)');
+            finalizeOrder(true);
+        }
+
+        function finalizeOrder(paid = false){
+            const pay = document.querySelector('input[name="pay"]:checked').value;
+            const o = JSON.parse(localStorage.getItem('pendingOrder') || 'null');
+            if (!o) return alert('No pending order');
+            o.paymentMethod = pay;
+            o.paid = paid || (pay === 'cod' || pay === 'pickup' ? false : false);
+            o.total = (o.price * o.quantity + o.shipping);
+            // push to orders list
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            orders.push(o);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            // clear pending
+            localStorage.removeItem('pendingOrder');
+            // signal dashboard to open orders
+            localStorage.setItem('openOrdersTab', 'true');
+            // add notification
+            const notifs = JSON.parse(localStorage.getItem('notifications') || '[]');
+            notifs.push({ id: Date.now(), type: 'order', title: 'Order Placed', message: 'Order ' + o.id + ' was placed', link: 'orders', time: Date.now(), read: false });
+            localStorage.setItem('notifications', JSON.stringify(notifs));
+            // go back to dashboard
+            window.location.href = 'clientDashboard.html';
+        }
+    </script>
+</body>
+</html>

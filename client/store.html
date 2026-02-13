@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 p-8 font-sans">
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <button onclick="goBack()" class="bg-slate-100 px-4 py-2 rounded-xl hover:bg-slate-200">← Back to dashboard</button>
+            </div>
+            <div>
+                <h1 id="storeName" class="text-2xl font-bold">Store Name</h1>
+                <p id="storeType" class="text-sm text-slate-500">Store type</p>
+            </div>
+            <div class="text-right">
+                <div id="storeRating" class="text-sm text-yellow-500">⭐ 4.8</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-1">
+                    <img id="storePhoto" src="https://via.placeholder.com/400x300" class="w-full rounded-lg object-cover">
+                </div>
+                <div class="md:col-span-2 space-y-4">
+                    <p id="storeDescription" class="text-slate-700">Store description goes here.</p>
+
+                    <h3 class="font-semibold">Products</h3>
+                    <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="fixed inset-0 hidden items-center justify-center z-50 bg-black/40">
+        <div class="bg-white rounded-2xl w-full max-w-2xl p-6">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 id="pmName" class="text-xl font-bold">Product</h2>
+                    <p id="pmDesc" class="text-sm text-slate-600">Description</p>
+                </div>
+                <button onclick="closeProductModal()" class="p-2">✕</button>
+            </div>
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <img id="pmImg" src="https://via.placeholder.com/300" class="w-full md:col-span-1 rounded-lg object-cover">
+                <div class="md:col-span-2">
+                    <p id="pmPrice" class="text-2xl font-bold text-blue-600">$0.00</p>
+                    <p id="pmFullDesc" class="mt-2 text-slate-700">Full description</p>
+                    <div class="mt-4">
+                        <label class="text-sm">Quantity</label>
+                        <input id="pmQty" type="number" min="1" value="1" class="ml-2 border rounded px-2 py-1 w-20">
+                    </div>
+                    <div class="mt-6 flex gap-3">
+                        <button onclick="orderProduct()" class="bg-blue-600 text-white px-4 py-2 rounded-xl">Order</button>
+                        <button onclick="closeProductModal()" class="bg-slate-100 px-4 py-2 rounded-xl">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack(){ window.location.href = 'clientDashboard.html'; }
+
+        function qs(name){
+            const params = new URLSearchParams(location.search);
+            return params.get(name);
+        }
+
+        const sampleStores = {
+            'Golden Taste': {
+                name: 'Golden Taste',
+                type: 'Fast Food & Burgers',
+                rating: 4.8,
+                photo: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop',
+                desc: 'Delicious burgers, fried chicken, and crispy fries prepared fresh daily.',
+                products: [
+                    { id: 'GT-1', name: 'Burger Combo', price: 28.99, img: 'https://via.placeholder.com/400?text=Burger', desc: 'Burger Combo with fries and drink' },
+                    { id: 'GT-2', name: 'Fries', price: 8.50, img: 'https://via.placeholder.com/400?text=Fries', desc: 'Crispy golden fries' }
+                ]
+            },
+            'Fresh Greens': {
+                name: 'Fresh Greens', type: 'Salads & Healthy Bowls', rating: 4.6, photo: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop',
+                desc: 'Fresh organic salads, acai bowls, and nutritious meal prep options.',
+                products: [ { id: 'FG-1', name: 'Acai Bowl', price: 12.50, img: 'https://via.placeholder.com/400?text=Acai', desc: 'Healthy acai bowl with toppings' } ]
+            },
+            'Pizza Palace': {
+                name: 'Pizza Palace', type: 'Pizza', rating: 4.7, photo: 'https://via.placeholder.com/800x600?text=Pizza',
+                desc: 'Classic and gourmet pizzas baked fresh.',
+                products: [ { id: 'PP-1', name: 'Large Pepperoni Pizza', price: 35.00, img: 'https://via.placeholder.com/400?text=Pizza', desc: 'Delicious pepperoni pizza with fresh ingredients' } ]
+            },
+            'Coffee Corner': {
+                name: 'Coffee Corner', type: 'Café & Pastries', rating: 4.9, photo: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&h=600&fit=crop', desc: 'Specialty coffee and pastries.', products: [ { id: 'CC-1', name: 'Cappuccino (Large)', price: 16.00, img: 'https://via.placeholder.com/400?text=Coffee', desc: 'Premium cappuccino' } ]
+            },
+            'Sweet Bites': {
+                name: 'Sweet Bites', type: 'Desserts & Confectionery', rating: 4.8, photo: 'https://images.unsplash.com/photo-1565958011504-4b852e45b58c?w=800&h=600&fit=crop', desc: 'Delectable desserts and sweet treats.', products: [ { id: 'SB-1', name: 'Chocolate Cake', price: 20.00, img: 'https://via.placeholder.com/400?text=Cake', desc: 'Rich chocolate cake' } ]
+            },
+            'Pasta Paradise': {
+                name: 'Pasta Paradise', type: 'Italian Cuisine', rating: 4.7, photo: 'https://images.unsplash.com/photo-1586985289688-cacf884ca6a1?w=800&h=600&fit=crop', desc: 'Authentic Italian pasta.', products: [ { id: 'PP2-1', name: 'Spaghetti Carbonara', price: 14.99, img: 'https://via.placeholder.com/400?text=Pasta', desc: 'Classic carbonara' } ]
+            }
+        };
+
+        const storeParam = qs('store') || 'Golden Taste';
+        const store = sampleStores[storeParam] || sampleStores['Golden Taste'];
+
+        document.getElementById('storeName').innerText = store.name;
+        document.getElementById('storeType').innerText = store.type;
+        document.getElementById('storePhoto').src = store.photo;
+        document.getElementById('storeDescription').innerText = store.desc;
+        document.getElementById('storeRating').innerText = '⭐ ' + store.rating;
+
+        const productList = document.getElementById('productList');
+        store.products.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'bg-slate-50 p-3 rounded-lg cursor-pointer hover:shadow';
+            card.innerHTML = `
+                <img src="${p.img}" class="w-full h-32 object-cover rounded-lg">
+                <div class="mt-2">
+                    <div class="font-semibold">${p.name}</div>
+                    <div class="text-sm text-slate-500">${p.desc}</div>
+                    <div class="mt-2 font-bold text-blue-600">$${p.price.toFixed(2)}</div>
+                </div>
+            `;
+            card.onclick = () => openProductModal(p);
+            productList.appendChild(card);
+        });
+
+        function openProductModal(p){
+            document.getElementById('pmName').innerText = p.name;
+            document.getElementById('pmDesc').innerText = p.desc;
+            document.getElementById('pmPrice').innerText = '$' + p.price.toFixed(2);
+            document.getElementById('pmFullDesc').innerText = p.desc;
+            document.getElementById('pmImg').src = p.img;
+            document.getElementById('pmQty').value = 1;
+            document.getElementById('productModal').classList.remove('hidden');
+            // store current product for order
+            window.currentProduct = p;
+        }
+
+        function closeProductModal(){ document.getElementById('productModal').classList.add('hidden'); }
+
+        function orderProduct(){
+            const qty = parseInt(document.getElementById('pmQty').value) || 1;
+            const p = window.currentProduct;
+            const order = {
+                id: 'ORD-' + Date.now(),
+                store: store.name,
+                productId: p.id,
+                productName: p.name,
+                productImage: p.img,
+                price: p.price,
+                quantity: qty,
+                shipping: 3.50,
+                date: new Date().toLocaleString()
+            };
+            localStorage.setItem('pendingOrder', JSON.stringify(order));
+            // go to checkout
+            window.location.href = 'checkout.html';
+        }
+    </script>
+</body>
+</html>
