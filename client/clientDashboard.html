@@ -184,33 +184,129 @@
             </section>
 
             <section id="stores-section" class="content-section space-y-6">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-xl font-bold">Favorite Stores</h3>
-                    <div class="flex gap-3">
-                        <input type="text" placeholder="Search stores..."
-                            class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 outline-none">
-                        <button onclick="switchTab('stores')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-colors">View All Stores</button>
+                <!-- Search Bar -->
+                <div class="flex gap-3">
+                    <input type="text" id="searchInput" placeholder="Search stores..."
+                        class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-100 outline-none" onkeyup="searchStores(this.value)">
+                </div>
+
+                <!-- Navigation Filter Bar -->
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="flex gap-0">
+                        <button onclick="filterStores('all')" class="filter-btn flex-1 px-6 py-4 text-center bg-blue-600 text-white font-semibold rounded-tl-2xl rounded-bl-2xl hover:bg-blue-700 transition-all border-r border-blue-500" data-category="all">All Stores</button>
+                        <button onclick="filterStores('favorites')" class="filter-btn flex-1 px-6 py-4 text-center bg-slate-100 text-slate-700 font-semibold rounded-tr-2xl rounded-br-2xl hover:bg-slate-200 transition-all" data-category="favorites">⭐ Favorites</button>
                     </div>
                 </div>
-                
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b border-slate-100">
-                            <tr>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Store</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Category</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Rating</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Est. Time</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="store-list-body" class="divide-y divide-gray-50">
-                            <tr>
-                                <td class="px-6 py-4 font-medium italic text-slate-400" colspan="6">No favorite stores yet. Add stores to your favorites!</td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                <!-- Store Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="storeGrid">
+                    <!-- Store Card 1 -->
+                    <div class="store-card bg-white rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden cursor-pointer" data-category="all" data-store-id="1">
+                        <div class="relative h-40 bg-gradient-to-br from-orange-400 to-orange-500 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop" alt="Golden Taste" class="w-full h-full object-cover">
+                            <button class="favorite-btn absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100 transition-all shadow-lg" data-store-id="1" onclick="toggleFavorite(event, 'Golden Taste', 1)">
+                                <svg class="w-6 h-6 text-gray-400 favorite-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="p-4" onclick="openStoreModal('Golden Taste', 'Fast Food & Burgers', 4.8, '20-30 mins', '₱50', '₱200')">
+                            <h3 class="text-lg font-bold text-gray-900">Golden Taste</h3>
+                            <p class="text-sm text-gray-600 mt-1">Delicious burgers, fried chicken, and crispy fries prepared fresh daily.</p>
+                            <div class="mt-3 flex justify-between items-center text-sm">
+                                <span class="text-yellow-500 font-semibold">⭐ 4.8</span>
+                                <span class="text-gray-500">Delivery: ₱50</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store Card 2 -->
+                    <div class="store-card bg-white rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden cursor-pointer" data-category="all" data-store-id="2">
+                        <div class="relative h-40 bg-gradient-to-br from-green-400 to-green-500 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop" alt="Fresh Greens" class="w-full h-full object-cover">
+                            <button class="favorite-btn absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100 transition-all shadow-lg" data-store-id="2" onclick="toggleFavorite(event, 'Fresh Greens', 2)">
+                                <svg class="w-6 h-6 text-gray-400 favorite-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="p-4" onclick="openStoreModal('Fresh Greens', 'Salads & Healthy Bowls', 4.6, '15-25 mins', '₱40', '₱150')">
+                            <h3 class="text-lg font-bold text-gray-900">Fresh Greens</h3>
+                            <p class="text-sm text-gray-600 mt-1">Fresh organic salads, acai bowls, and nutritious meal prep options.</p>
+                            <div class="mt-3 flex justify-between items-center text-sm">
+                                <span class="text-yellow-500 font-semibold">⭐ 4.6</span>
+                                <span class="text-gray-500">Delivery: ₱40</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store Card 3 -->
+                    <div class="store-card bg-white rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden cursor-pointer" data-category="all" data-store-id="3">
+                        <div class="relative h-40 bg-gradient-to-br from-red-400 to-red-500 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561241?w=400&h=300&fit=crop" alt="Spicy Wok" class="w-full h-full object-cover">
+                            <button class="favorite-btn absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100 transition-all shadow-lg" data-store-id="3" onclick="toggleFavorite(event, 'Spicy Wok', 3)">
+                                <svg class="w-6 h-6 text-gray-400 favorite-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="p-4" onclick="openStoreModal('Spicy Wok', 'Asian & Chinese Cuisine', 4.7, '25-35 mins', '₱60', '₱250')">
+                            <h3 class="text-lg font-bold text-gray-900">Spicy Wok</h3>
+                            <p class="text-sm text-gray-600 mt-1">Authentic Asian dishes, stir-fries, and noodles with bold flavors.</p>
+                            <div class="mt-3 flex justify-between items-center text-sm">
+                                <span class="text-yellow-500 font-semibold">⭐ 4.7</span>
+                                <span class="text-gray-500">Delivery: ₱60</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store Card 4 -->
+                    <div class="store-card bg-white rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden cursor-pointer" data-category="all" data-store-id="4">
+                        <div class="relative h-40 bg-gradient-to-br from-purple-400 to-purple-500 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop" alt="Coffee Corner" class="w-full h-full object-cover">
+                            <button class="favorite-btn absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100 transition-all shadow-lg" data-store-id="4" onclick="toggleFavorite(event, 'Coffee Corner', 4)">
+                                <svg class="w-6 h-6 text-gray-400 favorite-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="p-4" onclick="openStoreModal('Coffee Corner', 'Café & Pastries', 4.9, '10-15 mins', '₱30', '₱100')">
+                            <h3 class="text-lg font-bold text-gray-900">Coffee Corner</h3>
+                            <p class="text-sm text-gray-600 mt-1">Specialty coffee, artisanal pastries, and cozy breakfast favorites.</p>
+                            <div class="mt-3 flex justify-between items-center text-sm">
+                                <span class="text-yellow-500 font-semibold">⭐ 4.9</span>
+                                <span class="text-gray-500">Delivery: ₱30</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store Card 5 -->
+                    <div class="store-card bg-white rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden cursor-pointer" data-category="all" data-store-id="5">
+                        <div class="relative h-40 bg-gradient-to-br from-pink-400 to-pink-500 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1565958011504-4b852e45b58c?w=400&h=300&fit=crop" alt="Sweet Bites" class="w-full h-full object-cover">
+                            <button class="favorite-btn absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100 transition-all shadow-lg" data-store-id="5" onclick="toggleFavorite(event, 'Sweet Bites', 5)">
+                                <svg class="w-6 h-6 text-gray-400 favorite-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="p-4" onclick="openStoreModal('Sweet Bites', 'Desserts & Confectionery', 4.8, '20-25 mins', '₱45', '₱180')">
+                            <h3 class="text-lg font-bold text-gray-900">Sweet Bites</h3>
+                            <p class="text-sm text-gray-600 mt-1">Delectable desserts, cakes, ice cream, and sweet treats for any occasion.</p>
+                            <div class="mt-3 flex justify-between items-center text-sm">
+                                <span class="text-yellow-500 font-semibold">⭐ 4.8</span>
+                                <span class="text-gray-500">Delivery: ₱45</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store Card 6 -->
+                    <div class="store-card bg-white rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden cursor-pointer" data-category="all" data-store-id="6">
+                        <div class="relative h-40 bg-gradient-to-br from-blue-400 to-blue-500 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1586985289688-cacf884ca6a1?w=400&h=300&fit=crop" alt="Pasta Paradise" class="w-full h-full object-cover">
+                            <button class="favorite-btn absolute top-3 right-3 bg-white rounded-full p-2 hover:bg-gray-100 transition-all shadow-lg" data-store-id="6" onclick="toggleFavorite(event, 'Pasta Paradise', 6)">
+                                <svg class="w-6 h-6 text-gray-400 favorite-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="p-4" onclick="openStoreModal('Pasta Paradise', 'Italian Cuisine', 4.7, '30-40 mins', '₱70', '₱300')">
+                            <h3 class="text-lg font-bold text-gray-900">Pasta Paradise</h3>
+                            <p class="text-sm text-gray-600 mt-1">Authentic Italian pasta, risotto, and traditional dishes made with fresh ingredients.</p>
+                            <div class="mt-3 flex justify-between items-center text-sm">
+                                <span class="text-yellow-500 font-semibold">⭐ 4.7</span>
+                                <span class="text-gray-500">Delivery: ₱70</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -251,26 +347,18 @@
                         <div class="p-6">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
-                                    <h4 class="font-bold text-lg">#ORD-1023</h4>
-                                    <p class="text-sm text-slate-500">Bes Burger House</p>
-                                    <p class="text-xs text-slate-400 mt-1">Feb 7, 2026</p>
+                                    <button onclick="switchStore('Bes Burger House')" class="text-xl font-bold text-blue-600 hover:text-blue-700 hover:underline transition">Bes Burger House</button>
+                                    <p class="text-xs text-slate-500 mt-2">Order #ORD-1023 • Feb 7, 2026</p>
                                 </div>
                                 <div class="text-right">
                                     <p class="text-xl font-bold text-blue-600">$45.50</p>
-                                    <div class="flex gap-2 mt-2 justify-end">
-                                        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
-                                            Paid
-                                        </span>
-                                        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
-                                            Delivered
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="border-t pt-4">
+                            <button onclick="openDeliveryTimeline('Order Placed', 'Delivered', 'ORD-1023')" class="w-full -mx-6 px-6 py-3 bg-green-100 text-green-700 font-bold text-sm hover:bg-green-200 transition cursor-pointer">✓ Delivered - View Journey</button>
+                            <div class="border-t pt-4 mt-4">
                                 <h5 class="font-semibold text-sm mb-3">Order Items</h5>
                                 <div class="space-y-3">
-                                    <div class="flex gap-3">
+                                    <div class="flex gap-3 cursor-pointer hover:opacity-80 transition" onclick="openProductDetail('Burger Combo', '$28.99', 1, 'Delicious burger combo with fresh ingredients')">
                                         <img src=\"https://via.placeholder.com/80?text=Burger\" alt=\"Burger Combo\" class=\"w-20 h-20 rounded-lg object-cover\">
                                         <div class="flex-1">
                                             <p class="font-semibold text-sm\">Burger Combo</p>
@@ -278,7 +366,7 @@
                                             <p class="text-sm font-bold text-blue-600 mt-1\">$28.99</p>
                                         </div>
                                     </div>
-                                    <div class="flex gap-3">
+                                    <div class="flex gap-3 cursor-pointer hover:opacity-80 transition" onclick="openProductDetail('Fries', '$8.50', 2, 'Crispy golden fries')">
                                         <img src=\"https://via.placeholder.com/80?text=Fries\" alt=\"Fries\" class=\"w-20 h-20 rounded-lg object-cover\">
                                         <div class="flex-1">
                                             <p class="font-semibold text-sm\">Fries</p>
@@ -300,26 +388,18 @@
                         <div class="p-6">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
-                                    <h4 class="font-bold text-lg">#ORD-1024</h4>
-                                    <p class="text-sm text-slate-500">Pizza Palace</p>
-                                    <p class="text-xs text-slate-400 mt-1">Feb 13, 2026</p>
+                                    <button onclick="switchStore('Pizza Palace')" class="text-xl font-bold text-blue-600 hover:text-blue-700 hover:underline transition">Pizza Palace</button>
+                                    <p class="text-xs text-slate-500 mt-2">Order #ORD-1024 • Feb 13, 2026</p>
                                 </div>
                                 <div class="text-right">
                                     <p class="text-xl font-bold text-blue-600">$52.00</p>
-                                    <div class="flex gap-2 mt-2 justify-end">
-                                        <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">
-                                            To Pay
-                                        </span>
-                                        <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">
-                                            Pending
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="border-t pt-4">
+                            <button onclick="openDeliveryTimeline('Order Placed', 'Pending', 'ORD-1024')" class="w-full -mx-6 px-6 py-3 bg-yellow-100 text-yellow-700 font-bold text-sm hover:bg-yellow-200 transition cursor-pointer">⏳ Pending - View Journey</button>
+                            <div class="border-t pt-4 mt-4">
                                 <h5 class="font-semibold text-sm mb-3">Order Items</h5>
                                 <div class="space-y-3">
-                                    <div class="flex gap-3">
+                                    <div class="flex gap-3 cursor-pointer hover:opacity-80 transition" onclick="openProductDetail('Large Pepperoni Pizza', '$35.00', 1, 'Delicious pepperoni pizza with fresh ingredients')">
                                         <img src=\"https://via.placeholder.com/80?text=Pizza\" alt=\"Large Pizza\" class=\"w-20 h-20 rounded-lg object-cover\">
                                         <div class="flex-1">
                                             <p class="font-semibold text-sm\">Large Pepperoni Pizza</p>
@@ -327,7 +407,7 @@
                                             <p class="text-sm font-bold text-blue-600 mt-1\">$35.00</p>
                                         </div>
                                     </div>
-                                    <div class="flex gap-3">
+                                    <div class="flex gap-3 cursor-pointer hover:opacity-80 transition" onclick="openProductDetail('Soft Drink (2L)', '$5.00', 1, 'Refreshing soft drink')">
                                         <img src=\"https://via.placeholder.com/80?text=Drink\" alt=\"Drink\" class=\"w-20 h-20 rounded-lg object-cover\">
                                         <div class="flex-1">
                                             <p class="font-semibold text-sm\">Soft Drink (2L)</p>
@@ -349,26 +429,18 @@
                         <div class="p-6">
                             <div class="flex justify-between items-start mb-4">
                                 <div>
-                                    <h4 class="font-bold text-lg">#ORD-1025</h4>
-                                    <p class="text-sm text-slate-500">Cafe Blend</p>
-                                    <p class="text-xs text-slate-400 mt-1">Feb 12, 2026</p>
+                                    <button onclick="switchStore('Cafe Blend')" class="text-xl font-bold text-blue-600 hover:text-blue-700 hover:underline transition">Cafe Blend</button>
+                                    <p class="text-xs text-slate-500 mt-2">Order #ORD-1025 • Feb 12, 2026</p>
                                 </div>
                                 <div class="text-right">
                                     <p class="text-xl font-bold text-blue-600">$28.75</p>
-                                    <div class="flex gap-2 mt-2 justify-end">
-                                        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
-                                            Paid
-                                        </span>
-                                        <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">
-                                            In Delivery
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="border-t pt-4">
+                            <button onclick="openDeliveryTimeline('Order Placed', 'In Delivery', 'ORD-1025')" class="w-full -mx-6 px-6 py-3 bg-blue-100 text-blue-700 font-bold text-sm hover:bg-blue-200 transition cursor-pointer">📦 In Delivery - View Journey</button>
+                            <div class="border-t pt-4 mt-4">
                                 <h5 class="font-semibold text-sm mb-3">Order Items</h5>
                                 <div class="space-y-3">
-                                    <div class="flex gap-3">
+                                    <div class="flex gap-3 cursor-pointer hover:opacity-80 transition" onclick="openProductDetail('Cappuccino (Large)', '$16.00', 2, 'Premium cappuccino made with freshly ground coffee beans')">
                                         <img src=\"https://via.placeholder.com/80?text=Coffee\" alt=\"Coffee\" class=\"w-20 h-20 rounded-lg object-cover\">
                                         <div class="flex-1">
                                             <p class="font-semibold text-sm\">Cappuccino (Large)</p>
@@ -376,7 +448,7 @@
                                             <p class="text-sm font-bold text-blue-600 mt-1\">$16.00</p>
                                         </div>
                                     </div>
-                                    <div class="flex gap-3">
+                                    <div class="flex gap-3 cursor-pointer hover:opacity-80 transition" onclick="openProductDetail('Croissant', '$7.00', 2, 'Fresh butter croissant, baked fresh daily')">
                                         <img src=\"https://via.placeholder.com/80?text=Pastry\" alt=\"Pastry\" class=\"w-20 h-20 rounded-lg object-cover\">
                                         <div class="flex-1">
                                             <p class="font-semibold text-sm\">Croissant</p>
@@ -770,6 +842,316 @@
         // Logout handler
         function logout() {
             window.location.href = '../index.html';
+        }
+
+        // ===== STORE MANAGEMENT FUNCTIONS =====
+
+        // Initialize favorites from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const favorites = JSON.parse(localStorage.getItem('favoriteStores') || '[]');
+            favorites.forEach(storeId => {
+                const btn = document.querySelector(`.favorite-btn[data-store-id="${storeId}"]`);
+                if (btn) {
+                    btn.classList.add('favorited');
+                    btn.querySelector('.favorite-icon').style.fill = 'currentColor';
+                    btn.querySelector('.favorite-icon').classList.add('text-red-500');
+                    btn.querySelector('.favorite-icon').classList.remove('text-gray-400');
+                    
+                    const card = document.querySelector(`.store-card[data-store-id="${storeId}"]`);
+                    if (card) {
+                        card.dataset.category = 'all favorites';
+                    }
+                }
+            });
+        });
+
+        // Toggle favorite for a store
+        function toggleFavorite(event, storeName, storeId) {
+            event.stopPropagation();
+            
+            const btn = event.currentTarget;
+            const icon = btn.querySelector('.favorite-icon');
+            const card = document.querySelector(`.store-card[data-store-id="${storeId}"]`);
+            
+            let favorites = JSON.parse(localStorage.getItem('favoriteStores') || '[]');
+            
+            if (btn.classList.contains('favorited')) {
+                btn.classList.remove('favorited');
+                icon.style.fill = 'none';
+                icon.classList.remove('text-red-500');
+                icon.classList.add('text-gray-400');
+                
+                favorites = favorites.filter(id => id !== storeId);
+                card.dataset.category = 'all';
+            } else {
+                btn.classList.add('favorited');
+                icon.style.fill = 'currentColor';
+                icon.classList.add('text-red-500');
+                icon.classList.remove('text-gray-400');
+                
+                if (!favorites.includes(storeId)) {
+                    favorites.push(storeId);
+                }
+                
+                card.dataset.category = 'all favorites';
+            }
+            
+            localStorage.setItem('favoriteStores', JSON.stringify(favorites));
+        }
+
+        // Search stores
+        function searchStores(query) {
+            const storeCards = document.querySelectorAll('.store-card');
+            const searchTerm = query.toLowerCase();
+
+            storeCards.forEach(card => {
+                const storeName = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                
+                if (storeName.includes(searchTerm) || description.includes(searchTerm) || searchTerm === '') {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter stores
+        function filterStores(category) {
+            const storeCards = document.querySelectorAll('.store-card');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            // Update button styles
+            filterButtons.forEach(btn => {
+                if (btn.dataset.category === category) {
+                    btn.classList.remove('bg-slate-100', 'text-slate-700');
+                    btn.classList.add('bg-blue-600', 'text-white');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white');
+                    btn.classList.add('bg-slate-100', 'text-slate-700');
+                }
+            });
+
+            // Filter stores
+            storeCards.forEach(card => {
+                if (category === 'all') {
+                    card.style.display = 'block';
+                } else if (category === 'favorites') {
+                    const isFavorited = card.querySelector('.favorite-btn.favorited');
+                    card.style.display = isFavorited ? 'block' : 'none';
+                }
+            });
+        }
+
+        // Open Store Modal
+        function openStoreModal(storeName, storeType, rating, deliveryTime, deliveryFee, minOrder) {
+            const modalHTML = `
+                <div id="storeModal" class="fixed inset-0 modal-bg z-50 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-3xl w-full max-w-2xl max-h-96 overflow-y-auto">
+                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 flex justify-between items-start sticky top-0">
+                            <div>
+                                <h2 class="text-3xl font-bold">${storeName}</h2>
+                                <p class="text-blue-100 mt-1">${storeType}</p>
+                                <div class="mt-3 flex gap-4 text-sm">
+                                    <span class="bg-white text-blue-600 px-3 py-1 rounded-full font-semibold">⭐ ${rating}</span>
+                                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">📦 ${deliveryTime}</span>
+                                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">🚚 ${deliveryFee}</span>
+                                </div>
+                            </div>
+                            <button onclick="closeStoreModal()" class="text-white hover:bg-blue-700 p-2 rounded-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+
+                        <div class="p-6">
+                            <div class="mb-6">
+                                <h3 class="font-bold text-lg mb-3">Popular Items</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg hover:bg-blue-50 transition cursor-pointer">
+                                        <span class="font-semibold">Signature Dish</span>
+                                        <span class="text-blue-600 font-bold">₱299</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg hover:bg-blue-50 transition cursor-pointer">
+                                        <span class="font-semibold">Classic Combo</span>
+                                        <span class="text-blue-600 font-bold">₱449</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg hover:bg-blue-50 transition cursor-pointer">
+                                        <span class="font-semibold">Premium Selection</span>
+                                        <span class="text-blue-600 font-bold">₱599</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-t pt-4">
+                                <h3 class="font-bold text-lg mb-3">Store Info</h3>
+                                <div class="space-y-2 text-sm text-slate-600">
+                                    <p><strong>Minimum Order:</strong> ${minOrder}</p>
+                                    <p><strong>Delivery Time:</strong> ${deliveryTime}</p>
+                                    <p><strong>Delivery Fee:</strong> ${deliveryFee}</p>
+                                    <p><strong>Rating:</strong> ${rating} ⭐</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-6 border-t flex gap-3 sticky bottom-0">
+                            <button onclick="closeStoreModal()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-3 rounded-lg transition">Close</button>
+                            <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Browse Menu</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeStoreModal() {
+            const modal = document.getElementById('storeModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('storeModal');
+            if (modal && e.target === modal) {
+                closeStoreModal();
+            }
+        });
+
+        // ===== ORDER MANAGEMENT FUNCTIONS =====
+
+        // Navigate to a specific store
+        function switchStore(storeName) {
+            switchTab('stores');
+        }
+
+        // Open delivery timeline modal
+        function openDeliveryTimeline(status, currentStatus, orderId) {
+            const timelineSteps = [
+                { name: 'Order Placed', icon: '✓', completed: true },
+                { name: 'Order Ready for Pickup', icon: '📦', completed: currentStatus !== 'Order Placed' && currentStatus !== 'Pending' },
+                { name: 'Picked Up by Rider', icon: '🏍️', completed: currentStatus === 'In Delivery' || currentStatus === 'Delivered' },
+                { name: 'In Transit', icon: '🚚', completed: currentStatus === 'Delivered' },
+                { name: 'Delivered', icon: '✓', completed: currentStatus === 'Delivered' }
+            ];
+
+            let timelineHTML = `
+                <div id="timelineModal" class="fixed inset-0 modal-bg z-50 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-3xl w-full max-w-2xl shadow-2xl">
+                        <div class="p-6 border-b flex justify-between items-center">
+                            <div>
+                                <h3 class="text-2xl font-bold">Order Journey</h3>
+                                <p class="text-sm text-slate-500 mt-1">Order #${orderId}</p>
+                            </div>
+                            <button onclick="closeTimelineModal()" class="p-2 hover:bg-gray-100 rounded-full">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                        
+                        <div class="p-8">
+                            <div class="space-y-6">
+            `;
+
+            timelineSteps.forEach((step, index) => {
+                const isLast = index === timelineSteps.length - 1;
+                timelineHTML += `
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold ${
+                                step.completed ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-400'
+                            }">
+                                ${step.icon}
+                            </div>
+                            ${!isLast ? '<div class="w-1 h-12 bg-slate-200 mt-2"></div>' : ''}
+                        </div>
+                        <div class="pt-2">
+                            <p class="font-semibold text-lg ${
+                                step.completed ? 'text-slate-900' : 'text-slate-400'
+                            }">${step.name}</p>
+                            <p class="text-sm text-slate-500 mt-1">${
+                                step.completed ? 'Completed' : 'Pending'
+                            }</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            timelineHTML += `
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-50 p-6 border-t flex gap-3">
+                            <button onclick="closeTimelineModal()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', timelineHTML);
+        }
+
+        function closeTimelineModal() {
+            const modal = document.getElementById('timelineModal');
+            if (modal) modal.remove();
+        }
+
+        // Open product detail modal
+        function openProductDetail(productName, price, quantity, description) {
+            const modalHTML = `
+                <div id="productModal" class="fixed inset-0 modal-bg z-50 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-3xl w-full max-w-2xl shadow-2xl">
+                        <div class="p-6 border-b flex justify-between items-center">
+                            <h3 class="text-2xl font-bold">${productName}</h3>
+                            <button onclick="closeProductModal()" class="p-2 hover:bg-gray-100 rounded-full">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                        
+                        <div class="p-6 space-y-6">
+                            <img src="https://via.placeholder.com/400?text=${productName}" alt="${productName}" class="w-full h-64 rounded-2xl object-cover">
+                            
+                            <div>
+                                <h4 class="text-sm font-semibold text-slate-500 uppercase mb-2">Description</h4>
+                                <p class="text-lg text-slate-700">${description}</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-3 gap-4">
+                                <div>
+                                    <p class="text-sm text-slate-500">Quantity Ordered</p>
+                                    <p class="text-2xl font-bold text-blue-600 mt-1">${quantity}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-slate-500">Unit Price</p>
+                                    <p class="text-2xl font-bold text-blue-600 mt-1">${price}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-slate-500">Total</p>
+                                    <p class="text-2xl font-bold text-green-600 mt-1" id="totalPrice"></p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-slate-50 p-4 rounded-xl">
+                                <h4 class="font-semibold text-slate-700 mb-3">Order Again?</h4>
+                                <p class="text-sm text-slate-600 mb-4">Add this item to your cart from the store menu</p>
+                                <button onclick="switchTab('stores'); closeProductModal();" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">Go to Store</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            // Calculate total price
+            const priceValue = parseFloat(price.replace('$', ''));
+            const total = (priceValue * quantity).toFixed(2);
+            document.getElementById('totalPrice').textContent = '$' + total;
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('productModal');
+            if (modal) modal.remove();
         }
     </script>
 </body>
