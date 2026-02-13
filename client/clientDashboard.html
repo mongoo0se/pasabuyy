@@ -59,9 +59,6 @@
             <a href="messages.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100 no-underline block">
                 <i data-lucide="message-circle" class="w-5 h-5"></i> Messages
             </a>
-            <a href="profile.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100 no-underline block">
-                <i data-lucide="user" class="w-5 h-5"></i> Profile
-            </a>
         </nav>
 
         <div class="p-4 border-t border-gray-100">
@@ -119,8 +116,8 @@
                         <button class="w-full flex items-center gap-3 p-4 hover:bg-slate-50">
                             <i data-lucide="user" class="w-4 h-4"></i> My Profile
                         </button>
-                        <button class="w-full flex items-center gap-3 p-4 hover:bg-slate-50">
-                            <i data-lucide="settings" class="w-4 h-4"></i> Settings
+                        <button onclick="switchTab('account-settings')" class="w-full flex items-center gap-3 p-4 hover:bg-slate-50">
+                            <i data-lucide="settings" class="w-4 h-4"></i> Account Settings
                         </button>
                         <button onclick="logout()"
                             class="w-full flex items-center gap-3 p-4 text-red-500 hover:bg-red-50">
@@ -247,99 +244,211 @@
                     </div>
                 </div>
 
-                <!-- Orders Table -->
-                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b">
-                            <tr>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Store</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order Status</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Delivery Status</th>
-                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y">
-                            <tr class="hover:bg-slate-50">
-                                <td class="px-6 py-4 font-semibold">#ORD-1023</td>
-                                <td class="px-6 py-4">Bes Burger House</td>
-                                <td class="px-6 py-4 font-bold">$45.50</td>
-                                <td class="px-6 py-4">Feb 7, 2026</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
-                                        Paid
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
-                                        Delivered
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <button onclick="openOrderModal('#ORD-1023','Bes Burger House','$45.50','Feb 7, 2026','Paid','Delivered')" class="text-blue-600 hover:underline text-sm">View</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-slate-50">
-                                <td class="px-6 py-4 font-semibold">#ORD-1024</td>
-                                <td class="px-6 py-4">Pizza Palace</td>
-                                <td class="px-6 py-4 font-bold">$52.00</td>
-                                <td class="px-6 py-4">Feb 13, 2026</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">
-                                        To Pay
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">
-                                        Pending
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <button onclick="openOrderModal('#ORD-1024','Pizza Palace','$52.00','Feb 13, 2026','To Pay','Pending')" class="text-blue-600 hover:underline text-sm">View</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-slate-50">
-                                <td class="px-6 py-4 font-semibold">#ORD-1025</td>
-                                <td class="px-6 py-4">Cafe Blend</td>
-                                <td class="px-6 py-4 font-bold">$28.75</td>
-                                <td class="px-6 py-4">Feb 12, 2026</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
-                                        Paid
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">
-                                        In Delivery
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <button onclick="openOrderModal('#ORD-1025','Cafe Blend','$28.75','Feb 12, 2026','Paid','In Delivery')" class="text-blue-600 hover:underline text-sm">Track</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-slate-50">
-                                <td class="px-6 py-4 font-semibold">#ORD-1026</td>
-                                <td class="px-6 py-4">Bakery Fresh</td>
-                                <td class="px-6 py-4 font-bold">$35.25</td>
-                                <td class="px-6 py-4">Feb 11, 2026</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
-                                        Paid
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">
-                                        To Be Delivered
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <button onclick="openOrderModal('#ORD-1026','Bakery Fresh','$35.25','Feb 11, 2026','Paid','To Be Delivered')" class="text-blue-600 hover:underline text-sm">Track</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Orders Detail Cards -->
+                <div class="space-y-4">
+                    <!-- Order Card 1 -->
+                    <div class="bg-white rounded-2xl border shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="font-bold text-lg">#ORD-1023</h4>
+                                    <p class="text-sm text-slate-500">Bes Burger House</p>
+                                    <p class="text-xs text-slate-400 mt-1">Feb 7, 2026</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xl font-bold text-blue-600">$45.50</p>
+                                    <div class="flex gap-2 mt-2 justify-end">
+                                        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                                            Paid
+                                        </span>
+                                        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                                            Delivered
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h5 class="font-semibold text-sm mb-3">Order Items</h5>
+                                <div class="space-y-3">
+                                    <div class="flex gap-3">
+                                        <img src=\"https://via.placeholder.com/80?text=Burger\" alt=\"Burger Combo\" class=\"w-20 h-20 rounded-lg object-cover\">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-sm\">Burger Combo</p>
+                                            <p class="text-xs text-slate-500\">Quantity: 1</p>
+                                            <p class="text-sm font-bold text-blue-600 mt-1\">$28.99</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <img src=\"https://via.placeholder.com/80?text=Fries\" alt=\"Fries\" class=\"w-20 h-20 rounded-lg object-cover\">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-sm\">Fries</p>
+                                            <p class="text-xs text-slate-500\">Quantity: 2</p>
+                                            <p class="text-sm font-bold text-blue-600 mt-1\">$8.50</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t mt-4 pt-4 flex gap-2">
+                                <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition text-sm\">View Details</button>
+                                <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-lg transition text-sm\">Reorder</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Card 2 -->
+                    <div class="bg-white rounded-2xl border shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="font-bold text-lg">#ORD-1024</h4>
+                                    <p class="text-sm text-slate-500">Pizza Palace</p>
+                                    <p class="text-xs text-slate-400 mt-1">Feb 13, 2026</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xl font-bold text-blue-600">$52.00</p>
+                                    <div class="flex gap-2 mt-2 justify-end">
+                                        <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">
+                                            To Pay
+                                        </span>
+                                        <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">
+                                            Pending
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h5 class="font-semibold text-sm mb-3">Order Items</h5>
+                                <div class="space-y-3">
+                                    <div class="flex gap-3">
+                                        <img src=\"https://via.placeholder.com/80?text=Pizza\" alt=\"Large Pizza\" class=\"w-20 h-20 rounded-lg object-cover\">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-sm\">Large Pepperoni Pizza</p>
+                                            <p class="text-xs text-slate-500\">Quantity: 1</p>
+                                            <p class="text-sm font-bold text-blue-600 mt-1\">$35.00</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <img src=\"https://via.placeholder.com/80?text=Drink\" alt=\"Drink\" class=\"w-20 h-20 rounded-lg object-cover\">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-sm\">Soft Drink (2L)</p>
+                                            <p class="text-xs text-slate-500\">Quantity: 1</p>
+                                            <p class="text-sm font-bold text-blue-600 mt-1\">$5.00</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t mt-4 pt-4 flex gap-2">
+                                <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition text-sm\">View Details</button>
+                                <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-lg transition text-sm\">Pay Now</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Card 3 -->
+                    <div class="bg-white rounded-2xl border shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="font-bold text-lg">#ORD-1025</h4>
+                                    <p class="text-sm text-slate-500">Cafe Blend</p>
+                                    <p class="text-xs text-slate-400 mt-1">Feb 12, 2026</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xl font-bold text-blue-600">$28.75</p>
+                                    <div class="flex gap-2 mt-2 justify-end">
+                                        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                                            Paid
+                                        </span>
+                                        <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">
+                                            In Delivery
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h5 class="font-semibold text-sm mb-3">Order Items</h5>
+                                <div class="space-y-3">
+                                    <div class="flex gap-3">
+                                        <img src=\"https://via.placeholder.com/80?text=Coffee\" alt=\"Coffee\" class=\"w-20 h-20 rounded-lg object-cover\">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-sm\">Cappuccino (Large)</p>
+                                            <p class="text-xs text-slate-500\">Quantity: 2</p>
+                                            <p class="text-sm font-bold text-blue-600 mt-1\">$16.00</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <img src=\"https://via.placeholder.com/80?text=Pastry\" alt=\"Pastry\" class=\"w-20 h-20 rounded-lg object-cover\">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-sm\">Croissant</p>
+                                            <p class="text-xs text-slate-500\">Quantity: 2</p>
+                                            <p class="text-sm font-bold text-blue-600 mt-1\">$7.00</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t mt-4 pt-4 flex gap-2">
+                                <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition text-sm\">Track Order</button>
+                                <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-lg transition text-sm\">Contact Support</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Card 4 -->
+                    <div class="bg-white rounded-2xl border shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="font-bold text-lg">#ORD-1026</h4>
+                                    <p class="text-sm text-slate-500">Bakery Fresh</p>
+                                    <p class="text-xs text-slate-400 mt-1">Feb 11, 2026</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xl font-bold text-blue-600">$35.25</p>
+                                    <div class="flex gap-2 mt-2 justify-end">
+                                        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                                            Paid
+                                        </span>
+                                        <span class="px-3 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">
+                                            To Be Delivered
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4">
+                                <h5 class="font-semibold text-sm mb-3">Order Items</h5>
+                                <div class="space-y-3">
+                                    <div class="flex gap-3">
+                                        <img src=\"https://via.placeholder.com/80?text=Bread\" alt=\"Bread\" class=\"w-20 h-20 rounded-lg object-cover\">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-sm\">Whole Wheat Bread</p>
+                                            <p class="text-xs text-slate-500\">Quantity: 1</p>
+                                            <p class="text-sm font-bold text-blue-600 mt-1\">$6.50</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <img src=\"https://via.placeholder.com/80?text=Cake\" alt=\"Cake\" class=\"w-20 h-20 rounded-lg object-cover\">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-sm\">Chocolate Cake</p>
+                                            <p class="text-xs text-slate-500\">Quantity: 1</p>
+                                            <p class="text-sm font-bold text-blue-600 mt-1\">$20.00</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <img src=\"https://via.placeholder.com/80?text=Donuts\" alt=\"Donuts\" class=\"w-20 h-20 rounded-lg object-cover\">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-sm\">Glazed Donuts (Box)</p>
+                                            <p class="text-xs text-slate-500\">Quantity: 1</p>
+                                            <p class="text-sm font-bold text-blue-600 mt-1\">$8.75</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t mt-4 pt-4 flex gap-2">
+                                <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition text-sm\">Track Order</button>
+                                <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-lg transition text-sm\">Reorder</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </section>
@@ -429,6 +538,80 @@
 
             </section>
 
+            <section id="account-settings-section" class="content-section space-y-6">
+
+                <!-- Header -->
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold">Account Settings</h3>
+                </div>
+
+                <!-- Account Security -->
+                <div class="bg-white rounded-2xl border shadow-sm p-6 space-y-6">
+                    <div>
+                        <h4 class="font-bold text-lg mb-4">Security Settings</h4>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700">Current Password</label>
+                                <input type="password" placeholder="Enter current password"
+                                    class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                            </div>
+
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700">New Password</label>
+                                <input type="password" placeholder="Enter new password"
+                                    class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                            </div>
+
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700">Confirm New Password</label>
+                                <input type="password" placeholder="Confirm new password"
+                                    class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                            </div>
+
+                            <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors">
+                                Update Password
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <h4 class="font-bold text-lg mb-4">Two-Factor Authentication</h4>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-semibold">Enable 2FA for added security</p>
+                                <p class="text-xs text-slate-500 mt-1">Protect your account with two-factor authentication</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <h4 class="font-bold text-lg mb-4">Active Sessions</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                                <div>
+                                    <p class="font-semibold text-sm">Current Device</p>
+                                    <p class="text-xs text-slate-500">Chrome on Windows • Last active now</p>
+                                </div>
+                                <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Active</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
+                                <div>
+                                    <p class="font-semibold text-sm">Mobile Device</p>
+                                    <p class="text-xs text-slate-500">Safari on iPhone • Last active 2 hours ago</p>
+                                </div>
+                                <button class="text-red-600 hover:text-red-700 text-xs font-bold">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
         </main>
     </div>
 
@@ -484,7 +667,8 @@
                 'stores': 'Favorite Stores',
                 'orders': 'My Orders',
                 'messages': 'Messages',
-                'profile': 'My Profile'
+                'profile': 'My Profile',
+                'account-settings': 'Account Settings'
             };
             document.getElementById('page-title').innerText = titles[tabId];
 
