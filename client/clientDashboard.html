@@ -61,11 +61,7 @@
             </button>
         </nav>
 
-        <div class="p-4 border-t border-gray-100">
-            <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
-                <i data-lucide="log-out" class="w-5 h-5"></i> Logout
-            </button>
-        </div>
+        <!-- Side panel logout removed (logout available in user dropdown) -->
     </aside>
 
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -74,32 +70,23 @@
             <h2 id="page-title" class="text-lg font-semibold text-slate-800">Dashboard Overview</h2>
             <div class="flex items-center gap-5">
                 <div class="relative">
-                    <button onclick="toggleNotifications()">
+                    <button onclick="toggleNotifications()" class="relative">
                         <i data-lucide="bell" class="w-5 h-5 text-slate-400"></i>
-                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                        <span id="notificationBadge" class="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-0.5 text-xs bg-red-500 text-white rounded-full border-2 border-white hidden">0</span>
                     </button>
 
                     <!-- Notification Dropdown -->
                     <div id="notificationBox"
                         class="hidden absolute right-0 mt-4 w-80 bg-white rounded-2xl shadow-xl border z-50">
-                        <div class="p-4 border-b font-bold text-slate-800">
-                            Notifications
+                        <div class="p-4 border-b font-bold text-slate-800 flex items-center justify-between">
+                            <span>Notifications</span>
+                            <button onclick="clearNotifications()" class="text-xs text-slate-500 hover:underline">Clear</button>
                         </div>
 
-                        <div class="max-h-72 overflow-y-auto divide-y">
-                            <div class="p-4 hover:bg-slate-50">
-                                <p class="text-sm font-semibold">Order Delivered</p>
-                                <p class="text-xs text-slate-500">Your order #ORD-1023 • 2 mins ago</p>
-                            </div>
-                            <div class="p-4 hover:bg-slate-50">
-                                <p class="text-sm font-semibold text-green-600">New Store Available</p>
-                                <p class="text-xs text-slate-500">Check out the latest restaurants</p>
-                            </div>
-                            <div class="p-4 hover:bg-slate-50">
-                                <p class="text-sm font-semibold">Special Promo</p>
-                                <p class="text-xs text-slate-500">50% off on selected items today</p>
-                            </div>
+                        <div id="notificationList" class="max-h-72 overflow-y-auto divide-y">
+                            <!-- notifications injected here -->
                         </div>
+                        <div id="noNotifications" class="p-4 text-sm text-slate-500 hidden">No notifications</div>
                     </div>
                 </div>
                 <div class="relative">
@@ -573,38 +560,66 @@
 
                 <!-- Profile Info -->
                 <div class="bg-white rounded-2xl border shadow-sm p-6 space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-sm font-semibold text-slate-700">First Name</label>
-                            <input type="text" value="Juan"
-                                class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                    <div class="flex items-center gap-6">
+                        <div class="flex-shrink-0">
+                            <img id="profileAvatarImg" src="https://ui-avatars.com/api/?name=Customer&background=0D8ABC&color=fff" class="w-24 h-24 rounded-full shadow-sm object-cover" alt="avatar">
                         </div>
-                        <div>
-                            <label class="text-sm font-semibold text-slate-700">Last Name</label>
-                            <input type="text" value="Dela Cruz"
-                                class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                        <div class="flex-1">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-sm font-semibold text-slate-700">First Name</label>
+                                    <input id="profileFirstName" type="text" value="Juan" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                                </div>
+                                <div>
+                                    <label class="text-sm font-semibold text-slate-700">Last Name</label>
+                                    <input id="profileLastName" type="text" value="Dela Cruz" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                                </div>
+                            </div>
+                            <div class="mt-3 flex items-center gap-3">
+                                <label class="text-sm font-semibold text-slate-700">Change Photo</label>
+                                <input id="profileAvatarInput" type="file" accept="image/*" class="text-sm">
+                                <button onclick="removeAvatar()" class="text-sm text-red-500 hover:underline">Remove</button>
+                            </div>
                         </div>
                     </div>
 
                     <div>
                         <label class="text-sm font-semibold text-slate-700">Email</label>
-                        <input type="email" value="juan@email.com"
-                            class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                        <input id="profileEmail" type="email" value="juan@email.com" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-sm font-semibold text-slate-700">Phone</label>
+                            <input id="profilePhone" type="text" value="+63 912 345 6789" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-slate-700">Birthday</label>
+                            <input id="profileBirthday" type="date" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                        </div>
                     </div>
 
                     <div>
-                        <label class="text-sm font-semibold text-slate-700">Phone</label>
-                        <input type="text" value="+63 912 345 6789"
-                            class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">
+                        <label class="text-sm font-semibold text-slate-700">Bio</label>
+                        <textarea id="profileBio" rows="3" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">Hello! I'm using Pa-Buy Bes!</textarea>
                     </div>
 
                     <div>
                         <label class="text-sm font-semibold text-slate-700">Address</label>
-                        <textarea rows="3" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">123 Main Street, City, Province 12345</textarea>
+                        <textarea id="profileAddress" rows="2" class="w-full mt-1 bg-slate-50 border rounded-xl px-4 py-3">123 Main Street, City, Province 12345</textarea>
                     </div>
 
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">
-                        Update Profile
+                    <div class="border-t pt-4">
+                        <h4 class="font-semibold mb-3">Connect E-Wallet</h4>
+                        <div class="flex gap-3">
+                            <input id="profileGCash" type="text" placeholder="GCash number (09...)" class="flex-1 bg-slate-50 border rounded-xl px-4 py-3">
+                            <button id="connectGCashBtn" onclick="connectGCash()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-semibold">Connect GCash</button>
+                        </div>
+                        <p id="gcashStatus" class="text-sm text-slate-500 mt-2">Not connected</p>
+                    </div>
+
+                    <button onclick="saveProfile()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl">
+                        Save Profile
                     </button>
                 </div>
 
@@ -793,7 +808,18 @@
 
         // NOTIFICATION DROPDOWN
         function toggleNotifications() {
-            document.getElementById('notificationBox').classList.toggle('hidden');
+            renderNotifications();
+            const box = document.getElementById('notificationBox');
+            box.classList.toggle('hidden');
+            // reset badge when opening
+            const badge = document.getElementById('notificationBadge');
+            if (!box.classList.contains('hidden')) {
+                // user viewed notifications, clear unread count
+                const notifs = JSON.parse(localStorage.getItem('notifications') || '[]');
+                notifs.forEach(n => n.read = true);
+                localStorage.setItem('notifications', JSON.stringify(notifs));
+                updateNotificationBadge();
+            }
         }
 
         // Close notification when clicking outside
@@ -1237,6 +1263,173 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderConversationsList();
         });
+
+        // ===== Profile persistence and avatar handling =====
+        function loadProfile() {
+            const p = JSON.parse(localStorage.getItem('profile') || '{}');
+            if (p.firstName) document.getElementById('profileFirstName').value = p.firstName;
+            if (p.lastName) document.getElementById('profileLastName').value = p.lastName;
+            if (p.email) document.getElementById('profileEmail').value = p.email;
+            if (p.phone) document.getElementById('profilePhone').value = p.phone;
+            if (p.address) document.getElementById('profileAddress').value = p.address;
+            if (p.bio) document.getElementById('profileBio').value = p.bio;
+            if (p.birthday) document.getElementById('profileBirthday').value = p.birthday;
+            if (p.gcash) document.getElementById('profileGCash').value = p.gcash;
+            if (p.avatar) {
+                document.getElementById('profileAvatarImg').src = p.avatar;
+                // update header avatar
+                const headerImg = document.querySelector('header img');
+                if (headerImg) headerImg.src = p.avatar;
+            }
+            // update user name in header
+            const name = ((p.firstName || '') + ' ' + (p.lastName || '')).trim();
+            if (name) {
+                const nameEl = document.querySelector('header .flex.items-center span');
+                if (nameEl) nameEl.innerText = name;
+            }
+            // GCash status label
+            const gcashStatus = document.getElementById('gcashStatus');
+            if (p.gcash) gcashStatus.innerText = 'Connected: ' + p.gcash; else gcashStatus.innerText = 'Not connected';
+        }
+
+        function saveProfile() {
+            const profile = {
+                firstName: document.getElementById('profileFirstName').value.trim(),
+                lastName: document.getElementById('profileLastName').value.trim(),
+                email: document.getElementById('profileEmail').value.trim(),
+                phone: document.getElementById('profilePhone').value.trim(),
+                address: document.getElementById('profileAddress').value.trim(),
+                bio: document.getElementById('profileBio').value.trim(),
+                birthday: document.getElementById('profileBirthday').value,
+                gcash: document.getElementById('profileGCash').value.trim(),
+                avatar: document.getElementById('profileAvatarImg').src
+            };
+            localStorage.setItem('profile', JSON.stringify(profile));
+            // update header avatar and name
+            const headerImg = document.querySelector('header img');
+            if (headerImg) headerImg.src = profile.avatar;
+            const nameEl = document.querySelector('header .flex.items-center span');
+            if (nameEl) nameEl.innerText = (profile.firstName + ' ' + profile.lastName).trim() || 'Customer';
+            document.getElementById('gcashStatus').innerText = profile.gcash ? 'Connected: ' + profile.gcash : 'Not connected';
+            addNotification('profile', 'Profile Updated', 'Your profile was updated successfully');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const avatarInput = document.getElementById('profileAvatarInput');
+            if (avatarInput) {
+                avatarInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        document.getElementById('profileAvatarImg').src = ev.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            loadProfile();
+            renderNotifications();
+        });
+
+        function removeAvatar() {
+            document.getElementById('profileAvatarImg').src = 'https://ui-avatars.com/api/?name=Customer&background=0D8ABC&color=fff';
+            saveProfile();
+        }
+
+        function connectGCash() {
+            const val = document.getElementById('profileGCash').value.trim();
+            if (!val) return alert('Enter a GCash number');
+            saveProfile();
+            addNotification('gcash', 'GCash Connected', 'GCash was connected to your account');
+        }
+
+        // ===== Notifications system =====
+        function getNotifications() {
+            return JSON.parse(localStorage.getItem('notifications') || '[]');
+        }
+
+        function renderNotifications() {
+            const list = document.getElementById('notificationList');
+            const no = document.getElementById('noNotifications');
+            const notifs = getNotifications().slice().reverse(); // newest first
+            list.innerHTML = '';
+            if (!notifs.length) {
+                no.classList.remove('hidden');
+            } else {
+                no.classList.add('hidden');
+                notifs.forEach(n => {
+                    const el = document.createElement('div');
+                    el.className = 'p-4 hover:bg-slate-50 cursor-pointer';
+                    el.innerHTML = `<p class="text-sm font-semibold">${n.title}</p><p class="text-xs text-slate-500">${n.message}</p>`;
+                    el.onclick = () => {
+                        if (n.link === 'orders') switchTab('orders');
+                        else if (n.link === 'messages') switchTab('messages');
+                        // mark as read
+                        n.read = true;
+                        saveNotifications(getNotifications());
+                        renderNotifications();
+                    };
+                    list.appendChild(el);
+                });
+            }
+            updateNotificationBadge();
+        }
+
+        function saveNotifications(arr) {
+            localStorage.setItem('notifications', JSON.stringify(arr));
+        }
+
+        function addNotification(type, title, message, link) {
+            const arr = getNotifications();
+            arr.push({ id: Date.now(), type, title, message, link: link || null, time: Date.now(), read: false });
+            saveNotifications(arr);
+            updateNotificationBadge();
+        }
+
+        function clearNotifications() {
+            localStorage.setItem('notifications', JSON.stringify([]));
+            renderNotifications();
+        }
+
+        function updateNotificationBadge() {
+            const badge = document.getElementById('notificationBadge');
+            const unread = getNotifications().filter(n => !n.read).length;
+            if (!badge) return;
+            if (unread > 0) {
+                badge.classList.remove('hidden');
+                badge.innerText = unread > 9 ? '9+' : unread.toString();
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Simulate incoming reply and notification when user sends a message
+        const originalSendMessage = sendMessage;
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            if (!text || activeConversationId === null) return;
+            const conv = conversations.find(c => c.id === activeConversationId);
+            const msg = { from: 'me', text, time: Date.now() };
+            conv.messages.push(msg);
+            conv.last = text;
+            input.value = '';
+            renderChatWindow(conv);
+            renderConversationsList();
+
+            // simulate a reply after 2s
+            setTimeout(() => {
+                const reply = { from: 'them', text: 'Thanks! We will update you soon.', time: Date.now() };
+                conv.messages.push(reply);
+                conv.last = reply.text;
+                renderChatWindow(conv);
+                renderConversationsList();
+                addNotification('message', 'New message', `New message from ${conv.name}`, 'messages');
+            }, 2000);
+        }
+
+        // ensure badge updated on load
+        updateNotificationBadge();
     </script>
 </body>
 </html>
