@@ -34,7 +34,7 @@
         .modal-bg { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
     </style>
 </head>
-<body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden" x-data="storeManager()">
+<body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden" x-data="storeManager()" x-init="initData()">
 
     <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col z-20">
         <div class="p-6">
@@ -87,6 +87,29 @@
         <main class="flex-1 overflow-y-auto p-8">
             
             <section id="dashboard-section" class="content-section active space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Total Stores</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="totalStores"></h3>
+                        <span class="text-slate-400 text-xs mt-2">Registered</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Active Stores</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="activeCount"></h3>
+                        <span class="text-green-500 text-xs font-bold mt-2">Onboarded</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Total Sales</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="'₱' + totalSales.toLocaleString()"></h3>
+                        <span class="text-slate-400 text-xs mt-2">All-time (demo)</span>
+                    </div>
+                    <div class="bg-blue-600 p-6 rounded-2xl border border-blue-700 shadow-md">
+                        <p class="text-blue-100 text-sm font-medium">Platform Cut (5%)</p>
+                        <h3 class="text-2xl font-bold mt-2 text-white" x-text="'₱' + platformCut"></h3>
+                        <span class="text-blue-200 text-xs font-bold mt-2">Estimated</span>
+                    </div>
+                </div>
+
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                     <div class="p-6 border-b flex justify-between items-center">
                         <h3 class="font-bold text-slate-800 uppercase text-sm tracking-wide">Registered Entities</h3>
@@ -126,7 +149,9 @@
                                         <td class="px-6 py-4">
                                             <select x-model="store.status" 
                                                     :class="getStatusClass(store.status)"
-                                                    class="text-xs font-bold px-3 py-1.5 rounded-full outline-none appearance-none cursor-pointer border-none">\n                                                <option value="Active">Active</option>
+                                                    @change="calculateTotals()"
+                                                    class="text-xs font-bold px-3 py-1.5 rounded-full outline-none appearance-none cursor-pointer border-none">
+                                                <option value="Active">Active</option>
                                                 <option value="Inactive">Inactive</option>
                                                 <option value="Suspended">Suspended</option>
                                             </select>
@@ -222,13 +247,40 @@
                 revenueChart: null,
                 orderChart: null,
                 salesChart: null,
+                // all stores (source of truth), and the array used to render the table
+                allStores: [],
                 stores: [],
+                // summary stats
+                totalStores: 0,
+                activeCount: 0,
+                totalSales: 0,
+                platformCut: '0.00',
                 getStatusClass(status) {
                     return {
                         'bg-green-100 text-green-600': status === 'Active',
                         'bg-yellow-100 text-yellow-600': status === 'Inactive',
                         'bg-red-100 text-red-600': status === 'Suspended',
                     };
+                },
+                // Initialize demo data and compute stats
+                initData() {
+                    // demo seed — replace with API fetch in production
+                    this.allStores = [
+                        { id: 'S-1001', name: 'KapeKorner', phone: '+63 912 345 6789', email: 'kape@example.com', sales: 12500, status: 'Active', completed: 320, cancelled: 12 },
+                        { id: 'S-1002', name: 'BentoBox', phone: '+63 917 555 1234', email: 'bento@example.com', sales: 8200, status: 'Active', completed: 210, cancelled: 8 },
+                        { id: 'S-1003', name: 'SnackShack', phone: '+63 927 111 2222', email: 'snack@example.com', sales: 4300, status: 'Inactive', completed: 98, cancelled: 5 }
+                    ];
+
+                    // use allStores as the table data (can filter/search later)
+                    this.stores = this.allStores;
+                    this.calculateTotals();
+                },
+
+                calculateTotals() {
+                    this.totalStores = this.allStores.length;
+                    this.activeCount = this.allStores.filter(s => s.status === 'Active').length;
+                    this.totalSales = this.allStores.reduce((sum, s) => sum + (s.sales || 0), 0);
+                    this.platformCut = (this.totalSales * 0.05).toFixed(2);
                 },
                 viewAnalytics(store) {
                     this.activeStore = store;

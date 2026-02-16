@@ -160,6 +160,8 @@
                                 <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Name</th>
                                 <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Type</th>
                                 <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Email</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Approved By</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
                                 <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
                             </tr>
                         </thead>
@@ -169,7 +171,36 @@
                                     <td class="px-6 py-4 font-semibold text-slate-700" x-text="item.name"></td>
                                     <td class="px-6 py-4 text-xs text-slate-500 uppercase" x-text="item.type"></td>
                                     <td class="px-6 py-4 text-slate-600 text-sm" x-text="item.email"></td>
+                                    <td class="px-6 py-4 text-sm text-slate-700" x-text="item.approvedBy"></td>
+                                    <td class="px-6 py-4 text-sm text-slate-600" x-text="new Date(item.approvedAt).toLocaleString()"></td>
                                     <td class="px-6 py-4"><span class="text-green-600 font-bold text-sm"><i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i> Approved</span></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mt-6">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <h4 class="font-bold text-slate-800">Approval Events (Audit Trail)</h4>
+                        <span class="text-xs text-slate-400">Shows who approved and when</span>
+                    </div>
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Applicant</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Type</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Approved By</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            <template x-for="ev in approvalEvents" :key="ev.id + ev.approvedAt">
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 font-semibold text-slate-700" x-text="ev.name"></td>
+                                    <td class="px-6 py-4 text-xs text-slate-500 uppercase" x-text="ev.type"></td>
+                                    <td class="px-6 py-4 text-sm text-slate-700" x-text="ev.approvedBy"></td>
+                                    <td class="px-6 py-4 text-sm text-slate-600" x-text="new Date(ev.approvedAt).toLocaleString()"></td>
                                 </tr>
                             </template>
                         </tbody>
@@ -255,7 +286,11 @@
                 isProcessing: false,
                 reviewData: null,
                 reviewType: '',
+                // currently signed-in admin (replace with real auth in production)
+                currentAdmin: { name: 'Master Admin', email: 'admin@pasabuy.local' },
                 acceptedHistory: [],
+                // detailed approval event log (keeps who approved and when per applicant)
+                approvalEvents: [],
                 stats: { runners: 0, stores: 0, clients: 0 },
                 pendingStores: [],
                 pendingRunners: [],
@@ -281,11 +316,32 @@
                     }
                 },
                 finalize() {
-                    this.acceptedHistory.unshift({...this.reviewData});
+                    const approvedAt = new Date().toISOString();
+                    const approvedEntry = {
+                        ...this.reviewData,
+                        approvedBy: this.currentAdmin.name,
+                        approvedByEmail: this.currentAdmin.email,
+                        approvedAt,
+                        type: this.reviewType
+                    };
+
+                    // Add to accepted history (newest first)
+                    this.acceptedHistory.unshift(approvedEntry);
+
+                    // Add a detailed event for auditing per-applicant
+                    this.approvalEvents.unshift({
+                        id: this.reviewData.id,
+                        name: this.reviewData.name,
+                        email: this.reviewData.email,
+                        type: this.reviewType,
+                        approvedBy: this.currentAdmin.name,
+                        approvedAt
+                    });
+
                     const key = this.reviewType === 'store' ? 'stores' : 'runners';
                     this.stats[key]++;
-                    
-                    // Logic to add to accepted history (in-memory only). Persist via server when ready.
+
+                    // Persist removal from pending (in-memory here). Hook up to backend when available.
                     this.removePending();
                 },
                 removePending() {

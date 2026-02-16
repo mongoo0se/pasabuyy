@@ -90,13 +90,13 @@
             <section id="dashboard-section" class="content-section active space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-slate-500 text-sm font-medium">Active Runners</p>
-                        <h3 class="text-2xl font-bold mt-2" x-text="runners.length"></h3>
+                            <p class="text-slate-500 text-sm font-medium">Active Runners</p>
+                            <h3 class="text-2xl font-bold mt-2" x-text="activeRunners.length"></h3>
                         <span class="text-green-500 text-xs font-bold mt-2 flex items-center gap-1"><i data-lucide="arrow-up-right" class="w-3 h-3"></i> On duty</span>
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                        <p class="text-slate-500 text-sm font-medium">Total Deliveries</p>
-                        <h3 class="text-2xl font-bold mt-2" x-text="logs.length"></h3>
+                        <p class="text-slate-500 text-sm font-medium">Total Deliveries Today</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="deliveriesToday"></h3>
                         <span class="text-slate-400 text-xs mt-2">Today's activity</span>
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
@@ -133,7 +133,7 @@
                         <h4 class="font-bold text-slate-800">Active Runners</h4>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-                        <template x-for="runner in runners" :key="runner.name">
+                        <template x-for="runner in activeRunners" :key="runner.name">
                             <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
                                 <h3 class="font-semibold text-slate-800" x-text="runner.name"></h3>
                                 <div class="flex items-center mt-1 text-yellow-500 text-sm">
@@ -237,33 +237,94 @@
 
         function initMap() {
             const essuCoords = [11.6094, 125.4287];
-            const map = L.map('map').setView(essuCoords, 17);
+            // make map and markers globally accessible so Alpine can update markers
+            window.map = L.map('map').setView(essuCoords, 17);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
+            }).addTo(window.map);
 
-            const runnerLocations = [];
-
-            runnerLocations.forEach(loc => {
-                const marker = L.marker([loc.lat, loc.lng]).addTo(map);
-                marker.bindPopup(`<b>${loc.name}</b><br>Status: On Delivery`);
-            });
+            window.runnerMarkers = [];
         }
 
         function runnerStats() {
             return {
-                runners: [],
+                // all known runners
+                allRunners: [],
+                // currently active/on-duty runners
+                activeRunners: [],
+                // delivery logs (orders delivered/attempted)
+                logs: [],
+                reviews: [],
+                deliveriesToday: 0,
+
+                // seed some demo data — in production fetch from API
+                initData() {
+                    // sample runners
+                    this.allRunners = [
+                        { id: 'r1', name: 'Jun Dela Cruz', rating: 4.8, delivered: 12, pending: 1, earnings: '1250.00', lat: 11.6097, lng: 125.4289, active: true },
+                        { id: 'r2', name: 'Ana Santos', rating: 4.6, delivered: 8, pending: 0, earnings: '820.00', lat: 11.6091, lng: 125.4282, active: false },
+                        { id: 'r3', name: 'Mark Reyes', rating: 4.9, delivered: 15, pending: 2, earnings: '1500.00', lat: 11.6095, lng: 125.4291, active: true }
+                    ];
+
+                    // sample delivery logs for today and previous day
+                    const today = new Date();
+                    const yesterday = new Date(Date.now() - 86400000);
+                    this.logs = [
+                        { id: 'O-1001', runner: 'Jun Dela Cruz', location: 'North Gate', status: 'Delivered', payment: '₱120.00', date: today.toISOString() },
+                        { id: 'O-1002', runner: 'Mark Reyes', location: 'Library', status: 'Delivered', payment: '₱150.00', date: today.toISOString() },
+                        { id: 'O-0999', runner: 'Ana Santos', location: 'Annex', status: 'Delivered', payment: '₱95.00', date: yesterday.toISOString() }
+                    ];
+
+                    // initial computations
+                    this.updateActiveRunners();
+                    this.calculateDeliveriesToday();
+                    this.updateMapMarkers();
+
+                    // simulate runner status updates every 10s (demo only)
+                    setInterval(() => {
+                        // flip a runner's active state randomly
+                        const idx = Math.floor(Math.random() * this.allRunners.length);
+                        this.allRunners[idx].active = !this.allRunners[idx].active;
+                        this.updateActiveRunners();
+                        this.updateMapMarkers();
+                    }, 10000);
+                },
+
+                updateActiveRunners() {
+                    this.activeRunners = this.allRunners.filter(r => r.active);
+                },
+
+                calculateDeliveriesToday() {
+                    const todayStr = new Date().toDateString();
+                    this.deliveriesToday = this.logs.filter(l => new Date(l.date).toDateString() === todayStr).length;
+                },
+
+                updateMapMarkers() {
+                    if(!window.map) return;
+                    // clear existing markers
+                    window.runnerMarkers.forEach(m => window.map.removeLayer(m));
+                    window.runnerMarkers = [];
+
+                    // add markers for active runners
+                    this.activeRunners.forEach(r => {
+                        try {
+                            const mk = L.marker([r.lat, r.lng]).addTo(window.map);
+                            mk.bindPopup(`<b>${r.name}</b><br>Status: On Duty`);
+                            window.runnerMarkers.push(mk);
+                        } catch (e) {
+                            // ignore map errors in environments without leaflet
+                        }
+                    });
+                },
+
                 // Function to calculate the 5% revenue from all runner earnings
                 calculateTotalAdminRevenue() {
-                    let total = this.runners.reduce((sum, runner) => {
-                        return sum + parseFloat(runner.earnings.replace(',', ''));
+                    let total = this.allRunners.reduce((sum, runner) => {
+                        return sum + parseFloat((runner.earnings || '0').toString().replace(',', ''));
                     }, 0);
                     return (total * 0.05).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                },
-                logs: [],
-                reviews: []
-                
+                }
             }
         }
 
