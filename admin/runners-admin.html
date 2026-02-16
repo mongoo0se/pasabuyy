@@ -47,6 +47,8 @@
             </div>
         </div>
 
+                
+
         <nav class="flex-1 px-4 space-y-1">
             <a href="main-admin.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
                 <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Dashboard
@@ -111,6 +113,34 @@
                     </div>
                 </div>
 
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mt-6">
+                    <div class="p-6 border-b">
+                        <h4 class="font-bold text-slate-800">Commission Events</h4>
+                    </div>
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Runner</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Type</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Amount</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Processed By</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            <template x-for="ev in commissionEvents" :key="ev.id + ev.paidAt">
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 font-semibold text-slate-700" x-text="ev.name"></td>
+                                    <td class="px-6 py-4 text-xs text-slate-500 uppercase" x-text="ev.type"></td>
+                                    <td class="px-6 py-4 text-slate-800" x-text="'₱' + ev.amount"></td>
+                                    <td class="px-6 py-4 text-sm text-slate-700" x-text="ev.paidBy"></td>
+                                    <td class="px-6 py-4 text-sm text-slate-600" x-text="new Date(ev.paidAt).toLocaleString()"></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                     <div class="p-6 border-b flex justify-between items-center">
                         <div>
@@ -153,10 +183,15 @@
                                         <p class="text-[10px] font-bold text-slate-500 uppercase">Total Paid</p>
                                         <p class="text-md font-bold text-slate-700 mt-1" x-text="'₱' + runner.earnings"></p>
                                     </div>
-                                    <div class="bg-blue-600 p-3 rounded-lg">
-                                        <p class="text-[10px] font-bold text-blue-100 uppercase">Admin (5%)</p>
-                                        <p class="text-md font-bold text-white mt-1" x-text="'₱' + (parseFloat(runner.earnings.replace(',','')) * 0.05).toFixed(2)"></p>
-                                    </div>
+                                            <div class="bg-blue-600 p-3 rounded-lg">
+                                                <p class="text-[10px] font-bold text-blue-100 uppercase">Admin (5%)</p>
+                                                <p class="text-md font-bold text-white mt-1" x-text="'₱' + (parseFloat(runner.earnings.replace(',','')) * 0.05).toFixed(2)"></p>
+                                            </div>
+                                            <div class="bg-white p-3 rounded-lg">
+                                                <p class="text-[10px] font-bold text-slate-500 uppercase">Commission Owed (2%)</p>
+                                                <p class="text-md font-bold text-slate-700 mt-1" x-text="'₱' + (runner.commissionOwed || 0)"></p>
+                                                <button @click="payRunnerCommission(runner)" class="mt-2 w-full bg-green-600 text-white py-1 rounded text-xs">Pay ₱<span x-text="runner.commissionOwed || 0"></span></button>
+                                            </div>
                                 </div>
                             </div>
                         </template>
@@ -281,6 +316,14 @@
                     this.calculateDeliveriesToday();
                     this.updateMapMarkers();
 
+                    // initialize commission events and compute per-runner commission (2%)
+                    this.commissionEvents = [];
+                    this.allRunners.forEach(r => {
+                        const earnings = parseFloat((r.earnings || '0').toString().replace(',', ''));
+                        r.commissionOwed = +(earnings * 0.02).toFixed(2);
+                        r.lastCommissionPaidAt = null;
+                    });
+
                     // simulate runner status updates every 10s (demo only)
                     setInterval(() => {
                         // flip a runner's active state randomly
@@ -324,6 +367,15 @@
                         return sum + parseFloat((runner.earnings || '0').toString().replace(',', ''));
                     }, 0);
                     return (total * 0.05).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+                ,
+                // pay commission to runner (admin action)
+                payRunnerCommission(runner) {
+                    const amount = runner.commissionOwed || 0;
+                    const now = new Date().toISOString();
+                    this.commissionEvents.unshift({ id: runner.id, name: runner.name, type: 'runner', amount, paidBy: 'Admin', paidAt: now });
+                    runner.lastCommissionPaidAt = now;
+                    runner.commissionOwed = 0;
                 }
             }
         }

@@ -110,6 +110,34 @@
                     </div>
                 </div>
 
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mt-6">
+                    <div class="p-6 border-b">
+                        <h4 class="font-bold text-slate-800">Commission Events</h4>
+                    </div>
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Entity</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Type</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Amount</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Handled By</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            <template x-for="ev in commissionEvents" :key="ev.id + ev.settledAt">
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 font-semibold text-slate-700" x-text="ev.name"></td>
+                                    <td class="px-6 py-4 text-xs text-slate-500 uppercase" x-text="ev.type"></td>
+                                    <td class="px-6 py-4 text-slate-800" x-text="'₱' + ev.amount"></td>
+                                    <td class="px-6 py-4 text-sm text-slate-700" x-text="ev.settledBy"></td>
+                                    <td class="px-6 py-4 text-sm text-slate-600" x-text="new Date(ev.settledAt).toLocaleString()"></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+
                 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                     <div class="p-6 border-b flex justify-between items-center">
                         <h3 class="font-bold text-slate-800 uppercase text-sm tracking-wide">Registered Entities</h3>
@@ -157,7 +185,10 @@
                                             </select>
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <button @click="viewAnalytics(store)" class="text-blue-600 hover:text-blue-800 hover:scale-110 transition"><i data-lucide="chart-pie" class="w-5 h-5"></i></button>
+                                            <div class="flex items-center justify-center gap-2">
+                                                <button @click="viewAnalytics(store)" class="text-blue-600 hover:text-blue-800 hover:scale-110 transition"><i data-lucide="chart-pie" class="w-5 h-5"></i></button>
+                                                <button @click="settleStoreCommission(store)" class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Settle ₱<span x-text="computeWeeklyCut(store)"></span></button>
+                                            </div>
                                         </td>
                                     </tr>
                                 </template>
@@ -274,6 +305,8 @@
                     // use allStores as the table data (can filter/search later)
                     this.stores = this.allStores;
                     this.calculateTotals();
+                    // initialize commission events store
+                    this.commissionEvents = [];
                 },
 
                 calculateTotals() {
@@ -281,6 +314,26 @@
                     this.activeCount = this.allStores.filter(s => s.status === 'Active').length;
                     this.totalSales = this.allStores.reduce((sum, s) => sum + (s.sales || 0), 0);
                     this.platformCut = (this.totalSales * 0.05).toFixed(2);
+                },
+                // compute weekly platform cut for a given store (10% weekly sales)
+                computeWeeklyCut(store) {
+                    // here we use store.sales as a proxy for weekly total in demo
+                    return +(store.sales * 0.10).toFixed(2);
+                },
+
+                // mark store commission as settled (admin action)
+                settleStoreCommission(store) {
+                    const amount = this.computeWeeklyCut(store);
+                    const now = new Date().toISOString();
+                    this.commissionEvents.unshift({
+                        id: store.id,
+                        name: store.name,
+                        type: 'store',
+                        amount,
+                        settledBy: this.currentAdmin?.name || 'Admin',
+                        settledAt: now
+                    });
+                    store.lastCommissionSettledAt = now;
                 },
                 viewAnalytics(store) {
                     this.activeStore = store;

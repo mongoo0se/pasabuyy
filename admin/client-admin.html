@@ -34,7 +34,7 @@
         .modal-bg { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
     </style>
 </head>
-<body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden" x-data="clientManager()">
+<body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden" x-data="clientManager()" x-init="initData()">
 
     <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col z-20">
         <div class="p-6">
@@ -88,11 +88,16 @@
 
             
             <section id="dashboard-section" class="content-section active space-y-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                         <p class="text-slate-500 text-sm font-medium">Total Orders</p>
                         <h3 class="text-2xl font-bold mt-2" x-text="orders.length"></h3>
                         <span class="text-blue-500 text-xs font-bold mt-2">Live transactions</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Total Clients</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="clients.length"></h3>
+                        <span class="text-slate-400 text-xs mt-2">Registered users</span>
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                         <p class="text-slate-500 text-sm font-medium">Delivered</p>
@@ -141,6 +146,40 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <h4 class="font-bold text-slate-800">Clients</h4>
+                        <span class="text-xs text-slate-400">Click a client to view their orders</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 border-b border-slate-100">
+                                <tr>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Client</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Contact</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Orders</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                <template x-for="client in clients" :key="client.id">
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-4 font-semibold text-slate-800" x-text="client.name"></td>
+                                        <td class="px-6 py-4 text-sm text-slate-600">
+                                            <div x-text="client.email"></div>
+                                            <div class="text-xs text-slate-400" x-text="client.phone"></div>
+                                        </td>
+                                        <td class="px-6 py-4 font-bold text-slate-800" x-text="getClientOrdersCount(client.id)"></td>
+                                        <td class="px-6 py-4">
+                                            <button @click="viewClientOrders(client)" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">View Orders</button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
 
         </main>
@@ -186,6 +225,39 @@
         </div>
     </div>
 
+    <div id="clientOrdersModal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4" x-show="showClientModal" x-cloak>
+        <div class="bg-white rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl scale-95 transition-transform duration-300">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold" x-text="(activeClient?.name || '') + ' — Orders'"></h3>
+                <button @click="closeClientModal()" class="p-2 hover:bg-gray-100 rounded-full"><i data-lucide="x"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-100">
+                        <tr>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Item</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Total</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        <template x-for="o in clientOrders" :key="o.id">
+                            <tr>
+                                <td class="px-6 py-4 font-bold text-blue-600" x-text="o.id"></td>
+                                <td class="px-6 py-4" x-text="o.item"></td>
+                                <td class="px-6 py-4" x-text="'₱' + o.total"></td>
+                                <td class="px-6 py-4"><span :class="getStatusStyle(o.status)" class="text-xs font-bold px-3 py-1 rounded-full" x-text="o.status"></span></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+
+                <button @click="closeClientModal()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-lg transition">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         // Initialize Icons
@@ -198,6 +270,10 @@
                 showModal: false,
                 selectedOrder: null,
                 orders: [],
+                clients: [],
+                clientOrders: [],
+                activeClient: null,
+                showClientModal: false,
                 getStatusStyle(status) {
                     return {
                         'bg-green-100 text-green-700 border border-green-200': status === 'Delivered',
@@ -215,6 +291,42 @@
                 viewProof(order) {
                     this.selectedOrder = order;
                     this.showModal = true;
+                }
+                ,
+                // initialize demo clients & orders
+                initData() {
+                    this.clients = [
+                        { id: 'C-001', name: 'Juan Dela Cruz', email: 'juan@example.com', phone: '+63 912 000 0000' },
+                        { id: 'C-002', name: 'Maria Clara', email: 'maria@example.com', phone: '+63 917 111 1111' },
+                        { id: 'C-003', name: 'Pedro Santos', email: 'pedro@example.com', phone: '+63 927 222 2222' }
+                    ];
+
+                    const now = new Date();
+                    this.orders = [
+                        { id: 'O-2001', clientId: 'C-001', clientName: 'Juan Dela Cruz', address: 'Dorm 3, ESSU', item: 'Burger Meal', total: 120, status: 'Delivered', date: now.toISOString() },
+                        { id: 'O-2002', clientId: 'C-002', clientName: 'Maria Clara', address: 'Library, ESSU', item: 'Sushi Box', total: 250, status: 'Pending', date: now.toISOString() },
+                        { id: 'O-2003', clientId: 'C-001', clientName: 'Juan Dela Cruz', address: 'Dorm 3, ESSU', item: 'Coffee', total: 60, status: 'Returned', date: now.toISOString() }
+                    ];
+                },
+
+                getClientOrdersCount(clientId) {
+                    return this.orders.filter(o => o.clientId === clientId).length;
+                },
+
+                viewClientOrders(client) {
+                    this.activeClient = client;
+                    this.clientOrders = this.orders.filter(o => o.clientId === client.id);
+                    this.showClientModal = true;
+                    document.getElementById('clientOrdersModal').classList.remove('hidden');
+                    document.getElementById('clientOrdersModal').classList.add('flex');
+                },
+
+                closeClientModal() {
+                    this.activeClient = null;
+                    this.clientOrders = [];
+                    this.showClientModal = false;
+                    document.getElementById('clientOrdersModal').classList.add('hidden');
+                    document.getElementById('clientOrdersModal').classList.remove('flex');
                 }
             }
         }
