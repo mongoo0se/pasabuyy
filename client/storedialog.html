@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fade .3s ease-in; }
+        @keyframes fade { from{opacity:0;transform:translateY(5px)} to{opacity:1} }
+        body { padding-bottom: 100px; }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- ================= HEADER ================= -->
+    <header class="bg-blue-600 text-white p-6 shadow sticky top-0 z-40">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 id="storeName" class="text-3xl font-bold"></h1>
+                <p id="storeType" class="text-blue-100"></p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="toggleFavorite()" class="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition" id="favBtn">
+                    ❤️ Favorite
+                </button>
+                <button onclick="history.back()" class="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition">
+                    ← Back
+                </button>
+            </div>
+        </div>
+
+        <img id="storeImage" class="mt-4 rounded-xl w-full h-48 object-cover">
+
+        <div class="flex gap-3 mt-4 text-sm flex-wrap">
+            <span id="rating" class="bg-yellow-400 text-blue-600 px-3 py-1 rounded-full font-semibold"></span>
+            <span id="deliveryTime" class="bg-white bg-opacity-20 px-3 py-1 rounded-full"></span>
+            <span id="deliveryFee" class="bg-white bg-opacity-20 px-3 py-1 rounded-full"></span>
+        </div>
+    </header>
+
+    <!-- ================= SEARCH ================= -->
+    <div class="p-4 bg-white shadow">
+        <input id="searchInput" type="text" placeholder="🔍 Search menu..." class="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+
+    <!-- ================= CATEGORY TABS ================= -->
+    <div class="flex gap-2 p-4 bg-gray-50 overflow-x-auto sticky top-20 z-30">
+        <button onclick="setCategory('meals')" class="tab px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold whitespace-nowrap transition">🍽️ Meals</button>
+        <button onclick="setCategory('drinks')" class="tab px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold whitespace-nowrap hover:bg-gray-300 transition">🥤 Drinks</button>
+        <button onclick="setCategory('desserts')" class="tab px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold whitespace-nowrap hover:bg-gray-300 transition">🍰 Desserts</button>
+    </div>
+
+    <!-- ================= MENU ================= -->
+    <main class="p-6 max-w-5xl mx-auto">
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">Menu Items</h2>
+        <div id="menuContainer" class="space-y-3"></div>
+    </main>
+
+    <!-- ================= REVIEWS ================= -->
+    <section class="bg-white p-6 shadow mt-6 max-w-5xl mx-auto rounded-xl">
+        <h2 class="font-bold text-xl mb-4">⭐ Customer Reviews</h2>
+        <div class="text-center text-sm text-gray-500 py-8">No reviews yet</div>
+    </section>
+
+    <!-- ================= CART BAR ================= -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg p-4">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <div>
+                <p class="text-gray-600 text-sm">Cart Items: <span id="cartCount" class="font-bold">0</span></p>
+                <p class="font-bold text-2xl text-blue-600">₱<span id="cartTotal">0</span></p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="viewCart()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-bold transition">
+                    👁️ View Cart
+                </button>
+                <button onclick="checkout()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold transition shadow-lg">
+                    🛒 Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ================= STORE DATA FROM URL ================= */
+        const params = new URLSearchParams(window.location.search);
+
+        const storeName = params.get("name") || "Store";
+        const storeType = params.get("type") || "Menu";
+        const rating = params.get("rating") || "4.8";
+        const deliveryTime = params.get("time") || "20-30 mins";
+        const deliveryFee = params.get("fee") || "₱40";
+
+        // Attempt to read store address from the shared store registry (for pickup address)
+        function getStoredStoreInfo(name) {
+            try {
+                const stores = JSON.parse(localStorage.getItem('pb_stores') || '[]');
+                return stores.find(s => s.name === name);
+            } catch {
+                return null;
+            }
+        }
+
+        const storeInfo = getStoredStoreInfo(storeName);
+        const storeAddress = storeInfo?.address || '';
+
+        document.getElementById("storeName").textContent = storeName;
+        document.getElementById("storeType").textContent = storeType;
+        document.getElementById("rating").textContent = "⭐ " + rating + " Rating";
+        document.getElementById("deliveryTime").textContent = "📦 " + deliveryTime;
+        document.getElementById("deliveryFee").textContent = "🚚 " + deliveryFee;
+
+        // Store image - random food image from Unsplash
+        const foodImages = [
+            "https://images.unsplash.com/photo-1555939594-58d7cb561137?w=800&h=400&fit=crop",
+            "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=800&h=400&fit=crop",
+            "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=400&fit=crop",
+            "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=400&fit=crop"
+        ];
+        document.getElementById("storeImage").src = foodImages[Math.floor(Math.random() * foodImages.length)];
+
+        /* ================= ADMIN EDITABLE MENU DATABASE ================= */
+        function getStoreProducts(storeName) {
+            try {
+                const key = `pb_store_products_${encodeURIComponent(storeName)}`;
+                return JSON.parse(localStorage.getItem(key) || '[]');
+            } catch {
+                return [];
+            }
+        }
+
+        const storedProducts = getStoreProducts(storeName);
+        const menuDB = {
+            meals: storedProducts.length ? storedProducts : [],
+            drinks: [],
+            desserts: []
+        };
+
+        /* ================= STATE ================= */
+        let category = "meals";
+
+        const CART_KEY = 'pb_cart';
+
+        function getCart() {
+            try {
+                return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+            } catch {
+                return [];
+            }
+        }
+
+        function setCart(cart) {
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+        }
+
+        function clearCart() {
+            localStorage.removeItem(CART_KEY);
+        }
+
+        let cart = getCart();
+        let favorites = []; // in-memory favorites
+
+        /* ================= MENU RENDER ================= */
+        function renderMenu() {
+            const search = document.getElementById("searchInput").value.toLowerCase();
+            const container = document.getElementById("menuContainer");
+            container.innerHTML = "";
+
+            const filtered = menuDB[category].filter(item => 
+                item.name.toLowerCase().includes(search)
+            );
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">No items found</p>';
+                return;
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "bg-white p-4 rounded-lg shadow fade-in flex justify-between items-center border border-gray-200 hover:shadow-lg transition";
+
+                card.innerHTML = `
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-lg text-gray-800">${item.name}</h3>
+                        <p class="text-sm text-gray-600">${item.desc}</p>
+                        <p class="text-blue-600 font-bold text-lg mt-2">₱${item.price}</p>
+                    </div>
+
+                    <div class="flex items-center gap-2 ml-4">
+                        <input type="number" min="1" value="1" class="qty w-14 border border-gray-300 rounded px-2 py-1 text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition">
+                            + Add
+                        </button>
+                    </div>
+                `;
+
+                card.querySelector("button").onclick = () => {
+                    const qty = parseInt(card.querySelector(".qty").value);
+                    addToCartItem(item, qty);
+                    saveCart();
+                    showNotification(`✅ Added ${qty}x ${item.name}`);
+                };
+
+                container.appendChild(card);
+            });
+        }
+
+        /* ================= CATEGORY SWITCH ================= */
+        function setCategory(cat) {
+            category = cat;
+
+            document.querySelectorAll(".tab").forEach(t => {
+                t.classList.remove("bg-blue-600", "text-white");
+                t.classList.add("bg-gray-200", "text-gray-700");
+            });
+
+            event.target.classList.remove("bg-gray-200", "text-gray-700");
+            event.target.classList.add("bg-blue-600", "text-white");
+
+            renderMenu();
+        }
+
+        /* ================= CART FUNCTIONS ================= */
+        function saveCart() {
+            setCart(cart);
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const total = cart.reduce((t, i) => t + (i.price * (i.qty || 1)), 0);
+            const quantity = cart.reduce((q, i) => q + (i.qty || 1), 0);
+            document.getElementById("cartTotal").textContent = total;
+            document.getElementById("cartCount").textContent = quantity;
+        }
+
+        function addToCartItem(item, qty) {
+            const existing = cart.find(i => i.name === item.name);
+            if (existing) {
+                existing.qty = (existing.qty || 1) + qty;
+            } else {
+                cart.push({ ...item, qty });
+            }
+        }
+
+        function viewCart() {
+            if (cart.length === 0) {
+                alert("❌ Cart is empty!");
+                return;
+            }
+            // TODO: integrate with server checkout flow. Redirecting to cart page without local storage.
+            window.location.href = "cart.html";
+        }
+
+        /* ================= FAVORITES ================= */
+        function toggleFavorite() {
+            if (favorites.includes(storeName)) {
+                favorites.splice(favorites.indexOf(storeName), 1);
+                document.getElementById("favBtn").textContent = "🤍 Favorite";
+                showNotification("❌ Removed from favorites");
+            } else {
+                favorites.push(storeName);
+                document.getElementById("favBtn").textContent = "❤️ Favorited";
+                showNotification("✅ Added to favorites!");
+            }
+        }
+
+        // Check if store is already favorited
+        function checkFavorite() {
+            if (favorites.includes(storeName)) document.getElementById("favBtn").textContent = "❤️ Favorited";
+        }
+
+        // Initialize cart display on load
+        updateCartDisplay();
+
+        /* ================= NOTIFICATIONS ================= */
+        function showNotification(message) {
+            const notif = document.createElement("div");
+            notif.className = "fixed bottom-32 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg font-semibold z-50";
+            notif.textContent = message;
+            document.body.appendChild(notif);
+
+            setTimeout(() => notif.remove(), 2000);
+        }
+
+        /* ================= SEARCH ================= */
+        document.getElementById("searchInput").addEventListener("input", renderMenu);
+
+        /* ================= CHECKOUT ================= */
+        function checkout() {
+            if (cart.length === 0) {
+                alert("❌ Cart is empty! Add some items first.");
+                return;
+            }
+
+            const itemCount = cart.reduce((q, i) => q + (i.qty || 1), 0);
+            const total = cart.reduce((t, i) => t + (i.price * (i.qty || 1)), 0);
+
+            alert(`✅ Proceeding to checkout...\n\nStore: ${storeName}\nItems: ${itemCount}\nTotal: ₱${total.toFixed(2)}`);
+
+            // Persist store info for checkout page
+            localStorage.setItem('pb_currentStore', JSON.stringify({
+                name: storeName,
+                address: storeAddress || '',
+                type: storeType,
+                rating,
+                time: deliveryTime,
+                fee: deliveryFee
+            }));
+
+            // Proceed to checkout (server integration required to pass cart)
+            const checkoutUrl = new URL('checkout.html', window.location.href).href;
+            window.location.href = checkoutUrl;
+        }
+
+        /* ================= INITIALIZATION ================= */
+        updateCartDisplay();
+        renderMenu();
+        checkFavorite();
+    </script>
+
+</body>
+</html>

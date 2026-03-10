@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Pa-Buy Bes!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        :root { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col z-20">
+        <div class="p-6">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold text-slate-800">Pa-Buy Bes!</span>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+            <a href="clientDashboard.html" class="w-full flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 11l4-4m0 0l4 4"></path></svg>
+                Dashboard
+            </a>
+            <a href="stores.html" class="w-full flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4m8 11H8a2 2 0 01-2-2v-5a2 2 0 012-2h8a2 2 0 012 2v5a2 2 0 01-2 2z"></path></svg>
+                Stores
+            </a>
+            <a href="cart.html" class="w-full flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                Cart
+            </a>
+            <a href="messages.html" class="w-full flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                Messages
+            </a>
+            <a href="profile.html" class="w-full flex items-center gap-3 p-3 rounded-xl text-slate-600 hover:bg-gray-100 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                Profile
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-gray-100">
+            <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <!-- Header -->
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 flex-shrink-0">
+            <h2 class="text-lg font-semibold text-slate-800">Checkout</h2>
+            <div class="flex items-center gap-5">
+                <div class="relative">
+                    <button onclick="toggleNotifications()" class="hover:bg-gray-100 p-2 rounded-lg transition">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+                    <div id="notificationBox" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border z-50">
+                        <div class="p-4 border-b font-bold text-slate-800">Notifications</div>
+                        <div class="max-h-72 overflow-y-auto divide-y">
+                            <div class="p-4 hover:bg-slate-50">
+                                <p class="text-sm font-semibold">Order Ready</p>
+                                <p class="text-xs text-slate-500">Your order is ready for checkout</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button onclick="toggleUserMenu()" class="hover:bg-gray-100 p-2 rounded-lg transition">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </button>
+                    <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border z-50">
+                        <div class="p-4 border-b">
+                            <p class="font-semibold text-slate-800">John Doe</p>
+                            <p class="text-xs text-slate-500">john@example.com</p>
+                        </div>
+                        <a href="profile.html" class="block px-4 py-3 hover:bg-gray-50">Edit Profile</a>
+                        <a href="profile.html" class="block px-4 py-3 hover:bg-gray-50">Settings</a>
+                        <button onclick="logout()" class="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Scrollable Content Area -->
+        <main class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-5xl mx-auto space-y-6">
+                <div class="flex items-center gap-4">
+                    <a href="cart.html" class="flex items-center gap-2 text-blue-600 hover:text-blue-700 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        Back to Cart
+                    </a>
+                </div>
+
+                <h3 class="text-2xl font-bold">Complete Your Order</h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Column: Forms -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Delivery Options -->
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                            <h4 class="font-bold text-lg mb-4">Delivery Option</h4>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-3 flex-1 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="delivery" value="delivery" checked class="w-4 h-4">
+                                    <span class="font-medium">Delivery</span>
+                                </label>
+                                <label class="flex items-center gap-3 flex-1 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="delivery" value="pickup" class="w-4 h-4">
+                                    <span class="font-medium">Pick-up</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Address -->
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                            <h4 class="font-bold text-lg mb-4">Delivery Address</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">Full Name</label>
+                                    <input type="text" placeholder="Enter your full name" value="John Doe" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">Phone Number</label>
+                                    <input type="tel" placeholder="Enter your phone number" value="+63 912 345 6789" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">Street Address</label>
+                                    <input type="text" placeholder="Enter your address" value="123 Main St, Barangay, City" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold mb-2">City</label>
+                                        <input type="text" placeholder="City" value="Cebu" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold mb-2">Postal Code</label>
+                                        <input type="text" placeholder="Postal Code" value="6000" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                            <h4 class="font-bold text-lg mb-4">Payment Method</h4>
+                            <div class="space-y-3">
+                                <label class="flex items-center gap-3 p-4 border-2 border-blue-300 rounded-xl cursor-pointer bg-blue-50 hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="cod" checked class="w-4 h-4">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">Cash on Delivery (COD)</p>
+                                        <p class="text-sm text-slate-500">Pay when you receive your order</p>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="card" class="w-4 h-4">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">Credit Card</p>
+                                        <p class="text-sm text-slate-500">Visa, Mastercard, or local cards</p>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="bank" class="w-4 h-4">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">Online Banking</p>
+                                        <p class="text-sm text-slate-500">Direct bank transfer</p>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-500 transition">
+                                    <input type="radio" name="payment" value="wallet" class="w-4 h-4">
+                                    <div class="flex-1">
+                                        <p class="font-semibold">Digital Wallet</p>
+                                        <p class="text-sm text-slate-500">GCash, PayMaya, or other e-wallets</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Instructions -->
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                            <h4 class="font-bold text-lg mb-4">Delivery Instructions (Optional)</h4>
+                            <textarea placeholder="Add any special delivery instructions..." class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition resize-none" rows="4"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Order Summary -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sticky top-6">
+                            <h4 class="font-bold text-lg mb-4">Order Summary</h4>
+                            
+                            <!-- Items -->
+                            <div id="orderItems" class="space-y-3 mb-4 pb-4 border-b border-gray-200">
+                                <!-- Populated by JavaScript -->
+                            </div>
+
+                            <!-- Totals -->
+                            <div class="space-y-2 mb-6">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Subtotal</span>
+                                    <span id="subtotalAmount" class="font-semibold">₱0.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Delivery Fee</span>
+                                    <span id="deliveryFeeAmount" class="font-semibold">₱0.00</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-600">Tax (5%)</span>
+                                    <span id="taxAmount" class="font-semibold">₱0.00</span>
+                                </div>
+                                <div class="border-t border-gray-200 pt-2 mt-2 flex justify-between">
+                                    <span class="font-bold">Total</span>
+                                    <span id="totalAmount" class="font-bold text-blue-600 text-lg">₱0.00</span>
+                                </div>
+                            </div>
+
+                            <button onclick="handlePlaceOrder(event)" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition duration-200">
+                                Place Order
+                            </button>
+                            <button onclick="window.location.href='cart.html'" class="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-slate-800 font-bold py-3 rounded-xl transition duration-200">
+                                Continue Shopping
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
+    <script src="../env.js"></script>
+    <script src="../supabase-client.js"></script>
+    <script>
+        function toggleNotifications() {
+            document.getElementById('notificationBox').classList.toggle('hidden');
+        }
+        
+        function toggleUserMenu() {
+            document.getElementById('userMenu').classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+            const notifBox = document.getElementById('notificationBox');
+            const userMenu = document.getElementById('userMenu');
+            const notifBtn = e.target.closest('button[onclick*="toggleNotifications"]');
+            const userBtn = e.target.closest('button[onclick*="toggleUserMenu"]');
+            
+            if (!notifBox.contains(e.target) && !notifBtn) {
+                notifBox.classList.add('hidden');
+            }
+            if (!userMenu.contains(e.target) && !userBtn) {
+                userMenu.classList.add('hidden');
+            }
+        });
+
+        function logout() {
+            // Keep store listings intact even after client logout
+            const stores = localStorage.getItem('pb_stores');
+            localStorage.clear();
+            if (stores) {
+                localStorage.setItem('pb_stores', stores);
+            }
+            sessionStorage.clear();
+            window.location.href = '../index.html';
+        }
+
+        // Form validation
+        function validateCheckoutForm() {
+            const fullName = document.querySelector('input[placeholder="Enter your full name"]').value.trim();
+            const phone = document.querySelector('input[placeholder="Enter your phone number"]').value.trim();
+            const address = document.querySelector('input[placeholder="Enter your address"]').value.trim();
+            const city = document.querySelector('input[placeholder="City"]').value.trim();
+            const postal = document.querySelector('input[placeholder="Postal Code"]').value.trim();
+
+            if (!fullName || !phone || !address || !city || !postal) {
+                alert('Please fill in all required fields!');
+                return false;
+            }
+            return true;
+        }
+
+        // Cart + delivery helpers
+        const CART_KEY = 'pb_cart';
+        const ACTIVE_DELIVERIES_KEY = 'pb_activeDeliveries';
+        const CURRENT_STORE_KEY = 'pb_currentStore';
+        const PROFILE_KEY = 'pb_clientProfile';
+        const DEFAULT_DELIVERY_FEE = 60;
+
+        function getCart() {
+            try {
+                return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+            } catch {
+                return [];
+            }
+        }
+
+        function getClientProfile() {
+            try {
+                return JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null');
+            } catch {
+                return null;
+            }
+        }
+
+        function setClientProfile(profile) {
+            localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+        }
+
+        function prefillCheckoutFromProfile() {
+            const profile = getClientProfile();
+            if (!profile) return;
+
+            const nameInput = document.querySelector('input[placeholder="Enter your full name"]');
+            const phoneInput = document.querySelector('input[placeholder="Enter your phone number"]');
+            const addressInput = document.querySelector('input[placeholder="Enter your address"]');
+            const cityInput = document.querySelector('input[placeholder="City"]');
+            const postalInput = document.querySelector('input[placeholder="Postal Code"]');
+
+            if (nameInput && profile.fullName) nameInput.value = profile.fullName;
+            if (phoneInput && profile.phone) phoneInput.value = profile.phone;
+            if (addressInput && profile.address) addressInput.value = profile.address;
+            if (cityInput && profile.city) cityInput.value = profile.city;
+            if (postalInput && profile.postal) postalInput.value = profile.postal;
+        }
+
+        function getCurrentStore() {
+            try {
+                return JSON.parse(localStorage.getItem(CURRENT_STORE_KEY) || 'null');
+            } catch {
+                return null;
+            }
+        }
+
+        function getActiveDeliveries() {
+            try {
+                return JSON.parse(localStorage.getItem(ACTIVE_DELIVERIES_KEY) || '[]');
+            } catch {
+                return [];
+            }
+        }
+
+        function setActiveDeliveries(deliveries) {
+            localStorage.setItem(ACTIVE_DELIVERIES_KEY, JSON.stringify(deliveries));
+        }
+
+        function addActiveDelivery(delivery) {
+            const deliveries = getActiveDeliveries();
+            deliveries.unshift(delivery);
+            setActiveDeliveries(deliveries);
+        }
+
+        function formatCurrency(value) {
+            return '₱' + (Number(value) || 0).toFixed(2);
+        }
+
+        function getCurrentTotals() {
+            const cart = getCart();
+            const subtotal = cart.reduce((t, item) => t + ((item.price || 0) * (item.qty || 1)), 0);
+            const deliveryFee = DEFAULT_DELIVERY_FEE;
+            const tax = subtotal * 0.05;
+            const total = subtotal + deliveryFee + tax;
+            return { cart, subtotal, deliveryFee, tax, total };
+        }
+
+        function renderOrderSummary() {
+            const { cart, subtotal, deliveryFee, tax, total } = getCurrentTotals();
+
+            const orderItemsEl = document.getElementById('orderItems');
+            const subtotalEl = document.getElementById('subtotalAmount');
+            const deliveryFeeEl = document.getElementById('deliveryFeeAmount');
+            const taxEl = document.getElementById('taxAmount');
+            const totalEl = document.getElementById('totalAmount');
+            const placeOrderBtn = document.querySelector('button[onclick="handlePlaceOrder()"]');
+
+            orderItemsEl.innerHTML = '';
+
+            if (cart.length === 0) {
+                orderItemsEl.innerHTML = '<p class="text-sm text-gray-500">Your cart is empty. Add items to continue.</p>';
+                if (placeOrderBtn) placeOrderBtn.disabled = true;
+            } else {
+                cart.forEach(item => {
+                    const qty = item.qty || 1;
+                    const itemTotal = (item.price || 0) * qty;
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'flex justify-between items-center';
+                    itemEl.innerHTML = `
+                        <div>
+                            <p class="font-semibold text-slate-800">${item.name} <span class="text-sm text-slate-500">x${qty}</span></p>
+                            <p class="text-xs text-slate-500">${formatCurrency(item.price)} each</p>
+                        </div>
+                        <p class="font-semibold">${formatCurrency(itemTotal)}</p>
+                    `;
+                    orderItemsEl.appendChild(itemEl);
+                });
+                if (placeOrderBtn) placeOrderBtn.disabled = false;
+            }
+
+            if (subtotalEl) subtotalEl.textContent = formatCurrency(subtotal);
+            if (deliveryFeeEl) deliveryFeeEl.textContent = formatCurrency(deliveryFee);
+            if (taxEl) taxEl.textContent = formatCurrency(tax);
+            if (totalEl) totalEl.textContent = formatCurrency(total);
+        }
+
+        // Place Order function (records to Supabase orders table)
+        async function handlePlaceOrder(event) {
+            const { cart, subtotal, deliveryFee, tax, total } = getCurrentTotals();
+            const store = getCurrentStore();
+            const currentUser = window.supabaseClient?.getCurrentUser?.();
+
+            if (!currentUser) {
+                alert('Please log in before placing an order.');
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            if (cart.length === 0) {
+                alert('Your cart is empty. Please add items to continue.');
+                return;
+            }
+
+            if (!validateCheckoutForm()) {
+                return;
+            }
+
+            const confirmed = confirm(`Are you sure you want to place this order?\n\nTotal: ${formatCurrency(total)}`);
+            if (!confirmed) {
+                return;
+            }
+
+            const placeOrderBtn = event?.target || document.querySelector('button[onclick="handlePlaceOrder(event)"]');
+            const originalText = placeOrderBtn?.textContent || 'Processing...';
+            if (placeOrderBtn) {
+                placeOrderBtn.disabled = true;
+                placeOrderBtn.textContent = 'Processing...';
+                placeOrderBtn.classList.add('opacity-50');
+            }
+
+            try {
+                const customerName = document.querySelector('input[placeholder="Enter your full name"]').value.trim();
+                const customerPhone = document.querySelector('input[placeholder="Enter your phone number"]').value.trim();
+                const customerAddress = document.querySelector('input[placeholder="Enter your address"]').value.trim();
+                const customerCity = document.querySelector('input[placeholder="City"]').value.trim();
+                const customerPostal = document.querySelector('input[placeholder="Postal Code"]').value.trim();
+                const dropoffAddressParts = [];
+                if (customerAddress) dropoffAddressParts.push(customerAddress);
+                if (customerCity) dropoffAddressParts.push(customerCity);
+                const dropoffPostalLine = customerPostal ? customerPostal : '';
+                const dropoffAddress = dropoffAddressParts.concat(dropoffPostalLine ? [dropoffPostalLine] : []).join(', ').trim();
+
+                setClientProfile({
+                    fullName: customerName,
+                    phone: customerPhone,
+                    address: customerAddress,
+                    city: customerCity,
+                    postal: customerPostal
+                });
+
+                const pickupAddress = store?.address || store?.name || 'Address not available';
+                const estimatedTime = 5 + Math.floor(Math.random() * 6);
+
+                const orderPayload = {
+                    user_id: currentUser.id,
+                    store_id: store?.id || null,
+                    status: 'pending',
+                    items: cart,
+                    subtotal,
+                    delivery_fee: deliveryFee,
+                    tax,
+                    total,
+                    pickup_address: pickupAddress,
+                    dropoff_address: dropoffAddress,
+                    delivery_eta: estimatedTime,
+                    customer_name: customerName,
+                    customer_phone: customerPhone
+                };
+
+                const order = await window.supabaseClient.createOrder(orderPayload);
+
+                // Keep a local reference for quick UI updates (for compatibility)
+                addActiveDelivery({
+                    id: order.id,
+                    store: store?.name || 'Unknown Store',
+                    storeAddress: pickupAddress,
+                    createdAt: order.created_at || new Date().toISOString(),
+                    status: order.status || 'Pending',
+                    customerName,
+                    customerPhone,
+                    dropoffAddress,
+                    items: cart,
+                    subtotal,
+                    deliveryFee,
+                    tax,
+                    total,
+                    prepTime: estimatedTime,
+                    estimatedTime
+                });
+
+                sessionStorage.setItem('pb_lastOrderId', order.id);
+                showSuccessModal(order.id);
+
+                // Clear cart after successful order
+                localStorage.removeItem(CART_KEY);
+                renderOrderSummary();
+            } catch (err) {
+                console.error('Order placement failed', err);
+                alert('Unable to place your order right now. Please try again later.');
+            } finally {
+                if (placeOrderBtn) {
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.textContent = originalText;
+                    placeOrderBtn.classList.remove('opacity-50');
+                }
+            }
+        }
+
+        // Success modal
+        function showSuccessModal(orderNumber) {
+            // Create modal HTML
+            const modalHTML = `
+                <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 animate-scale-in">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-800 mb-2">Order Placed Successfully!</h3>
+                            <p class="text-slate-600 mb-6">Your order has been confirmed and is being prepared.</p>
+                            
+                            <div class="bg-blue-50 rounded-xl p-4 mb-6">
+                                <p class="text-sm text-slate-600 mb-1">Order Number</p>
+                                <p class="text-xl font-bold text-blue-600">${orderNumber}</p>
+                            </div>
+
+                            <div class="space-y-2 text-sm text-slate-600 mb-6">
+                                <p>📍 Estimated delivery: 30-45 minutes</p>
+                                <p>📱 You'll receive SMS updates</p>
+                                <p>💬 Track your order in the Delivery section</p>
+                            </div>
+
+                            <button onclick="closeSuccessModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition duration-200 mb-3">
+                                Continue to Tracking
+                            </button>
+                            <button onclick="window.location.href='stores.html'" class="w-full bg-gray-100 hover:bg-gray-200 text-slate-800 font-bold py-3 rounded-xl transition duration-200">
+                                Continue Shopping
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes scaleIn {
+                        from {
+                            opacity: 0;
+                            transform: scale(0.95);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+                    }
+                    .animate-scale-in {
+                        animation: scaleIn 0.3s ease-out;
+                    }
+                </style>
+            `;
+
+            // Insert modal into page
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeSuccessModal() {
+            const modal = document.getElementById('successModal');
+            if (modal) {
+                modal.remove();
+            }
+            // Redirect to delivery tracking page
+            const deliveryUrl = new URL('delivery.html', window.location.href).href;
+            window.location.href = deliveryUrl;
+        }
+
+        // Populate form from saved profile (if available) and render order summary
+        prefillCheckoutFromProfile();
+        renderOrderSummary();
+    </script>
+</body>
+</html>

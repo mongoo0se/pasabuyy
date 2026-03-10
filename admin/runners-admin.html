@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProStore | Runner Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root { font-family: 'Inter', sans-serif; }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-bg { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+        
+        /* Map height constraint */
+        #map { height: 400px; width: 100%; z-index: 1; }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-900 flex h-screen overflow-hidden" x-data="runnerStats()">
+
+    <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col z-20">
+        <div class="p-6">
+            <div class="flex items-center gap-3 text-blue-600">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-800">Pa-Buy Bes!</span>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+            <a href="main-admin.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Dashboard
+            </a>
+            <button class="nav-btn active w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-blue-600 bg-blue-50 font-semibold">
+                <i data-lucide="truck" class="w-5 h-5"></i> Runners
+            </button>
+            <a href="store-admin.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="store" class="w-5 h-5"></i> Stores
+            </a>
+            <a href="client-admin.html" class="nav-btn w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 text-slate-600 hover:bg-gray-100">
+                <i data-lucide="users" class="w-5 h-5"></i> Clients
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-gray-100">
+            <button onclick="logout()" class="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
+            <h2 id="page-title" class="text-lg font-semibold text-slate-800">Runner Management</h2>
+            <div class="flex items-center gap-5">
+                <div class="relative">
+                    <i data-lucide="bell" class="w-5 h-5 text-slate-400 cursor-pointer"></i>
+                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                </div>
+                <div class="flex items-center gap-3 pl-5 border-l">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" class="w-8 h-8 rounded-full shadow-sm">
+                    <span class="text-sm font-medium text-slate-700">Runner Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-8">
+
+            <section id="dashboard-section" class="content-section active space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Active Runners</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="runners.length"></h3>
+                        <span class="text-green-500 text-xs font-bold mt-2 flex items-center gap-1"><i data-lucide="arrow-up-right" class="w-3 h-3"></i> On duty</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Total Deliveries</p>
+                        <h3 class="text-2xl font-bold mt-2" x-text="logs.length"></h3>
+                        <span class="text-slate-400 text-xs mt-2">Today's activity</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                        <p class="text-slate-500 text-sm font-medium">Avg Rating</p>
+                        <h3 class="text-2xl font-bold mt-2">—</h3>
+                        <span class="text-yellow-500 text-xs font-bold mt-2">—</span>
+                    </div>
+                    <div class="bg-blue-600 p-6 rounded-2xl border border-blue-700 shadow-md">
+                        <p class="text-blue-100 text-sm font-medium">Admin Revenue (5%)</p>
+                        <h3 class="text-2xl font-bold mt-2 text-white" x-text="'₱' + calculateTotalAdminRevenue()"></h3>
+                        <span class="text-blue-200 text-xs font-bold mt-2 flex items-center gap-1"><i data-lucide="trending-up" class="w-3 h-3"></i> From total earnings</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-slate-800">ESSU Campus GPS Tracker</h4>
+                            <p class="text-xs text-slate-500">Live monitoring of active runners</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                            </span>
+                            <span class="text-xs font-bold text-green-600 uppercase tracking-wider">Live</span>
+                        </div>
+                    </div>
+                    <div id="map"></div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b">
+                        <h4 class="font-bold text-slate-800">Active Runners</h4>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                        <template x-for="runner in runners" :key="runner.name">
+                            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
+                                <h3 class="font-semibold text-slate-800" x-text="runner.name"></h3>
+                                <div class="flex items-center mt-1 text-yellow-500 text-sm">
+                                    <i data-lucide="star" class="w-4 h-4 fill-yellow-500 mr-1"></i>
+                                    <span x-text="runner.rating"></span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3 mt-4">
+                                    <div class="bg-white p-3 rounded-lg">
+                                        <p class="text-xs font-bold text-slate-500 uppercase">Delivered</p>
+                                        <p class="text-lg font-bold text-green-600 mt-1" x-text="runner.delivered"></p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg">
+                                        <p class="text-xs font-bold text-slate-500 uppercase">Pending</p>
+                                        <p class="text-lg font-bold text-orange-600 mt-1" x-text="runner.pending"></p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-lg">
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase">Total Paid</p>
+                                        <p class="text-md font-bold text-slate-700 mt-1" x-text="'₱' + runner.earnings"></p>
+                                    </div>
+                                    <div class="bg-blue-600 p-3 rounded-lg">
+                                        <p class="text-[10px] font-bold text-blue-100 uppercase">Admin (5%)</p>
+                                        <p class="text-md font-bold text-white mt-1" x-text="'₱' + (parseFloat(runner.earnings.replace(',','')) * 0.05).toFixed(2)"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b">
+                            <h4 class="font-bold text-slate-800">Delivery Logs</h4>
+                        </div>
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 border-b border-slate-100">
+                                <tr>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Order ID</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Runner</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Location</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Payment</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                <template x-for="log in logs" :key="log.id">
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-4 font-bold text-blue-600" x-text="log.id"></td>
+                                        <td class="px-6 py-4 font-semibold text-slate-700" x-text="log.runner"></td>
+                                        <td class="px-6 py-4 text-slate-600 flex items-center gap-2">
+                                            <i data-lucide="map-pin" class="w-4 h-4 text-blue-600"></i>
+                                            <span x-text="log.location"></span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span :class="log.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'" class="text-xs font-bold px-3 py-1 rounded-full" x-text="log.status"></span>
+                                        </td>
+                                        <td class="px-6 py-4 text-xs text-slate-600" x-text="log.payment"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+                        <div class="p-6 border-b flex justify-between items-center">
+                            <h4 class="font-bold text-slate-800">Runner Reviews</h4>
+                            <i data-lucide="message-square" class="w-5 h-5 text-blue-500"></i>
+                        </div>
+                        <div class="p-4 space-y-4 overflow-y-auto max-h-[400px]">
+                            <template x-for="review in reviews" :key="review.id">
+                                <div class="p-4 rounded-xl border border-gray-50 bg-slate-50/50">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <p class="text-sm font-bold text-slate-800" x-text="review.client"></p>
+                                            <p class="text-[10px] text-slate-400" x-text="'Reviewing: ' + review.runner"></p>
+                                        </div>
+                                        <div class="flex text-yellow-500">
+                                            <template x-for="i in Array.from({length: review.stars})">
+                                                <i data-lucide="star" class="w-3 h-3 fill-yellow-500"></i>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-slate-600 italic" x-text="'&quot;' + review.comment + '&quot;'"></p>
+                                    <p class="text-[10px] text-slate-400 mt-2 text-right" x-text="review.date"></p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initMap();
+        });
+
+        function initMap() {
+            const essuCoords = [11.6094, 125.4287];
+            const map = L.map('map').setView(essuCoords, 17);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            const runnerLocations = [];
+
+            runnerLocations.forEach(loc => {
+                const marker = L.marker([loc.lat, loc.lng]).addTo(map);
+                marker.bindPopup(`<b>${loc.name}</b><br>Status: On Delivery`);
+            });
+        }
+
+        function runnerStats() {
+            return {
+                runners: [],
+                // Function to calculate the 5% revenue from all runner earnings
+                calculateTotalAdminRevenue() {
+                    let total = this.runners.reduce((sum, runner) => {
+                        return sum + parseFloat(runner.earnings.replace(',', ''));
+                    }, 0);
+                    return (total * 0.05).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                },
+                logs: [],
+                reviews: []
+                
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = '../index.html';
+        }
+    </script>
+</body>
+</html>
